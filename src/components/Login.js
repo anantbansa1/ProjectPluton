@@ -1,9 +1,14 @@
 import React from 'react'
 
-export default function Login() {
+function Login() {
   return (
     <div>
-      Hemlo guyms
+      <div className='bg-[#a7c7e7] h-[100vh] overflow-hidden'>
+        <div className='bg-[#232323] h-[100vh] scale-150 w-[42%] rotate-[-10deg]'>
+          
+        </div>
+      </div>
     </div>
   )
 }
+export default Login
