@@ -1,10 +1,13 @@
 import logo from "./logo.svg";
 import "./App.css";
+import Resetpass from './components/resetpass';
 
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <div>
+        <Resetpass></Resetpass>
+      </div>
     </>
   );
 }
