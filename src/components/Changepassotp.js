@@ -35,7 +35,7 @@ export default function Changepassotp(props) {
               Email : {props.Email}
             </div>
             <div className="flex mt-[5vh]  ">
-              <div className="">
+              <div className="border-[#232323]">
                 <TextField
                   id="outlined-basic"
                   label="Outlined"
@@ -47,7 +47,7 @@ export default function Changepassotp(props) {
               </div>
             </div>
             <div className="flex mt-[5vh] ">
-              <div className="bg-black px-10 py-2 text-white">
+              <div className="bg-black px-10 py-2 mx-5 text-white">
                 <button onClick={Submit_OTP}>Submit</button>
               </div>
               <div className="bg-black px-6 py-2 mx-4 text-white">
