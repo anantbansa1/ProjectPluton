@@ -24,11 +24,11 @@ export default function Changepassotp(props) {
     <div>
       <div className="flex bg-[#232323] items-center justify-center h-[100vh]">
         <div className="flex w-[450px] h-[500px] rounded-lg bg-white m-auto flex-col ">
-          <div className="flex justify-start mx-3 my-2">
-            <button onClick={Back_OTP} className="hover:underline"><p className="italic">back</p></button>
+          <div className="flex justify-start mx-3 my-2 text-lg">
+            <button onClick={Back_OTP} className="hover:underline">back</button>
           </div>
           <div className="flex justify-center flex-col items-center">
-            <div className="flex font-bold text-2xl text-center  mt-[10vh] ">
+            <div className="flex font-bold text-3xl text-center  mt-[10vh] ">
               Enter OTP
             </div>
             <div className="flex font-bold text-2xl  mt-[5vh] ">
