@@ -2,12 +2,18 @@ import React from 'react'
 
 function Login() {
   return (
-    <div className='flex space-x-5 font-bold bg-black text-white text-[50px] h-[100vh]' >
-      <div>
-      aafafafadfdafs</div>
-      <button className='px-[4px] py-[2px] border border-white  h-20 w-52 bg-red-700 rounded-[10px]'>start</button>
+    <div>
+      <div className='bg-[#a7c7e7] h-[100vh] '>
+        <div className='bg-[#232323] h-[100vh] scale-150 w-[42%] rotate-[-10deg]'>
+
+
+          
+        </div>adfadsfadfas
+        <div className="bg-black h-20  mt-[-100px] z-[50]">
+            
+        </div>
+      </div>
     </div>
   )
 }
-
 export default Login
