@@ -1,4 +1,5 @@
 import React from "react";
+import { TextField } from "@mui/material";
 
 export default function changepassotp(props) {
   return (
@@ -10,8 +11,13 @@ export default function changepassotp(props) {
             Email : {props.Email}
           </div>
           <div className="flex mt-[5vh]  ">
-            <div className="border-[1px] border-black">
-              <textarea name="otp" id="otp" cols="30" rows="1"></textarea>
+            <div className="">
+              <TextField
+                id="outlined-basic"
+                label="Outlined"
+                variant="outlined"
+                color="primary"
+              />
             </div>
           </div>
           <div className="flex mt-[5vh]">
