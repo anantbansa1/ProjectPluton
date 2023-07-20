@@ -22,7 +22,6 @@ export default function changepassotp(props) {
               <button>Resend OTP</button>
             </div>
           </div>
-          <div className="flex "></div>
         </div>
       </div>
     </div>
