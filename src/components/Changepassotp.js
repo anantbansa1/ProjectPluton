@@ -12,6 +12,7 @@ export default function changepassotp(props) {
           <div className="flex mt-[5vh] border-2 border-black">
             <textarea name="otp" id="otp" cols="10" rows="1"></textarea>
           </div>
+          <div className="flex "></div>
         </div>
       </div>
     </div>
