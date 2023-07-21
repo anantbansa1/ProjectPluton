@@ -3,6 +3,12 @@ import { TextField } from "@mui/material";
 
 export default function Resetpass(props){
     const [Email, setEmail] = useState("");
+    function resetpassemail(e){
+        setEmail(e.target.value);
+    }
+    function displayemail(e){
+        console.log(Email)
+    }
     return(    
     <div>
         <div className="bg-[#232323] items-center justify-center flex h-[100vh] font-bold">
@@ -24,9 +30,7 @@ export default function Resetpass(props){
                         width:350,
                     }}
                     value = {Email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                    }}
+                    onChange={resetpassemail}
                     />
                 </div>
                 </div>
@@ -34,9 +38,7 @@ export default function Resetpass(props){
                 <div className="flex text-red-600 font-medium text-normal">Invalid email</div>
                 </div>
                 <div className="flex mt-[7vh] bg-black text-white margin px-10 py-2">
-                    <button className="font-normal text-lg" onClick={()=>{
-                        console.log(Email)
-                    }}>Send OTP</button>
+                    <button className="font-normal text-lg" onClick={displayemail}>Send OTP</button>
                 </div>
             </div>
         </div>
