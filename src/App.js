@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import Resetpass from './components/resetpass';
+import Resetpass from './components/enterpwconfirmpw';
 
 function App() {
   return (
