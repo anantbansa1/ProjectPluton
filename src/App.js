@@ -1,15 +1,10 @@
 import logo from "./logo.svg";
 import "./App.css";
-import Changepassotp from "./components/Changepassotp";
-import Login from "./components/Login";
-
+import Navbar from "./components/Navbar";
 function App() {
   return (
     <>
-      {/* <Changepassotp Email="ab6157@dseu.ac.in"></Changepassotp> */}
-
-  <Login />
-
+      <Navbar></Navbar>
     </>
   );
 }
