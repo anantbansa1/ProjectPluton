@@ -8,24 +8,8 @@ export default function Navbar() {
     <>
       <div className="bg-[#a7c7e7] fixed left-0 top-0 h-[100vh] w-[20vw] flex-col items-center space-y-[20vh]">
         <div className="flex-col">
-          <button
-            onMouseOut={(e) => {
-              setprofile(true);
-            }}
-            onMouseOver={(e) => {
-              setprofile(false);
-            }}
-            className="bg-white w-[7vw] h-[7vw] mx-auto mt-[10vh]  rounded-[50%] ml-[6.5vw]"
-          >
-            {profile === false ? (
-              <img src={SirfPencil} alt="" className="rounded-[50%]" />
-            ) : (
-              <img
-                src={zoro}
-                alt=""
-                className="rounded-[50%] w-[7vw] h-[7vw]"
-              />
-            )}
+          <button className="bg-white w-[7vw] h-[7vw] mx-auto mt-[10vh]  rounded-[50%] ml-[6.5vw]">
+            <img src={zoro} alt="" className="rounded-[50%] w-[7vw] h-[7vw]" />
           </button>
           <div className="mx-auto text-center mt-[6vh] text-xl">
             <button>Home</button>
