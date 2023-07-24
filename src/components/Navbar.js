@@ -40,6 +40,10 @@ export default function Navbar() {
           </div>
           <hr className="mt-[3vh] w-[11vw] mx-auto border-black" />
           <div className="mx-auto text-center mt-[3vh] text-xl">
+            <button>Add new users</button>
+          </div>
+          <hr className="mt-[3vh] w-[11vw] mx-auto border-black" />
+          <div className="mx-auto text-center mt-[3vh] text-xl">
             <button>About Us</button>
           </div>
         </div>
