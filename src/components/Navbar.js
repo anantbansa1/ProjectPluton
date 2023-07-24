@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import zoro from "./Images/zoro.jpg";
+import zoro from "./Images/default-pic.png";
 import SirfPencil from "./Images/SirfPencil.jpg";
 
 export default function Navbar() {
