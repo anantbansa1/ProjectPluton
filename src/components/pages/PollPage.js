@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import Navbar from "../Navbar";
 
 export default function UserFeed() {
-
-  const [post,underline] = useState(true);
-  const [select,set] = useState(false);
+  const [post, underline] = useState(true);
+  const [select, set] = useState(false);
 
   return (
     <div>
@@ -12,11 +11,14 @@ export default function UserFeed() {
       <div className="ml-[20vw] flex text-white mt-[-5vh]">
         <div className="flex-row flex space-x-20 my-[10vh] mx-[23.5vw] text-xl">
           <div className="leading-10">
-            <button 
-            onClick={(e) =>{
-              underline(true);
-            }} 
-            className="w-[7vw] text-center">Post</button>
+            <button
+              onClick={(e) => {
+                underline(true);
+              }}
+              className="w-[7vw] text-center"
+            >
+              Post
+            </button>
             {post === true ? (
               <hr className="w-[7vw]" />
             ) : (
@@ -24,11 +26,14 @@ export default function UserFeed() {
             )}
           </div>
           <div className="leading-10">
-            <button 
-            onClick={(e) =>{
-              underline(false);
-            }} 
-            className="w-[5vw] text-center">Poll</button>
+            <button
+              onClick={(e) => {
+                underline(false);
+              }}
+              className="w-[7vw] text-center"
+            >
+              Poll
+            </button>
             {post === false ? (
               <hr className="w-[7vw]" />
             ) : (
@@ -85,53 +90,59 @@ export default function UserFeed() {
           </div>
           <div className="ml-[35vw] text-white ">
             <div className="h-[22vw] w-[40vw] bg-[#232323]  mt-[2vh] rounded-[10px]">
-                <div className="p-[1vw] text-xl">
-                    Poll Question ?
+              <div className="p-[1vw] text-xl">Poll Question ?</div>
+              <div className="flex items-center text-xl space-x-56 mt-[2vh]">
+                <div className="flex items-center space-x-4">
+                  <button className="flex space-x-4">
+                    <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
+                    <div>Selected Option</div>
+                  </button>
                 </div>
-                <div className="flex items-center text-xl space-x-56 mt-[2vh]">
-                    <div className="flex items-center space-x-4">
-                        <button className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></button>
-                        <button>Selected Option</button>
-                    </div>
-                    <div>
-                        <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
-                            2 votes
-                        </div>
-                    </div>
+                <div>
+                  <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
+                    2 votes
+                  </div>
                 </div>
-                <div className="flex items-center text-xl space-x-56 mt-[2vh]">
-                    <div className="flex items-center space-x-4">
-                        <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
-                        <button>Selected Option</button>
-                    </div>
-                    <div>
-                        <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
-                            5 votes
-                        </div>
-                    </div>
+              </div>
+              <div className="flex items-center text-xl space-x-56 mt-[2vh]">
+                <div className="flex items-center space-x-4">
+                  <button className="flex space-x-4">
+                    <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
+                    <div>Selected Option</div>
+                  </button>
                 </div>
-                <div className="flex items-center text-xl space-x-56 mt-[2vh]">
-                    <div className="flex items-center space-x-4">
-                        <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
-                        <button>Selected Option</button>
-                    </div>
-                    <div>
-                        <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
-                            10 votes
-                        </div>
-                    </div>
+                <div>
+                  <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
+                    2 votes
+                  </div>
                 </div>
-                <div className="flex items-center text-xl space-x-56 mt-[2vh]">
-                    <div className="flex items-center space-x-4">
-                        <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
-                        <button>Selected Option</button>
-                    </div>
-                    <div>
-                        <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
-                            0 votes
-                        </div>
-                    </div>
+              </div>
+              <div className="flex items-center text-xl space-x-56 mt-[2vh]">
+                <div className="flex items-center space-x-4">
+                  <button className="flex space-x-4">
+                    <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
+                    <div>Selected Option</div>
+                  </button>
                 </div>
+                <div>
+                  <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
+                    2 votes
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center text-xl space-x-56 mt-[2vh]">
+                <div className="flex items-center space-x-4">
+                  <button className="flex space-x-4">
+                    <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
+                    <div>Selected Option</div>
+                  </button>
+                </div>
+                <div>
+                  <div className="bg-[#656464] text-sm rounded-[20px] p-[0.3vw]">
+                    2 votes
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="flex space-x-[34vw]">
               <div>Date</div>
