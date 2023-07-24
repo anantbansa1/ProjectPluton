@@ -1,13 +1,10 @@
 import logo from "./logo.svg";
 import "./App.css";
-import Navbar from "./components/Navbar";
-import Userprofile from "./components/pages/Userprofile";
-import zoro from "./components/Images/default-pic.png"
-
+import FAQ from "./components/pages/FAQ";
 function App() {
   return (
     <>
-      <Userprofile name="Uday Yadav" rollno="41521069" dp={zoro} ></Userprofile>
+      <FAQ></FAQ>
     </>
   );
 }
