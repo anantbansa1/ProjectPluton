@@ -54,15 +54,15 @@ function Userprofile(props) {
                 <img
                   src={props.dp}
                   alt=""
-                  className="rounded-[50%] h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]"
+                  className=" rounded-[50%] border border-white h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]"
                 />
               )}
             </button>
             <div className="flex flex-col space-y-2">
-              <div className="font-bold"> {props.name} </div>
-              <div className="text-lg lg:text-xl text-[#a5a5a5]">
+              <div className="text-[2.25rem] font-semibold"> {props.name} </div>
+              <div className="text-lg lg:text-xl  text-[#a5a5a5]">
                 {" "}
-                {props.rollno}{" "}
+                {props.rollno}
               </div>
             </div>
           </div>
@@ -71,8 +71,10 @@ function Userprofile(props) {
                   <hr  className="h-1" />
         </div> */}
         <div className="grid  items-center h-[70vh] gap-0 text-center lg:row-span-5 md:col-span-8 ">
-          <div className="lg:row-span-1 lg:col-span-8">Medals</div>
-          <div className="lg:col-span-2 lg:row-span-2">
+          <div className="lg:row-span-1  font-semibold lg:col-span-8">
+            Medals
+          </div>
+          <div className="lg:col-span-2  lg:row-span-2">
             <img className="h-[20vh] mx-auto text-center" src={Rank1} alt="" />{" "}
             <div className="text-xl p-1F text-[#c0bebe]">Spring 2023</div>{" "}
           </div>
@@ -98,7 +100,7 @@ function Userprofile(props) {
           </div>
         </div>
         <div className="border-l items-center border-white text-center col-span-3 row-span-4">
-          <div className="mt-5"> Badges </div>
+          <div className="mt-5 font-semibold"> Badges </div>
           <div className="col-span-2 my-4 row-span-2">
             <img
               className="h-[20vh] mx-auto text-center"
@@ -142,20 +144,37 @@ function Userprofile(props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <img
-              src={zoro}
+              src={props.dp}
               alt=""
               className="rounded-[50%] w-[20vw] h-[20vw]"
             />
             <div className="flex my-5 justify-between">
-              <input type="file"></input>
-            {/* <button className="hover:underline"> Change Photo</button> */}
-            <button className="hover:underline"> Unset Photo</button>
+              <input
+                className=" text-[#5d5d5d]
+   file:mr-5 file:px-4 file:py-2 file:border-[1px]
+   file:text-xs file:font-medium
+   file:bg-black file:text-white
+   hover:file:cursor-pointer hover:file:bg-black 
+   hover:file:text-white"
+                type="file"
+              ></input>
+              {/* <button className="hover:underline"> Change Photo</button> */}
+              <button className="hover:underline"> Unset Photo</button>
             </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <button className="mx-3 hover:underline px-3 py-2 " onClick={handleClose}>Cancel</button>
-          <button className="mx-3 bg-black text-white px-3 py-2 " onClick={handleClose}  autoFocus>
+          <button
+            className="mx-3 hover:underline px-3 py-2 "
+            onClick={handleClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="mx-3 bg-black text-white px-3 py-2 "
+            onClick={handleClose}
+            autoFocus
+          >
             Save Changes
           </button>
         </DialogActions>
