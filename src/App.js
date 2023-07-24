@@ -1,10 +1,10 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
-import UserFeed from "./components/pages/UserFeed";
+import AdminFeed from "./components/pages/AdminFeed";
 function App() {
   return (
     <>
-      <UserFeed></UserFeed>
+      <AdminFeed></AdminFeed>
     </>
   );
 }
