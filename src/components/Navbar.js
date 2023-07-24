@@ -6,7 +6,7 @@ export default function Navbar() {
   const [profile, setprofile] = useState(true);
   return (
     <>
-      <div className="bg-[#a7c7e7] fixed left-0 top-0 h-[100vh] w-[20vw] flex-col items-center space-y-[20vh]">
+      <div className="bg-[#a7c7e7] fixed left-0 top-0 h-[100vh] w-[20vw] flex-col  items-center space-y-[20vh]">
         <div className="flex-col">
           <button
             onMouseOut={(e) => {
