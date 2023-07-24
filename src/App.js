@@ -1,10 +1,10 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
-import UserFeed from "./components/pages/UserFeed";
+import PollPage from "./components/pages/PollPage";
 function App() {
   return (
     <>
-      <UserFeed></UserFeed>
+      <PollPage></PollPage>
     </>
   );
 }
