@@ -1,10 +1,10 @@
 import logo from "./logo.svg";
 import "./App.css";
-import FAQ from "./components/pages/FAQ";
+import Clubprofile from "./components/pages/Clubprofile";
 function App() {
   return (
     <>
-      <FAQ></FAQ>
+      <Clubprofile></Clubprofile>
     </>
   );
 }
