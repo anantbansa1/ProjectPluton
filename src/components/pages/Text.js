@@ -4,14 +4,14 @@ export default function Text() {
   return (
     <div>
       <Navbar></Navbar>
-      <div className=' text-white ml-[35vw] mr-[15vw] flex justify-between items-center justify-center mt-[15vh] text-3xl'>
-        <button className='hover:bg-[#4B4A4A] rounded-sm p-[1vh]'>
+      <div className=' text-white ml-[35vw] mr-[15vw] flex justify-between items-center mt-[15vh] text-3xl'>
+        <button className='hover:bg-[#4B4A4A] text-lightgray rounded-full p-[1vh]  px-[3vh]'>
           Text
         </button>
-        <button className='hover:bg-[#4B4A4A] rounded-sm p-[1vh]'>
+        <button className='hover:bg-[#4B4A4A] rounded-full p-[1vh]  px-[3vh]'>
           Images
         </button>
-        <button className='hover:bg-[#4B4A4A] rounded-sm p-[1vh]'>
+        <button className='hover:bg-[#4B4A4A] rounded-full p-[1vh]  px-[3vh]'>
           Polls
         </button>
         </div>
@@ -21,7 +21,7 @@ export default function Text() {
         <button className='bg-white p-[1vh] px-[5vh] rounded-full'>+Announcement</button>
         <button className='bg-white p-[1vh] px-[5vh] rounded-full'>+Achievement</button>
       </div>
-      <div className='ml-[87vw] text-white text-xl mt-[6vh]'>
+      <div className='ml-[87vw] text-white text-2xl mt-[6vh]'>
         <button>
           Submit
         </button>
