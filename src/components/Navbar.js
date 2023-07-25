@@ -1,38 +1,48 @@
 import React, { useState } from "react";
 import zoro from "./Images/zoro.jpg";
 import SirfPencil from "./Images/SirfPencil.jpg";
+import HomeIcon from "@mui/icons-material/Home";
+import LiveHelpIcon from "@mui/icons-material/LiveHelp";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import InfoIcon from "@mui/icons-material/Info";
 
 export default function Navbar() {
   const [profile, setprofile] = useState(true);
   return (
     <>
-      <div className="bg-[#a7c7e7] fixed left-0 top-0 h-[100vh] w-[20vw] flex-col items-center space-y-[20vh]">
+      <div className="bg-[#a7c7e7] flex  fixed left-0 top-0 h-[100vh] w-[20vw] flex-col  place-content-between">
         <div className="flex-col">
           <button className="bg-white w-[7vw] h-[7vw] mx-auto mt-[10vh]  rounded-[50%] ml-[6.5vw]">
             <img src={zoro} alt="" className="rounded-[50%] w-[7vw] h-[7vw]" />
           </button>
-          <div className="mx-auto text-center mt-[6vh] text-xl">
+          <div className="mx-5 flex items-center justify-start  text-center mt-[6vh] text-xl">
+            {" "}
+            <HomeIcon className="scale-[120%]"></HomeIcon>&nbsp;&nbsp;
             <button>Home</button>
           </div>
-          <hr className="mt-[3vh] w-[11vw] mx-auto border-black" />
-          <div className="mx-auto text-center mt-[3vh] text-xl">
+          {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
+          <div className="mx-5 flex items-center  justify-start text-center mt-[6vh] text-xl">
+            <LiveHelpIcon className="scale-[120%]"></LiveHelpIcon>&nbsp;&nbsp;
             <button>FAQ</button>
           </div>
-          <hr className="mt-[3vh] w-[11vw] mx-auto border-black" />
-          <div className="mx-auto text-center mt-[3vh] text-xl">
+          {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
+          <div className="mx-5 flex items-center justify-start  text-center mt-[6vh] text-xl">
+            <LeaderboardIcon className="scale-[120%]"></LeaderboardIcon>
+            &nbsp;&nbsp;
             <button>Leaderboard</button>
           </div>
-          <hr className="mt-[3vh] w-[11vw] mx-auto border-black" />
-          <div className="mx-auto text-center mt-[3vh] text-xl">
+          {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
+          <div className="mx-5 flex items-center justify-start  text-center mt-[6vh] text-xl">
+            <InfoIcon className="scale-[120%]"></InfoIcon>&nbsp;&nbsp;
             <button>About Us</button>
           </div>
         </div>
 
-        <div>
-          <div className=" text-center text-xl flex-row text-red-600">
-            <button className="flex-row">
-              <div className="flex items-center">
-                <div>
+        <div className="mb-5">
+          <div className="justify-start  text-xl flex-row text-red-600">
+            <button className="flex-row justify-start mx-5">
+              <div className="flex items-center justify-start ">
+                <div className="scale-[120%]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
