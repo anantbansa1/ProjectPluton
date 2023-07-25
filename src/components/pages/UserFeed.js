@@ -42,8 +42,8 @@ export default function UserFeed() {
         />
       </div>
 
-      <div className="flex items-center ml-[70vw] mt-[-4vh] text-white">
-        <button className="flex items-center">
+      <div className="flex items-center ml-[70vw] mt-[-4vh]  text-white">
+        <button className="flex items-center max-[576px]:ml-[-4vw] max-[450px]:ml-[-7vw]">
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +56,7 @@ export default function UserFeed() {
               <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z" />
             </svg>
           </div>
-          <div className="text-lg ml-[0.5vw]">Filters</div>
+          <div className="text-lg ml-[0.5vw] ">Filters</div>
           <div className="ml-[0.5vw]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
