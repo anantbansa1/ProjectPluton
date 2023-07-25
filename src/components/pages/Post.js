@@ -11,13 +11,13 @@ export default function Text() {
   return (
     <div>
       <Navbar></Navbar>
-      <div className=" text-white ml-[35vw] mx-auto mr-[10vw] flex space-x-40 items-center mt-[9vh] text-3xl">
+      <div className="ml-[35vw] mx-auto mr-[10vw] flex space-x-40 items-center mt-[9vh] text-3xl">
         <div className="flex-col">
           <button
             onClick={(e) => {
               setoption("text");
             }}
-            className=" text-lightgray rounded-full p-[1vh]  px-[3vh]"
+            className={`rounded-full p-[1vh] px-[3vh] ${option === "text"? 'text-white' :'text-slate-300'}`}
           >
             Text
           </button>
@@ -32,7 +32,7 @@ export default function Text() {
             onClick={(e) => {
               setoption("image");
             }}
-            className=" text-lightgray rounded-full p-[1vh]  px-[3vh]"
+            className={`rounded-full p-[1vh] px-[3vh] ${option === "image"? 'text-white' :'text-slate-300'}`}
           >
             Posts
           </button>
@@ -47,7 +47,7 @@ export default function Text() {
             onClick={(e) => {
               setoption("Poll");
             }}
-            className="text-lightgray rounded-full p-[1vh]  px-[3vh]"
+            className={`rounded-full p-[1vh] px-[3vh] ${option === "Poll"? 'text-white' :'text-slate-300'}`}
           >
             Poll
           </button>
