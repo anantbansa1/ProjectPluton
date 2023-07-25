@@ -88,11 +88,11 @@ export default function UserFeed() {
               </div>
             </div>
           </div>
-          <div className="ml-[35vw] text-white ">
+          <div className="ml-[35vw] text-white">
             <div className="h-[22vw] w-[40vw] bg-[#232323]  mt-[2vh] rounded-[10px]">
-              <div className="p-[1vw] text-xl">Poll Question ?</div>
-              <div className="flex items-center text-xl space-x-56 mt-[2vh]">
-                <div className="flex items-center space-x-4">
+              <div className="p-[1vw]  max-[1192px]:text-md lg:text-xl">Poll Question ?</div>
+              <div className="flex items-center  text-xl space-x-56 mt-[2vh]">
+                <div className="flex items-center lg:space-x-4  ">
                   <button className="flex space-x-4">
                     <div className="h-[3vw] w-[3vw] bg-white rounded-[50%] ml-[1vw]"></div>
                     <div>Selected Option</div>
