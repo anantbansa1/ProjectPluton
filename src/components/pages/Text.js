@@ -9,7 +9,7 @@ export default function Text() {
   return (
     <div>
       <Navbar></Navbar>
-      <div className=" text-white ml-[35vw] mx-auto mr-[10vw] flex space-x-40 items-center mt-[15vh] text-3xl">
+      <div className=" text-white ml-[35vw] mx-auto mr-[10vw] flex space-x-40 items-center mt-[9vh] text-3xl">
         <div className="flex-col">
           <button
             onClick={(e) => {
@@ -50,16 +50,14 @@ export default function Text() {
             Poll
           </button>
           {option === "Poll" ? (
-            <div className="bg-blue-400">
             <hr className="w-[6.5vw] border-white border-[2px]" />
-            </div>
           ) : (
             <hr className="hidden" />
           )}
         </div>
       </div>
-      <div className="bg-[#4B4A4A] ml-[28vw] h-[19vw] w-[64vw] mt-[5vw]"></div>
-      <div className="ml-[28vw] text-black text-xl space-x-8 mt-[2vh]">
+      <div className="bg-[#4B4A4A] ml-[28vw] h-[19vw] w-[64vw] mt-[3vw]"></div>
+      <div className="ml-[28vw] text-black text-xl space-x-8 mt-[4vh]">
         <button 
         onClick={(e) => {
           setevent(console.log(1));
@@ -86,7 +84,7 @@ export default function Text() {
       onClick={(e) => {
         setevent(console.log(4));
       }}
-      className="ml-[87vw] text-white text-2xl mt-[6vh] hover:font-semibold">
+      className="ml-[87vw] text-white text-2xl mt-[8vh] hover:font-semibold">
         <button>Submit</button>
       </div>
     </div>
