@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Userprofile from "./components/pages/Userprofile";
-import zoro from "./components/Images/default-pic.png";
+import zoro from "./components/Images/zoro.jpg";
 
 function App() {
   return (

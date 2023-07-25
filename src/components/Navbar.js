@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import zoro from "./Images/default-pic.png";
+import zoro from "./Images/zoro.jpg";
 import SirfPencil from "./Images/SirfPencil.jpg";
 import HomeIcon from "@mui/icons-material/Home";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
