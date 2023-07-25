@@ -59,8 +59,8 @@ function Userprofile(props) {
               )}
             </button>
             <div className="flex flex-col space-y-2">
-              <div className="text-[2.25rem] font-semibold"> {props.name} </div>
-              <div className="text-lg lg:text-xl  text-[#a5a5a5]">
+              <div className="md:text-[2.25rem] text-lg font-semibold"> {props.name} </div>
+              <div className="text-sm lg:text-xl  text-[#a5a5a5]">
                 {" "}
                 {props.rollno}
               </div>

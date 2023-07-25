@@ -19,34 +19,34 @@ export default function Navbar() {
             {/* <button>Anant</button> */}
           </button>
 
-          <div className="max-[768px]:mx-auto mx-5 flex items-center max-[768px]:justify-center justify-start  text-center  text-xl">
+          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
             {" "}
             <HomeIcon className=" scale-[120%]"></HomeIcon>
-            <button className="max-[768px]:hidden">&nbsp;&nbsp;Home</button>
+            <button className="max-md:hidden">&nbsp;&nbsp;Home</button>
           </div>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div className="max-[768px]:mx-auto mx-5 flex items-center  max-[768px]:justify-center justify-start text-center  text-xl">
+          <div className="max-md:mx-auto mx-5 flex items-center  max-md:justify-center justify-start text-center  text-xl">
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
-            <button className="max-[768px]:hidden">&nbsp;&nbsp;FAQ</button>
+            <button className="max-md:hidden">&nbsp;&nbsp;FAQ</button>
           </div>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div className="max-[768px]:mx-auto mx-5 flex items-center max-[768px]:justify-center justify-start  text-center  text-xl">
+          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
-            <button className="max-[768px]:hidden">
+            <button className="max-md:hidden">
               &nbsp;&nbsp;Leaderboard
             </button>
           </div>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div className="max-[768px]:mx-auto mx-5 flex items-center max-[768px]:justify-center justify-start  text-center  text-xl">
+          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
             <InfoIcon className=" scale-[120%]"></InfoIcon>
-            <button className="max-[768px]:hidden">&nbsp;&nbsp;About Us</button>
+            <button className="max-md:hidden">&nbsp;&nbsp;About Us</button>
           </div>
         </div>
 
-        <div className="mb-5 max-[768px]:text-center">
-          <div className="max-[768px]:justify-center justify-start text-[#E73A37]  text-xl flex-row">
-            <button className="flex-row  max-[768px]:justify-center justify-start max-[768px]:mx-auto mx-5  ">
-              <div className="flex items-center max-[768px]:justify-center justify-start ">
+        <div className="mb-5 max-md:text-center">
+          <div className="max-md:justify-center justify-start text-[#E73A37]  text-xl flex-row">
+            <button className="flex-row  max-md:justify-center justify-start max-md:mx-auto mx-5  ">
+              <div className="flex items-center max-md:justify-center justify-start ">
                 {/* <div className="scale-[120%] text-[#E73A37]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +62,7 @@ export default function Navbar() {
           
                 </div> */}
                 <PowerSettingsNewIcon />
-                <div className="text-black mx-1 max-[768px]:hidden">
+                <div className="text-black mx-1 max-md:hidden">
                   &nbsp;Logout
                 </div>
               </div>
