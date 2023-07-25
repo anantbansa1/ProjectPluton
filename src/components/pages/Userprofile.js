@@ -17,7 +17,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-function Clubprofile(props) {
+function Userprofile(props) {
   const [open, setOpen] = React.useState(false);
   const [profile, setprofile] = useState(true);
 
@@ -33,7 +33,7 @@ function Clubprofile(props) {
     <div className="">
       <Navbar></Navbar>
 
-      <div className=" grid  gap-y-0 gap-x-0 mt-[7vh] ml-[20vw] text-[1.5rem] md:text-[2rem] text-white">
+      <div className=" grid  gap-y-0 gap-x-0 mt-[7vh] max-[768px]:ml-[15vw] ml-[20vw] text-[1.5rem] md:text-[2rem] text-white">
         <div className="row-span-1 h-[23vh] col-span-11 border-b border-b-white">
           <div className="flex  items-center space-x-[2vw]">
             <div className="col-span-10"></div>

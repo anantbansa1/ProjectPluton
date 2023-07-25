@@ -4,9 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Dependencies
 
-npm i
-npm install -D tailwindcss
-npx tailwindcss init
+npm i\
+npm install -D tailwindcss\
+npx tailwindcss init\
 npm install @mui/material @mui/styled-engine-sc styled-components
 
 ## Available Scripts
