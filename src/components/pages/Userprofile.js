@@ -33,11 +33,11 @@ function Userprofile(props) {
     <div className="">
       <Navbar></Navbar>
 
-      <div className=" grid  gap-y-0 gap-x-0 mt-[7vh] ml-[20vw] text-[1.5rem] md:text-[2rem] text-white">
-        <div className="row-span-1 h-[23vh] col-span-11 border-b border-b-white">
+      <div className=" grid gap-y-0 gap-x-0 mt-[7vh] ml-[20vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(20vh,auto))] lg:text-[2rem] text-white">
+        <div className="row-span-1 row-start-1 col-start-1 col-span-4 border-b border-b-white">
           <div className="flex  items-center space-x-[2vw]">
-            <div className="col-span-10"></div>
-            <div className="col-span-10"></div>
+            <div></div>
+<div></div>
             <button
               onClick={handleClickOpen}
               onMouseOut={(e) => {
@@ -70,59 +70,55 @@ function Userprofile(props) {
         {/* <div className=" col-span-12">
                   <hr  className="h-1" />
         </div> */}
-        <div className="grid  items-center h-[70vh] gap-0 text-center  lg:row-span-3 md:col-span-8 ">
-          <div className="lg:row-span-1  font-semibold lg:col-span-8">
+        <div className="p-2 grid border-r row-start-2 col-start-1  border-white items-center gap-0 text-center grid-cols-4 grid-rows-[repeat(5,minmax(5vh,auto))]  col-span-3 row-span-1  ">
+          <div className="row-span-1 col-span-4 font-semibold">
             Medals
           </div>
-          <div className="lg:col-span-2  lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank1} alt="" />{" "}
-            <div className="text-xl p-1F text-[#c0bebe]">Spring 2023</div>{" "}
+          <div className="col-span-1 row-span-1">
+            <img className="lg:h-[20vh] h-[20vw] mx-auto text-center" src={Rank1} alt="" />{" "}
           </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img
-              className="h-[20vh] mx-auto text-center"
-              src={Rank20p}
-              alt=""
-            />
-            <div className="text-xl p-1F text-[#c0bebe]">Autumn 2022</div>{" "}
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1 row-start-3 text-[#c0bebe]">Spring 2023</div>{" "}
+          <div className="col-span-1 row-span-1">
+            <img className="lg:h-[20vh] h-[20vw]  mx-auto text-center" src={Rank20p} alt=""/>
           </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank3} alt="" />
-            <div className="text-xl p-1F text-[#c0bebe]">Spring 2022</div>{" "}
+            <div className="lg:text-xl text-xs  p-1 row-span-1 col-span-1 row-start-3 text-[#c0bebe]">Autumn 2022</div>{" "}
+          <div className="col-span-1 row-span-1">
+            <img className="lg:h-[20vh] h-[20vw]  mx-auto text-center" src={Rank3} alt="" />
           </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank5} alt="" />
-            <div className="text-xl p-1F text-[#c0bebe]">Autumn 2021</div>{" "}
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1 row-start-3 text-[#c0bebe]">Spring 2022</div>{" "}
+          <div className="col-span-1 row-span-1">
+            <img className="lg:h-[20vh] h-[20vw]  mx-auto text-center" src={Rank5} alt="" />
           </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank2} alt="" />
-            <div className="text-xl p-1F text-[#c0bebe]">Spring 2021</div>{" "}
+            <div className="lg:text-xl text-xs  p-1 row-span-1 row-start-3 col-span-1 text-[#c0bebe]">Autumn 2021</div>{" "}
+          <div className="col-span-1 row-span-1">
+            <img className="lg:h-[20vh] h-[20vw]  mx-auto text-center" src={Rank2} alt="" />
           </div>
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 text-[#c0bebe]">Spring 2021</div>{" "}
         </div>
-        <div className="border-l items-center border-white text-center col-span-3 row-span-4">
-          <div className="mt-5 font-semibold"> Badges </div>
-          <div className="col-span-2 my-4 row-span-2">
+        <div className="p-2 items-center row-start-2 col-start-4 text-center grid grid-rows-[repeat(5,minmax(5vh,auto))] gap-3 grid-cols-1">
+          <div className="mt-3 font-semibold"> Badges </div>
+          <div className="row-span-1 col-span-1">
             <img
               className="h-[20vw] lg:h-[20vh] mx-auto text-center"
               src={BadgeSilver}
               alt=""
             />
           </div>
-          <div className="col-span-2 my-4 row-span-2">
+          <div className="row-span-1 col-span-1">
             <img
               className="h-[20vw] lg:h-[20vh] mx-auto text-center"
               src={BadgeGolden}
               alt=""
             />
           </div>
-          <div className="col-span-2 my-4 row-span-2">
+          <div className="row-span-1 col-span-1">
             <img
               className="h-[20vw] lg:h-[20vh] mx-auto text-center"
               src={BadgeSilver}
               alt=""
             />
           </div>
-          <div className="col-span-2 my-4 row-span-2">
+          <div className="row-span-1 col-span-1">
             <img
               className="h-[20vw] lg:h-[20vh] mx-auto text-center"
               src={BadgeGolden}
