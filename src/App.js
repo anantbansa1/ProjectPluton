@@ -1,12 +1,12 @@
 import logo from "./logo.svg";
 import "./App.css";
 import Navbar from "./components/Navbar";
-import RemoveUserAdmin from "./components/RemoveUserAdmin";
+import AddUserAdmin from "./components/AddUserAdmin";
 function App() {
   return (
     <>
       <Navbar></Navbar>
-      <RemoveUserAdmin filename="filename.csv"></RemoveUserAdmin>
+      <AddUserAdmin filename="filename.csv"></AddUserAdmin>
     </>
   );
 }
