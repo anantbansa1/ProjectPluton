@@ -11,10 +11,11 @@ export default function Navbar() {
   const [profile, setprofile] = useState(true);
   return (
     <>
-      <div className="bg-[#a7c7e7] flex  fixed left-0 top-0 h-[100vh] w-[15vw] md:w-[20vw] flex-col  place-content-around">
+      <div className="bg-[#A7C7E7]  font-semibold flex  fixed left-0 top-0 h-[100vh] w-[15vw] md:w-[20vw] flex-col  place-content-around">
         <div className="flex flex-col space-y-[6vh] ">
-          <button className="flex self-center items-center text-xl bg-white w-[7vw] h-[7vw] mx-5  rounded-[50%] ">
-            <img src={zoro} alt="" className="rounded-[50%] w-[7vw] h-[7vw]" />
+          <button className="flex  max-md:hidden items-center font-serif font-bold italic text-3xl mx-5   ">
+            {/* <img src={zoro} alt="" className="rounded-[50%] w-[7vw] h-[7vw]" /> */}
+            Pluton
             &nbsp;&nbsp;
             {/* <button>Anant</button> */}
           </button>
@@ -40,7 +41,18 @@ export default function Navbar() {
           <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-md:hidden">&nbsp;&nbsp;About Us</button>
+          </div>          
+          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
+            {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
+            <button className="flex justify-start self-start  h-[26px] w-[26px] rounded-[100%] items-center text-xl  ">
+            <img src={zoro} alt="" className="h-[26px] w-[26px] rounded-[100%] " />
+
+            &nbsp;&nbsp;
+            {/* <button>Anant</button> */}
+          </button>
+            <button className="max-md:hidden">&nbsp;&nbsp;Profile</button>
           </div>
+
         </div>
 
         <div className="mb-5 max-md:text-center">
@@ -62,7 +74,7 @@ export default function Navbar() {
           
                 </div> */}
                 <PowerSettingsNewIcon />
-                <div className="text-black mx-1 max-md:hidden">
+                <div className=" mx-1 max-md:hidden">
                   &nbsp;Logout
                 </div>
               </div>
