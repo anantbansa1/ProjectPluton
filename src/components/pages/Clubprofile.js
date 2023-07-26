@@ -1,23 +1,19 @@
 import React from "react";
 import Navbar from "../Navbar";
 import { useState } from "react";
-import zoro from "../Images/zoro.jpg";
 import SirfPencil from "../Images/pencil_black.jpg";
-import Rank5 from "../Images/rank5.png";
-import Rank1 from "../Images/rank1.png";
-import Rank3 from "../Images/rank3.png";
-import Rank20p from "../Images/rank20p.png";
-import Rank2 from "../Images/rank2.png";
-import BadgeSilver from "../Images/badge_silver.png";
-import BadgeGolden from "../Images/badge_golden.png";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Bronzebadge from "../Images/badge_bronze.png";
+import Silverbadge from "../Images/badge_silver.png";
+import Goldbadge from "../Images/badge_golden.png";
+import corebadge from "../Images/badge_core.png";
+import Zoro from "../Images/zoro.jpg";
 
-function Clubprofile(props) {
+function ClubProfile(props) {
   const [open, setOpen] = React.useState(false);
   const [profile, setprofile] = useState(true);
 
@@ -29,15 +25,21 @@ function Clubprofile(props) {
     setOpen(false);
   };
 
+  const image =
+    props.clubpoint < props.tbronze
+      ? Bronzebadge
+      : props.clubpoint <= props.tsilver
+      ? Silverbadge
+      : Goldbadge;
   return (
     <div className="">
       <Navbar></Navbar>
-
-      <div className=" grid  gap-y-0 gap-x-0 mt-[7vh] max-[768px]:ml-[15vw] ml-[20vw] text-[1.5rem] md:text-[2rem] text-white">
-        <div className="row-span-1 h-[23vh] col-span-11 border-b border-b-white">
-          <div className="flex  items-center space-x-[2vw]">
-            <div className="col-span-10"></div>
-            <div className="col-span-10"></div>
+      <div className="ml-[15vw] md:ml-[20vw] grid grid-rows-[repeat(8,minmax(30px,auto))] gap-2 grid-cols-[repeat(7,minmax(20px,auto))] ">
+        <div className="row-start-1 col-start-1 row-span-4 col-span-7 ">
+          <img src={Zoro} alt="" className="object-cover h-[20vw] w-full" />
+        </div>
+        <div className=" row-span-2 row-start-4 col-start-2 col-span-1 w-fit ">
+          <div className=" ">
             <button
               onClick={handleClickOpen}
               onMouseOut={(e) => {
@@ -46,7 +48,7 @@ function Clubprofile(props) {
               onMouseOver={(e) => {
                 setprofile(false);
               }}
-              className="bg-white h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]  rounded-[50%] "
+              className="bg-white h-[10vw] w-[10vw] min-w-[100px] min-h-[100px]  rounded-[50%] "
             >
               {profile === false ? (
                 <img src={SirfPencil} alt="" className="rounded-[50%]" />
@@ -54,81 +56,101 @@ function Clubprofile(props) {
                 <img
                   src={props.dp}
                   alt=""
-                  className=" rounded-[50%] border border-white h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]"
+                  className=" rounded-[50%] border border-white h-[10vw] w-[10vw] min-w-[100px] min-h-[100px]"
                 />
               )}
             </button>
-            <div className="flex flex-col space-y-2">
-              <div className="text-[2.25rem] font-semibold"> {props.name} </div>
-              <div className="text-lg lg:text-xl  text-[#a5a5a5]">
-                {" "}
-                {props.rollno}
-              </div>
-            </div>
           </div>
         </div>
-        {/* <div className=" col-span-12">
-                  <hr  className="h-1" />
-        </div> */}
-        <div className="grid  items-center h-[70vh] gap-0 text-center  lg:row-span-3 md:col-span-8 ">
-          <div className="lg:row-span-1  font-semibold lg:col-span-8">
-            Medals
-          </div>
-          <div className="lg:col-span-2  lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank1} alt="" />{" "}
-            <div className="text-xl p-1F text-[#c0bebe]">Spring 2023</div>{" "}
-          </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img
-              className="h-[20vh] mx-auto text-center"
-              src={Rank20p}
-              alt=""
-            />
-            <div className="text-xl p-1F text-[#c0bebe]">Autumn 2022</div>{" "}
-          </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank3} alt="" />
-            <div className="text-xl p-1F text-[#c0bebe]">Spring 2022</div>{" "}
-          </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank5} alt="" />
-            <div className="text-xl p-1F text-[#c0bebe]">Autumn 2021</div>{" "}
-          </div>
-          <div className="lg:col-span-2 lg:row-span-2">
-            <img className="h-[20vh] mx-auto text-center" src={Rank2} alt="" />
-            <div className="text-xl p-1F text-[#c0bebe]">Spring 2021</div>{" "}
+        <div className=" row-start-6 col-start-2  row-span-1 col-span-2">
+          <div className="text-[2.25rem] text-white font-semibold mix-blend-difference">
+            {" "}
+            {props.name}{" "}
           </div>
         </div>
-        <div className="border-l items-center border-white text-center col-span-3 row-span-4">
-          <div className="mt-5 font-semibold"> Badges </div>
-          <div className="col-span-2 my-4 row-span-2">
-            <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
-              src={BadgeSilver}
-              alt=""
-            />
-          </div>
-          <div className="col-span-2 my-4 row-span-2">
-            <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
-              src={BadgeGolden}
-              alt=""
-            />
-          </div>
-          <div className="col-span-2 my-4 row-span-2">
-            <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
-              src={BadgeSilver}
-              alt=""
-            />
-          </div>
-          <div className="col-span-2 my-4 row-span-2">
-            <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
-              src={BadgeGolden}
-              alt=""
-            />
-          </div>
+        <div className="row-start-7 col-start-2 row-span-2 col-span-3 text-lg lg:text-md  text-[#a5a5a5]">
+          {" "}
+          {props.desc}
+        </div>
+        <div className="row-start-6 col-start-5 row-span-1 col-span-1 ">
+          <button className="px-4 py-2 text-white"> Apply Now</button>
+        </div>
+        <div className="row-start-6 col-start-6 row-span-1 col-span-1 text-white">
+          {"57"}
+          <button className="pr-4 pl-1 py-2 text-white"> members</button>
+        </div>
+      </div>
+      <div className=" grid gap-y-0 gap-x-0  max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-3 grid-rows-[repeat(2,minmax(,auto))] lg:text-[2rem] text-white">
+        <div className="grid pt-10 px-10   grid-rows-1 grid-cols-1 row-start-2 col-span-3 justify-center">
+          <div
+            className={`row-start-1 ${
+              props.clubpoint < props.tbronze ? "" : "hidden"
+            } rounded-full col-start-1 bg-[#824a02] z-10 h-[1.5vh] `}
+            style={{
+              width: ((props.clubpoint / props.tbronze) * 100).toString() + "%",
+            }}
+          />
+          <div
+            className={`row-start-1 ${
+              props.clubpoint < props.tbronze ? "" : "hidden"
+            } rounded-full w-[100%]  col-start-1 bg-[#a77044] h-[1.5vh] `}
+          />
+          <div
+            className={`row-start-1 ${
+              props.clubpoint < props.tsilver &&
+              props.clubpoint >= props.tbronze
+                ? ""
+                : "hidden"
+            } rounded-full w-[50%] col-start-1 bg-[#d7d7d7] z-10 h-[1.5vh] `}
+            style={{
+              width:
+                (
+                  ((props.clubpoint - props.tbronze) /
+                    (props.tsilver - props.tbronze)) *
+                  100
+                ).toString() + "%",
+            }}
+          />
+          <div
+            className={`row-start-1 ${
+              props.clubpoint < props.tsilver &&
+              props.clubpoint >= props.tbronze
+                ? ""
+                : "hidden"
+            } rounded-full w-[100%]  col-start-1 bg-[#a7a7ad] h-[1.5vh] `}
+          />
+          <div
+            className={`row-start-1  ${
+              props.clubpoint >= props.tsilver ? "" : "hidden"
+            }  rounded-full  col-start-1 bg-[#fee101] z-10 h-[1.5vh] `}
+            style={{
+              width:
+                props.clubpoint > props.tgold
+                  ? "100%"
+                  : (
+                      ((props.clubpoint - props.tsilver) /
+                        (props.tgold - props.tsilver)) *
+                      100
+                    ).toString() + "%",
+            }}
+          />
+          <div
+            className={`row-start-1 ${
+              props.clubpoint >= props.tsilver ? "" : "hidden"
+            }  rounded-full w-[100%]  col-start-1 bg-[#d6af36] h-[1.5vh]  `}
+          />
+        </div>
+      </div>
+      <div className="grid py-2 items-center grid-cols-[repeat(25,minmax(13px,auto))]  grid-rows-1 gap-0">
+        <div className=" m-auto  row-start-1 col-start-[25]  ">
+          <img src={image} alt="" className="  h-[15vh] " />
+        </div>
+        <div className="   row-start-1 col-start-[25] ">
+          <img
+            src={Zoro}
+            alt=""
+            className=" m-auto h-[10vh] w-[10vh] rounded-full  "
+          />
         </div>
       </div>
 
@@ -183,4 +205,4 @@ function Clubprofile(props) {
   );
 }
 
-export default Clubprofile;
+export default ClubProfile;
