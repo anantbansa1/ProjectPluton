@@ -1,64 +1,20 @@
 import React from "react";
 import Navbar from "../Navbar";
 import { useState } from "react";
-import zoro from "../Images/zoro.jpg";
 import SirfPencil from "../Images/pencil_black.jpg";
-import Rank5 from "../Images/rank5.png";
-import Rank1 from "../Images/rank1.png";
-import Rank3 from "../Images/rank3.png";
-import Rank20p from "../Images/rank20p.png";
-import Rank2 from "../Images/rank2.png";
-import BadgeSilver from "../Images/badge_silver.png";
-import BadgeGolden from "../Images/badge_golden.png";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
-import { yellow } from "@mui/material/colors";
-import { grey } from "@mui/material/colors";
-import { brown } from "@mui/material/colors";
-import { linearProgressClasses } from '@mui/material/LinearProgress';
-import { makeStyles } from "@mui/material";
-import styled from "styled-components";
+
 
 
 
 function ClubProfile(props) {
   const [open, setOpen] = React.useState(false);
   const [profile, setprofile] = useState(true);
-  const [progress, setProgress] = React.useState(0);
 
-  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
-    borderRadius: 5,
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 5,
-      backgroundColor: theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8',
-    },
-  }));
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress === 100) {
-          return 0;
-        }
-        const diff = Math.random() * 10;
-        return Math.min(oldProgress + diff, 100);
-      });
-    }, 500);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -67,6 +23,10 @@ function ClubProfile(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const perc_bronze = (((props.clubpoint/props.tbronze)*100).toString()+"%");
+  const pb = perc_bronze + "%";
+  console.log(pb)
 
   return (
     <div className="">
@@ -108,11 +68,15 @@ function ClubProfile(props) {
           <div></div>
         </div>
 
-        <div className="flex row-start-2 col-span-3 justify-center">
-          {/* <div></div> */}
-          <Box  sx={{ width: "80%", color: brown[700],height:[500] }}>
-            <LinearProgress  color="inherit" width="500" variant="determinate" value={30} />
-          </Box>
+        <div className="grid p-10   grid-rows-1 grid-cols-1 row-start-2 col-span-3 justify-center">
+          <div className={`row-start-1 ${props.clubpoint<props.tbronze?'':'hidden'} rounded-full col-start-1 bg-[#824a02] z-10 h-[1.5vh] ` } style={{width: (((props.clubpoint/props.tbronze)*100).toString()+"%")}} />
+          <div  className={`row-start-1 ${props.clubpoint<props.tbronze?'':'hidden'} rounded-full w-[100%]  col-start-1 bg-[#a77044] h-[1.5vh] `} />
+          <div className={`row-start-1 ${props.clubpoint<props.tsilver && props.clubpoint >= props.tbronze?'':'hidden'} rounded-full w-[50%] col-start-1 bg-[#d7d7d7] z-10 h-[1.5vh] `} style={{width: ((((props.clubpoint-props.tbronze)/(props.tsilver-props.tbronze))*100).toString()+"%")}} />
+          <div  className={`row-start-1 ${props.clubpoint<props.tsilver && props.clubpoint >= props.tbronze?'':'hidden'} rounded-full w-[100%]  col-start-1 bg-[#a7a7ad] h-[1.5vh] `} />
+          <div className={`row-start-1  ${props.clubpoint>=props.tsilver?'':'hidden'}  rounded-full w-[50%] col-start-1  z-10 h-[1.5vh] ` } style={{width: (props.clubpoint>props.tgold)?"100%":((((props.clubpoint-props.tsilver)/(props.tgold-props.tsilver))*100).toString()+"%")}}  />
+          <div  className={`row-start-1 ${props.clubpoint>=props.tsilver?'':'hidden'}  rounded-full w-[100%]  col-start-1 bg-[#d6af36] h-[1.5vh]  `} />
+          {props.clubpoint}  Pb: {((((props.clubpoint-props.tbronze)/props.tsilver)*100).toString()+"%")
+          }
         </div>
       </div>
 
