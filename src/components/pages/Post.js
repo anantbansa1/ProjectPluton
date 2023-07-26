@@ -11,7 +11,7 @@ export default function Text() {
   return (
     <div>
       <Navbar></Navbar>
-      <div className="ml-[35vw] mx-auto mr-[10vw] flex space-x-40 items-center mt-[9vh] text-3xl">
+      <div className="ml-[35vw] overflow-hidden mx-auto max-[479px]:space-x-10 mr-[10vw] flex  max-[1080]:space-x-40 items-center mt-[9vh] text-3xl">
         <div className="flex-col">
           <button
             onClick={(e) => {
