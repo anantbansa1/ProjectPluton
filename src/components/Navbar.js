@@ -6,18 +6,20 @@ import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import InfoIcon from "@mui/icons-material/Info";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import Pluton from "./Images/spaceship.jpg";
 
 export default function Navbar() {
   const [profile, setprofile] = useState(true);
   return (
     <>
-      <div className="bg-[#A7C7E7]  font-semibold flex  fixed left-0 top-0 h-[100vh] w-[15vw] md:w-[20vw] flex-col  place-content-around">
+      <div className="bg-[#A7C7E7]  font-semibold flex  fixed left-0 top-0 h-full w-[15vw] md:w-[20vw] flex-col  place-content-around">
         <div className="flex flex-col space-y-[6vh] ">
-          <button className="flex  max-md:hidden items-center font-serif font-bold italic text-3xl mx-5   ">
-            {/* <img src={zoro} alt="" className="rounded-[50%] w-[7vw] h-[7vw]" /> */}
-            Pluton
-            &nbsp;&nbsp;
-            {/* <button>Anant</button> */}
+          <button className="flex items-center flex-col font-bold italic text-3xl mx-2 ">
+            <img src={Pluton} alt="" className=" justify-center md:h-[80px] " />
+
+            <button className="max-lg:hidden font-roboto font-light ">
+              Pluton
+            </button>
           </button>
 
           <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
@@ -33,23 +35,24 @@ export default function Navbar() {
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
-            <button className="max-md:hidden">
-              &nbsp;&nbsp;Leaderboard
-            </button>
+            <button className="max-md:hidden">&nbsp;&nbsp;Leaderboard</button>
           </div>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-md:hidden">&nbsp;&nbsp;About Us</button>
-          </div>          
+          </div>
           <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
             {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
             <button className="flex justify-start self-start  h-[26px] w-[26px] rounded-[100%] items-center text-xl  ">
-            <img src={zoro} alt="" className="h-[26px] w-[26px] rounded-[100%] " />
-
-            &nbsp;&nbsp;
-            {/* <button>Anant</button> */}
-          </button>
+              <img
+                src={zoro}
+                alt=""
+                className="h-[26px] w-[26px] rounded-[100%] "
+              />
+              &nbsp;&nbsp;
+              {/* <button>Anant</button> */}
+            </button>
             <button className="max-md:hidden">&nbsp;&nbsp;Profile</button>
           </div>
 
@@ -74,9 +77,7 @@ export default function Navbar() {
           
                 </div> */}
                 <PowerSettingsNewIcon />
-                <div className=" mx-1 max-md:hidden">
-                  &nbsp;Logout
-                </div>
+                <div className=" mx-1 max-md:hidden">&nbsp;Logout</div>
               </div>
             </button>
           </div>
