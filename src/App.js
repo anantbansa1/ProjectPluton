@@ -2,6 +2,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import ClubProfile from "./components/pages/Clubprofile";
 import zoro from "./components/Images/zoro.jpg";
+import cops from "./components/Images/cops-logo.png"
 
 function App() {
   return (

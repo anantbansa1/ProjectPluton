@@ -10,7 +10,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Bronzebadge from "../Images/badge_bronze.png";
 import Silverbadge from "../Images/badge_silver.png";
 import Goldbadge from "../Images/badge_golden.png";
-import corebadge from "../Images/badge_core.png";
 import Zoro from "../Images/zoro.jpg";
 
 function ClubProfile(props) {
@@ -33,7 +32,7 @@ function ClubProfile(props) {
       : Goldbadge;
   return (
     <div className="">
-      <Navbar></Navbar>
+      <Navbar selected="profile"></Navbar>
       <div className="ml-[15vw] md:ml-[20vw] grid grid-rows-[repeat(8,minmax(30px,auto))] gap-2 grid-cols-[repeat(7,minmax(20px,auto))] ">
         <div className="row-start-1 col-start-1 row-span-4 col-span-7 ">
           <img src={Zoro} alt="" className="object-cover h-[20vw] w-full" />
@@ -72,10 +71,10 @@ function ClubProfile(props) {
           {" "}
           {props.desc}
         </div>
-        <div className="row-start-6 col-start-5 row-span-1 col-span-1 ">
+        <div className="text-lg row-start-6 col-start-5 row-span-1 col-span-1 ">
           <button className="px-4 py-2 text-white"> Apply Now</button>
         </div>
-        <div className="row-start-6 col-start-6 row-span-1 col-span-1 text-white">
+        <div className="row-start-6 text-lg col-start-6 row-span-1 col-span-1 text-white">
           {"57"}
           <button className="pr-4 pl-1 py-2 text-white"> members</button>
         </div>
