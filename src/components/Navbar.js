@@ -12,7 +12,7 @@ export default function Navbar(props) {
   const [profile, setprofile] = useState(true);
   return (
     <>
-      <div className="bg-[#A7C7E7]  font-semibold flex  fixed left-0 top-0 h-full w-[15vw] md:w-[20vw] flex-col  place-content-around">
+      <div className="bg-[#A7C7E7]  font-semibold flex shadow-2xl shadow-black fixed left-0 top-0 h-full w-[15vw] md:w-[20vw] flex-col  place-content-around">
         <div className="flex flex-col space-y-[6vh] ">
           <button className="flex items-center flex-col font-bold italic text-3xl mx-2 ">
             <img src={Pluton} alt="" className=" justify-center md:h-[80px] " />
