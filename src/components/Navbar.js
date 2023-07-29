@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import zoro from "./Images/zoro.jpg";
-import SirfPencil from "./Images/SirfPencil.jpg";
 import HomeIcon from "@mui/icons-material/Home";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
@@ -8,7 +7,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 
 export default function Navbar() {
-  const [profile, setprofile] = useState(true);
+  // const [profile, setprofile] = useState(true);
   return (
     <>
       <div className="bg-[#a7c7e7] flex  fixed left-0 top-0 h-[100vh] w-[15vw] md:w-[20vw] flex-col  place-content-around">
