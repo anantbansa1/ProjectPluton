@@ -10,7 +10,8 @@ function App() {
         name="Club Of Programmers"
         desc="
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, necessitatibus fugiat, voluptates reprehenderit temporibus architecto "
-        dp={zoro}
+        clubimage={zoro}
+        coverimage={zoro}
         clubpoint={110}
         tgold={150}
         tsilver={100}
