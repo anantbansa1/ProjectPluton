@@ -31,6 +31,27 @@ function ClubProfile(props) {
       ? Silverbadge
       : Goldbadge;
 
+  const badge =
+    props.clubpoint < props.tbronze
+      ? "bronze"
+      : props.clubpoint <= props.tsilver
+      ? "silver"
+      : "gold";
+
+  const pointleft =
+    props.clubpoint < props.tbronze
+      ? props.tbronze - props.clubpoint
+      : props.clubpoint <= props.tsilver
+      ? props.tsilver - props.clubpoint
+      : props.tgold - props.clubpoint;
+
+  const color =
+    props.clubpoint < props.tbronze
+      ? "text-[#824a02]"
+      : props.clubpoint <= props.tsilver
+      ? "text-[#d7d7d7]"
+      : "text-[#fee101]";
+
   function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
       return;
@@ -93,16 +114,16 @@ function ClubProfile(props) {
 
   return (
     <div className="">
-      <Navbar></Navbar>
-      <div className="ml-[15vw] md:ml-[20vw] grid grid-rows-[repeat(8,minmax(30px,auto))] gap-2 grid-cols-[repeat(7,minmax(30px,auto))] ">
-        <div className="row-start-1 col-start-1 row-span-4 col-span-7 ">
+      <Navbar selected="profile"></Navbar>
+      <div className="ml-[15vw]   md:ml-[20vw] grid grid-rows-[repeat(8,minmax(30px,auto))] gap-2 grid-cols-[repeat(7,minmax(30px,auto))] ">
+        <div className="row-start-1 col-start-1 row-span-4 max-sm:row-start-1 max-sm:col-start-1 max-sm:row-end-5 col-span-7 ">
           <img
             src={CoverImage}
             alt=""
-            className="object-cover h-[20vw] w-full"
+            className="object-cover max-sm:h-[38vw] h-[20vw] w-full"
           />
         </div>
-        <div className=" row-span-2 row-start-4 col-start-2 col-span-1 w-fit ">
+        <div className=" row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
           <div className=" ">
             <button
               onClick={handleClickOpen}
@@ -132,31 +153,39 @@ function ClubProfile(props) {
         </div>
         <div className="row-start-6 col-start-1 "></div>
         <div className=" row-start-6 col-start-2  row-span-1 col-span-2">
-          <div className="text-[2.25rem] text-white font-semibold mix-blend-difference">
+          <div className="text-[2.25rem] max-lg:text-2xl max-sm:text-lg text-white font-semibold mix-blend-difference">
             {" "}
             {props.name}{" "}
           </div>
         </div>
-        <div className="row-start-7 col-start-2 row-span-2 col-span-3 text-lg lg:text-md  text-[#a5a5a5]">
+        <div className="row-start-7  col-start-2 row-span-2 col-span-3 text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
           {" "}
           {props.desc}
         </div>
-        <div className="row-start-6 col-start-5 row-span-1 col-span-1 text-center ">
-          <button className="px-4 py-2 mx-auto text-white"> Apply Now</button>
+        <div className="row-start-6 max-sm:col-start-4  col-start-5 row-span-1 col-span-1 text-center ">
+          <button className="px-4 py-2 lg:text-xl text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full mx-auto text-white">
+            {" "}
+            Apply Now
+          </button>
         </div>
         <div className="row-start-6 col-start-6 row-span-1 col-span-1 text-center text-white">
-          <button className="pr-4 pl-1 py-2 text-white mx-auto text-center">
+          <button className="pr-4 pl-4  lg:text-xl text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white mx-auto text-center">
             57 members
           </button>
         </div>
         <div className="row-start-6 col-start-7"></div>
       </div>
-      <div className=" grid gap-y-0 gap-x-0  max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-3 grid-rows-[repeat(2,minmax(,auto))] lg:text-[2rem] text-white">
-        <div className="grid pt-10 px-10   grid-rows-1 grid-cols-1 row-start-2 col-span-3 justify-center">
+      <div className="flex max-sm:mt-5 max-md:ml-[21vw] ml-[23vw]  ">
+        <div className=" grid w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
+          <div
+            className={`row-start-2 self-start col-start-9 lg:text-xl md:text-sm  text-xs text-right ${color}`}
+          >
+            {pointleft} points to {badge}
+          </div>
           <div
             className={`row-start-1 ${
               props.clubpoint < props.tbronze ? "" : "hidden"
-            } rounded-full col-start-1 bg-[#824a02] z-10 h-[1.5vh] `}
+            } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
             style={{
               width: ((props.clubpoint / props.tbronze) * 100).toString() + "%",
             }}
@@ -164,7 +193,7 @@ function ClubProfile(props) {
           <div
             className={`row-start-1 ${
               props.clubpoint < props.tbronze ? "" : "hidden"
-            } rounded-full w-[100%]  col-start-1 bg-[#a77044] h-[1.5vh] `}
+            } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
           />
           <div
             className={`row-start-1 ${
@@ -172,7 +201,7 @@ function ClubProfile(props) {
               props.clubpoint >= props.tbronze
                 ? ""
                 : "hidden"
-            } rounded-full w-[50%] col-start-1 bg-[#d7d7d7] z-10 h-[1.5vh] `}
+            } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
             style={{
               width:
                 (
@@ -188,12 +217,12 @@ function ClubProfile(props) {
               props.clubpoint >= props.tbronze
                 ? ""
                 : "hidden"
-            } rounded-full w-[100%]  col-start-1 bg-[#a7a7ad] h-[1.5vh] `}
+            } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
           />
           <div
             className={`row-start-1  ${
               props.clubpoint >= props.tsilver ? "" : "hidden"
-            }  rounded-full  col-start-1 bg-[#fee101] z-10 h-[1.5vh] `}
+            }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
             style={{
               width:
                 props.clubpoint > props.tgold
@@ -208,19 +237,21 @@ function ClubProfile(props) {
           <div
             className={`row-start-1 ${
               props.clubpoint >= props.tsilver ? "" : "hidden"
-            }  rounded-full w-[100%]  col-start-1 bg-[#d6af36] h-[1.5vh]  `}
+            }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
           />
         </div>
-      </div>
-      <div className="grid py-2 items-center grid-cols-[repeat(25,minmax(13px,auto))]  grid-rows-1 gap-0">
-        <div className=" m-auto  row-start-1 col-start-[25]  ">
-          <img src={image} alt="" className="  h-[15vh] object-cover " />
-        </div>
-        <div className=" object-cover  row-start-1 col-start-[25] ">
+        <div className="grid grid-rows-1 items-center grid-cols-1">
+          <div className="  mx-auto row-start-1  col-start-1 ">
+            <img
+              src={image}
+              alt=""
+              className="sm:h-[150px]  h-[70px] object-cover "
+            />
+          </div>
           <img
             src={ClubImage}
             alt=""
-            className=" m-auto h-[10vh] w-[10vh] rounded-full  object-cover "
+            className="row-start-1 col-start-1 mx-auto sm:h-[100px] sm:w-[100px] h-[50px] w-[50px] rounded-full  object-cover "
           />
         </div>
       </div>
