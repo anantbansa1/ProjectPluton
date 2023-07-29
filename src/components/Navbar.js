@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import zoro from "./Images/zoro.jpg";
-import SirfPencil from "./Images/SirfPencil.jpg";
 import HomeIcon from "@mui/icons-material/Home";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import InfoIcon from "@mui/icons-material/Info";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import AddIcon from '@mui/icons-material/Add';
 
 export default function Navbar() {
-  const [profile, setprofile] = useState(true);
+  // const [profile, setprofile] = useState(true);
   return (
     <>
       <div className="bg-[#a7c7e7] flex  fixed left-0 top-0 h-[100vh] w-[15vw] md:w-[20vw] flex-col  place-content-around">
@@ -36,9 +36,16 @@ export default function Navbar() {
               &nbsp;&nbsp;Leaderboard
             </button>
           </div>
-          <hr className="mt-[3vh] w-[11vw] mx-auto border-black" />
-          <div className="mx-auto text-center mt-[3vh] text-xl">
-            <button>About Us</button>
+          <div className="max-[768px]:mx-auto mx-5 flex items-center max-[768px]:justify-center justify-start  text-center  text-xl">
+            <AddIcon className=" scale-[120%]"></AddIcon>
+            <button className="max-[768px]:hidden">
+              &nbsp;&nbsp;Add Users
+            </button>
+          </div>
+          {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
+          <div className="max-[768px]:mx-auto mx-5 flex items-center max-[768px]:justify-center justify-start  text-center  text-xl">
+            <InfoIcon className=" scale-[120%]"></InfoIcon>
+            <button className="max-[768px]:hidden">&nbsp;&nbsp;About Us</button>
           </div>
         </div>
 
