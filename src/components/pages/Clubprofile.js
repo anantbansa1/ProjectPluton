@@ -16,7 +16,7 @@ import "react-image-crop/dist/ReactCrop.css";
 
 function ClubProfile(props) {
   const [profile, setprofile] = useState(true);
-  const [ClubImage, setimage] = useState(props.clubimage);
+  const [ClubImage, setclubimage] = useState(props.clubimage);
   const [CoverImage, setcoverimage] = useState(props.coverimage);
   const [open, setOpen] = React.useState(false);
   const [upImg, setUpImg] = useState(ClubImage);
@@ -40,7 +40,7 @@ function ClubProfile(props) {
     if (crop.width && crop.height) {
       canvas.toBlob((blob) => {
         const Imageuse = canvas.toDataURL("image/png");
-        setimage(Imageuse);
+        setclubimage(Imageuse);
       }, "image/png");
     }
   }
@@ -252,7 +252,7 @@ function ClubProfile(props) {
                 accept="image/*"
                 onChange={onSelectFile}
               ></input>
-              <button className="hover:underline"> Unset Photo</button>
+              {/* <button className="hover:underline" onClick={setclubimage(gold)}> Unset Photo</button> */}
             </div>
           </DialogContentText>
         </DialogContent>
