@@ -13,7 +13,7 @@ function App() {
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem, necessitatibus fugiat, voluptates reprehenderit temporibus architecto "
         clubimage={cops}
         coverimage={zoro}
-        clubpoint={69}
+        clubpoint={160}
         tgold={150}
         tsilver={100}
         tbronze={50}
