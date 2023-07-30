@@ -8,11 +8,11 @@ import InfoIcon from "@mui/icons-material/Info";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import Pluton from "./Images/spaceship.jpg";
 
-export default function Navbar() {
+export default function Navbar(props) {
   const [profile, setprofile] = useState(true);
   return (
     <>
-      <div className="bg-[#A7C7E7]  font-semibold flex  fixed left-0 top-0 h-full w-[15vw] md:w-[20vw] flex-col  place-content-around">
+      <div className="bg-[#A7C7E7]  font-semibold flex  fixed left-0 top-0 h-full w-[15vw] md:w-[20vw] flex-col shadow-2xl shadow-black place-content-around">
         <div className="flex flex-col space-y-[6vh] ">
           <button className="flex items-center flex-col font-bold italic text-3xl mx-2 ">
             <img src={Pluton} alt="" className=" justify-center md:h-[80px] " />
@@ -22,29 +22,29 @@ export default function Navbar() {
             </button>
           </button>
 
-          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
+          <div className={`max-md:mx-auto mx-5 p-2 flex items-center max-md:justify-center ${props.selected==="home"?" bg-opacity-30  bg-white":""} hover:bg-opacity-30 hover:bg-white rounded-lg cursor-pointer  justify-start  text-center  text-xl`}>
             {" "}
             <HomeIcon className=" scale-[120%]"></HomeIcon>
             <button className="max-md:hidden">&nbsp;&nbsp;Home</button>
           </div>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div className="max-md:mx-auto mx-5 flex items-center  max-md:justify-center justify-start text-center  text-xl">
+          <div className={`max-md:mx-auto mx-5 p-2  ${props.selected==="faq"?" bg-opacity-30 p-2 bg-white  border-[#323232]":""} hover:bg-opacity-30 hover:bg-white rounded-lg cursor-pointer  flex items-center   max-md:justify-center justify-start text-center  text-xl`}>
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
             <button className="max-md:hidden">&nbsp;&nbsp;FAQ</button>
           </div>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
+          <div className={`max-md:mx-auto mx-5 p-2 flex ${props.selected==="leaderboard"?" bg-opacity-30  bg-white  border-[#323232]":""} hover:bg-opacity-30 hover:bg-white rounded-lg cursor-pointer items-center  max-md:justify-center justify-start  text-center  text-xl`}>
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
             <button className="max-md:hidden">&nbsp;&nbsp;Leaderboard</button>
           </div>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
+          <div className={`max-md:mx-auto mx-5 p-2 flex ${props.selected==="aboutus"?" bg-opacity-30  bg-white  border-[#323232]":""} hover:bg-opacity-30 cursor-pointer hover:bg-white rounded-lg items-center max-md:justify-center justify-start  text-center  text-xl`}>
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-md:hidden">&nbsp;&nbsp;About Us</button>
           </div>
-          <div className="max-md:mx-auto mx-5 flex items-center max-md:justify-center justify-start  text-center  text-xl">
+          <div className={`max-md:mx-auto mx-5 p-2 flex ${props.selected==="profile"?" bg-opacity-30  bg-white  border-[#323232]":""} rounded-lg items-center max-md:justify-center justify-start hover:bg-opacity-30 cursor-pointer hover:bg-white text-center  text-xl`}>
             {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
-            <button className="flex justify-start self-start  h-[26px] w-[26px] rounded-[100%] items-center text-xl  ">
+            <button className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-xl  `}>
               <img
                 src={zoro}
                 alt=""
@@ -55,11 +55,12 @@ export default function Navbar() {
             </button>
             <button className="max-md:hidden">&nbsp;&nbsp;Profile</button>
           </div>
+
         </div>
 
         <div className="mb-5 max-md:text-center">
-          <div className="max-md:justify-center justify-start text-[#E73A37]  text-xl flex-row">
-            <button className="flex-row  max-md:justify-center justify-start max-md:mx-auto mx-5  ">
+          <div className="max-md:justify-center justify-start text-[#E73A37]  text-xl flex-row p-3" >
+            <button className="flex-row  max-md:justify-center justify-start max-md:mx-auto  w-[100%] py-2 px-5 hover:bg-white hover:bg-opacity-30 rounded-lg ">
               <div className="flex items-center max-md:justify-center justify-start ">
                 {/* <div className="scale-[120%] text-[#E73A37]">
                   <svg
