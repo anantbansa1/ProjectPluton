@@ -55,7 +55,6 @@ export default function Navbar() {
             </button>
             <button className="max-md:hidden">&nbsp;&nbsp;Profile</button>
           </div>
-
         </div>
 
         <div className="mb-5 max-md:text-center">

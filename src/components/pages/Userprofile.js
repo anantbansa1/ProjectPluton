@@ -76,18 +76,18 @@ function Userprofile(props) {
             </div>
           </div>
         </div>
-        <div className="grid mx-auto   justify-start items-center  grid-rows-2 grid-cols-[4,minmax(20vw,auto)] gap-5 row-start-1 col-start-3  max-lg:row-start-2 max-lg:col-start-1 col-end-5">
+        <div className="grid mx-auto   justify-start items-center  grid-rows-2 grid-cols-[4,minmax(20vw,auto)] gap-2 row-start-1 col-start-3  max-lg:row-start-2 max-lg:col-start-1 col-end-5">
           <div className="lg:mx-auto max-lg:justify-self-center  max-lg:row-start-1 max-lg:self-end row-start-1 col-start-1 max-lg:col-start-1 text-md md:text-[1.25rem] text-md flex items-center h-fit whitespace-nowrap font-semibold">
             {" "}
-            3
+            {props.joined}
           </div>
-          <div className="text-sm lg:text-[1.1rem] max-lg:self-start text-center  text-slate-300 h-fit max-lg:row-start-2 row-start-1 col-start-2  max-lg:col-start-1 font-normal">
+          <div className="text-sm lg:text-[1.1rem] max-lg:self-start text-center  text-slate-300 h-fit max-lg:row-start-2 row-start-1 col-start-2  max-lg:col-start-1 font-normal mr-5">
             {" "}
             {"  clubs joined "}
           </div>
           <div className="md:text-[1.25rem] max-lg:justify-self-center  text-md max-lg:self-end max-lg:row-start-1 row-start-1 col-start-3  max-lg:col-start-3 mx-auto items-center h-fit flex whitespace-nowrap text-md   font-semibold">
             {" "}
-            45
+            {props.points}
           </div>
           <div className="text-sm lg:text-[1.1rem]   max-lg:self-start text-center h-fit text-slate-300 max-lg:row-start-2 row-start-1 col-start-4  max-lg:col-start-3 font-normal">
             {"  leaderboard points "}
@@ -185,14 +185,14 @@ function Userprofile(props) {
           <div className="mt-[1vw] font-semibold"> Badges </div>
           <div className="row-span-1 col-span-1">
             <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
+              className="h-[20vw] rounded-full lg:h-[20vh] mx-auto text-center"
               src={BadgeSilver}
               alt=""
             />
           </div>
           <div className="row-span-1 col-span-1">
             <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
+              className="h-[20vw] rounded-full lg:h-[20vh] mx-auto text-center"
               src={BadgeGolden}
               alt=""
             />

@@ -6,7 +6,13 @@ import zoro from "./components/Images/zoro.jpg";
 function App() {
   return (
     <>
-      <Userprofile name="Uday Yadav" rollno="41521069" dp={zoro}></Userprofile>
+      <Userprofile
+        name="Uday Yadav"
+        rollno="41521069"
+        dp={zoro}
+        joined="5"
+        points="45"
+      ></Userprofile>
     </>
   );
 }
