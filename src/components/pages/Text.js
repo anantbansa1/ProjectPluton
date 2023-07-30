@@ -6,86 +6,91 @@ export default function Text() {
   const [announcement, setannouncement] = useState("");
   const [achievement, setachievement] = useState("");
   const [submit, setsubmit] = useState("");
+  const [text,settext] = useState("");
   return (
-    <div>
+    <div className="mt-[-2vw]">
       <Navbar></Navbar>
-      <div className="  ml-[35vw] mx-auto mr-[10vw] flex space-x-40 items-center mt-[9vh] text-3xl">
-        <div className="flex-col">
+      <div className="flex-col max-md:ml-[20vw] max-md:w-[75vw] ml-[28vw] w-[64vw]">
+        <div className=" bg-none  max-md:text-xl  flex items-center mt-[9vh] text-3xl justify-between">
+          <div className="flex-col">
+            <button
+              onClick={(e) => {
+                setoption("text");
+              }}
+              className={`p-[1vh] px-[3vh] border-white ${
+                option === "text" ? "border-b text-white" : "text-slate-300"
+              }`}
+            >
+              Text
+            </button>
+          </div>
+          <div className="flex-col">
+            <button
+              onClick={(e) => {
+                setoption("post");
+              }}
+              className={`p-[1vh] px-[3vh] border-white ${
+                option === "post" ? "border-b text-white" : "text-slate-300"
+              }`}
+            >
+              Post
+            </button>
+          </div>
+          <div className="flex-col">
+          <button
+              onClick={(e) => {
+                setoption("poll");
+              }}
+              className={`p-[1vh] px-[3vh] border-white ${
+                option === "poll" ? "border-b text-white" : "text-slate-300"
+              }`}
+            >
+              Poll
+            </button>
+          </div>
+        </div>
+        <div>
+          <textarea
+            onChange={(e) => {
+              settext(e.target.value);
+            }}
+            className="p-[1vw] max-sm:h-[70vw] max-md:h-[40vw] max-md:w-[75vw] text-white text-xl bg-[#4b4a4a7e] h-[25vw] w-[64vw] mt-[3vw]"
+            placeholder="Enter your Text"
+          ></textarea>
+        </div>
+        <div className=" flex max-md:text-sm max-[1076px]:flex-col justify-around text-black text-xl  mt-[4vh]">
           <button
             onClick={(e) => {
-              setoption("text");
+              setevent(console.log(1));
             }}
-            className={`${option === "text" ? 'text-white' : 'text-slate-300' } rounded-full p-[1vh]  px-[3vh] `}
+            className="bg-white p-[1vh] px-[5vh] rounded-full hover:text-red-500"
           >
-            Text
+            +Event
           </button>
-          {option === "text" ? (
-            <hr className="w-[7vw] border-white border" />
-          ) : (
-            <hr className="hidden" />
-          )}
-        </div>
-        <div className="flex-col">
           <button
             onClick={(e) => {
-              setoption("image");
+              setevent(console.log(2));
             }}
-            className={`${option === "image" ? 'text-white' : 'text-slate-300' } rounded-full p-[1vh]  px-[3vh] `}
+            className="bg-white p-[1vh] max-[1076px]:mt-3  px-[5vh] rounded-full hover:text-red-500"
           >
-            Posts
+            +Announcement
           </button>
-          {option === "image" ? (
-            <hr className="w-[8vw] border-white border" />
-          ) : (
-            <hr className="hidden" />
-          )}
-        </div>
-        <div className="flex-col">
           <button
             onClick={(e) => {
-              setoption("Poll");
+              setevent(console.log(3));
             }}
-            className={`${option === "Poll" ? 'text-white' : 'text-slate-300' } rounded-full p-[1vh]  px-[3vh] `}
+            className="bg-white p-[1vh] max-[1076px]:mt-3 px-[5vh] rounded-full hover:text-red-500"
           >
-            Poll
+            +Achievement
           </button>
-          {option === "Poll" ? (
-            <hr className="w-[6.5vw] border-white border" />
-          ) : (
-            <hr className="hidden" />
-          )}
         </div>
-      </div>
-      <textarea className="p-[1vw]  text-white rounded-[10px] bg-[#4B4A4A] ml-[28vw] h-[19vw] w-[64vw] mt-[3vw]"></textarea>
-      <div className="ml-[28vw] text-black text-xl space-x-8 mt-[4vh]">
-        <button 
-        onClick={(e) => {
-          setevent(console.log(1));
+        <div 
+        onClick={(e) =>{
+          console.log(text);
         }}
-        className="bg-white p-[1vh] px-[5vh] rounded-full hover:text-red-500">
-          +Event
-        </button>
-        <button 
-        onClick={(e) => {
-          setevent(console.log(2));
-        }}
-        className="bg-white p-[1vh] px-[5vh] rounded-full hover:text-red-500">
-          +Announcement
-        </button>
-        <button 
-        onClick={(e) => {
-          setevent(console.log(3));
-        }}
-        className="bg-white p-[1vh] px-[5vh] rounded-full hover:text-red-500">
-          +Achievement
-        </button>
-      </div>
-      <div 
-      onClick={(e) => {
-        setevent(console.log(4));
-      }}
-      className="ml-[87vw] text-white text-2xl mt-[8vh] hover:font-semibold">
-        <button>Submit</button>
+        className="text-white text-xl flex max-sm:ml-[57vw] ml-[59vw] mt-[3vw] hover:font-semibold cursor-pointer">
+          Submit
+        </div>
       </div>
     </div>
   );
