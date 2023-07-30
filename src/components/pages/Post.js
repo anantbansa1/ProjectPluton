@@ -12,7 +12,7 @@ export default function Text() {
     <div>
       <Navbar></Navbar>
       <div className="flex-col max-[710px]:mx-auto  max-[619px]:mx-auto max-[820px]:space-x-100">
-        <div className="ml-[37vw] flex items-center max-[414px]:mt-8 text-3xl w-[38vw] justify-between  max-[420px]:ml-[12vw]">
+        <div className="ml-[37vw] flex items-center max-[414px]:mt-8 text-3xl w-[80vh] justify-between max-[420px]:ml-[12vw]">
           <div className="flex-col">
             <button
               onClick={(e) => {
@@ -50,14 +50,17 @@ export default function Text() {
             </button>
           </div>
         </div>
-        <div className="bg-[#4B4A4A] ml-[37vw] h-[30vh] w-[50vh] mt-[3vw] mb-[2vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px] max-[420px]:h-[200px]"></div>
-        <textarea className="bg-[#4B4A4A] ml-[32vw] h-[10vh] w-[70vh] mb-[1vh] text-white p-[0.5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]"></textarea>
+        <div className="bg-[#4B4A4A] ml-[37vw] h-[40vh] w-[80vh] mt-[3vw] mb-[5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px] max-[420px]:h-[200px]"></div>
+        <textarea className="bg-[#4B4A4A] ml-[32vw] h-[10vh] w-[100vh] mb-[1vh] text-white p-[0.5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]" onChange={(e)=>{setevent(e.target.value)}
+        }>
+
+        </textarea>
       
-      <div className=" max-[823px]:flex-col space-x-2 flex ml-[32vw] text-black text-xl mt-[3vh] ">
+      <div className=" max-[823px]:flex-col space-x-2 flex ml-[32vw] text-black text-xl mt-[5vh] ">
         <div>
           <button
             onClick={(e) => {
-              setevent(console.log(1));
+              console.log(1);
             }}
             className="bg-white p-[1vh] px-[4vh] rounded-full hover:text-red-500"
           >
@@ -67,7 +70,7 @@ export default function Text() {
         <div>
           <button
             onClick={(e) => {
-              setevent(console.log(2));
+              console.log(2);
             }}
             className="bg-white p-[1vh] px-[4vh] rounded-full hover:text-red-500 max-[823px]:mt-[10px] max-[823px]:mb-[10px]"
           >
@@ -77,7 +80,7 @@ export default function Text() {
         <div>
           <button
             onClick={(e) => {
-              setevent(console.log(3));
+              console.log(3);
             }}
             className="bg-white p-[1vh] px-[4vh] rounded-full hover:text-red-500"
           >
@@ -88,7 +91,7 @@ export default function Text() {
     </div>
       <div
         onClick={(e) => {
-          setevent(console.log(4));
+          console.log(event);
         }}
         className="max-[600px]:mr-[20vw] min-[375px]:ml-[75vw] ml-[100vw] text-white text-2xl mt-[7vh] hover:font-semibold"
       >
