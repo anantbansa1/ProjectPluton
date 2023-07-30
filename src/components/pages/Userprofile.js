@@ -32,9 +32,9 @@ function Userprofile(props) {
   return (
     <div className="">
       <Navbar></Navbar>
-
       <div className="font-montserrat grid gap-y-0 gap-x-0 mt-[7vh] max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(10vh,auto))] max-md:grid-rows-[repeat(3,minmax(14vh,auto))] lg:text-[2rem] text-white">
-        <div className="row-span-1 row-start-1 col-start-1 col-span-4  lg:border-b lg:border-[#626261]">
+        <div className="  row-span-1 row-start-1 col-start-1 col-span-4 my-[2vw]  bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
+          {/* <div className=""> */}
           <div className="flex  items-center space-x-[2vw] pb-[2vw]">
             <div></div>
             <div></div>
@@ -74,6 +74,7 @@ function Userprofile(props) {
                 </div>
               </div>
             </div>
+            {/* </div> */}
           </div>
         </div>
         <div className="grid mx-auto   justify-start items-center  grid-rows-2 grid-cols-[4,minmax(20vw,auto)] gap-2 row-start-1 col-start-3  max-lg:row-start-2 max-lg:col-start-1 col-end-5">
@@ -185,28 +186,28 @@ function Userprofile(props) {
           <div className="mt-[1vw] font-semibold"> Badges </div>
           <div className="row-span-1 col-span-1">
             <img
-              className="h-[20vw] rounded-full lg:h-[20vh] mx-auto text-center"
+              className="h-[20vh]    mx-auto text-center"
               src={BadgeSilver}
               alt=""
             />
           </div>
           <div className="row-span-1 col-span-1">
             <img
-              className="h-[20vw] rounded-full lg:h-[20vh] mx-auto text-center"
+              className="h-[20vh] ] mx-auto text-center"
               src={BadgeGolden}
               alt=""
             />
           </div>
           <div className="row-span-1 col-span-1">
             <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
+              className="h-[20vh]  mx-auto text-center"
               src={BadgeSilver}
               alt=""
             />
           </div>
           <div className="row-span-1 col-span-1">
             <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
+              className="h-[20vh]  mx-auto text-center"
               src={BadgeGolden}
               alt=""
             />
