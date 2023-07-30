@@ -15,7 +15,7 @@ export default function Text() {
     color: grey[100],
   };
   return (
-    <div className="mt-[-2vw]">
+    <div className=" mt-[-2vw]">
       <Navbar></Navbar>
       <div className="flex-col max-md:ml-[20vw] max-md:w-[75vw] ml-[28vw] w-[64vw]">
         <div className=" bg-none  max-md:text-xl  flex items-center mt-[9vh] text-3xl justify-between">
@@ -56,7 +56,7 @@ export default function Text() {
             </button>
           </div>
         </div>
-        <div className="ml-[0vw] max-md:ml-[15vw] my-10">
+        <div className="  max-md:ml-[0vw] my-10">
           <div className=" mx-auto w-[60vw] max-md:w-[75vw] h-fit bg-[#d6d5d959] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white border border-white">
             <div className="text-white  p-[10px]">
             <TextField  color='grey' id="standard-basic" label="Question" variant="outlined" />
