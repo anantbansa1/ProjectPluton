@@ -32,65 +32,67 @@ function Userprofile(props) {
   return (
     <div className="">
       <Navbar></Navbar>
-
-      <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
-        <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
-                  <div className="row-span-1 row-start-1 col-start-1 col-span-4  lg:border-b lg:border-[#626261]">
-          <div className="flex  items-center space-x-[2vw] pb-[2vw]">
-            <div></div>
-            <div></div>
-            <button
-              onClick={handleClickOpen}
-              onMouseOut={(e) => {
-                setprofile(true);
-              }}
-              onMouseOver={(e) => {
-                setprofile(false);
-              }}
-              className="bg-white h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]  rounded-[50%] "
-            >
-              {profile === false ? (
-                <img src={SirfPencil} alt="" className="rounded-[50%]" />
-              ) : (
-                <img
-                  src={props.dp}
-                  alt=""
-                  className=" rounded-[50%] border border-white h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]"
-                />
-              )}
-            </button>
-            <div className="flex flex-col space-y-2">
-              <div className="flex   lg:whitespace-nowrap md:text-[2.25rem] text-md justify-around  w-full font-semibold">
-                <div className="w-fit ">{props.name} </div>
-              </div>
-
-              <div className="flex space-x-[1vh] font-mono ">
-                <div className="text-sm lg:text-lg bg-opacity-30 bg-white w-fit px-3 py-1 rounded-full text-[#c7c6c6]">
-                  {" "}
-                  {"CSE"}
+      <div className="font-montserrat grid gap-y-0 gap-x-0 mt-[7vh] max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(10vh,auto))] max-md:grid-rows-[repeat(3,minmax(14vh,auto))] lg:text-[2rem] text-white">
+        <div className=" bg-[#130f22] shadow-xl rounded-2xl col-span-4 col-start-1 row-start-1 row-span-1 py-8 px-4 shadow-black">
+          <div className="  row-span-1 row-start-1 col-start-1 col-span-2 my-[2vw] ">
+            {/* <div className=""> */}
+            <div className="flex  items-center space-x-[2vw] pb-[2vw]">
+              <div></div>
+              <div></div>
+              <button
+                onClick={handleClickOpen}
+                onMouseOut={(e) => {
+                  setprofile(true);
+                }}
+                onMouseOver={(e) => {
+                  setprofile(false);
+                }}
+                className="bg-white h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]  rounded-[50%] "
+              >
+                {profile === false ? (
+                  <img src={SirfPencil} alt="" className="rounded-[50%]" />
+                ) : (
+                  <img
+                    src={props.dp}
+                    alt=""
+                    className=" rounded-[50%] border border-white h-[5vw] w-[5vw] min-w-[100px] min-h-[100px]"
+                  />
+                )}
+              </button>
+              <div className="flex flex-col space-y-2">
+                <div className="flex   lg:whitespace-nowrap md:text-[2.25rem] text-md justify-around  w-full font-semibold">
+                  <div className="w-fit ">{props.name} </div>
                 </div>
-                <div className="text-sm lg:text-lg bg-opacity-30 bg-white w-fit px-3 py-1 rounded-full text-[#c7c6c6]">
-                  {" "}
-                  {props.rollno}
+
+                <div className="flex space-x-[1vh] font-mono ">
+                  <div className="text-sm lg:text-lg bg-opacity-30 bg-white w-fit px-3 py-1 rounded-full text-[#c7c6c6]">
+                    {" "}
+                    {"CSE"}
+                  </div>
+                  <div className="text-sm lg:text-lg bg-opacity-30 bg-white w-fit px-3 py-1 rounded-full text-[#c7c6c6]">
+                    {" "}
+                    {props.rollno}
+                  </div>
                 </div>
               </div>
+              {/* </div> */}
             </div>
           </div>
-        </div>
-        <div className="grid mx-auto   justify-start items-center  grid-rows-2 grid-cols-[4,minmax(20vw,auto)] gap-2 row-start-1 col-start-3  max-lg:row-start-2 max-lg:col-start-1 col-end-5">
-          <div className="lg:mx-auto max-lg:justify-self-center  max-lg:row-start-1 max-lg:self-end row-start-1 col-start-1 max-lg:col-start-1 text-md md:text-[1.25rem] text-md flex items-center h-fit whitespace-nowrap font-semibold">
-            {" "}
-            {props.joined}
+          <div className=" mx-auto flex   row-start-1 col-start-3 row-span-1 col-span-1 ">
+            <div className="    text-md md:text-[1.25rem] text-md  font-semibold">
+              {" "}
+              {props.joined}
+            </div>
+            <div className="text-sm lg:text-[1.1rem]  text-slate-300  font-normal mr-5">
+              {" "}
+              {"  clubs joined "}
+            </div>
+            <div className="md:text-[1.25rem]  whitespace-nowrap text-md   font-semibold">
+              {" "}
+              {props.points}
+            </div>
           </div>
-          <div className="text-sm lg:text-[1.1rem] max-lg:self-start text-center  text-slate-300 h-fit max-lg:row-start-2 row-start-1 col-start-2  max-lg:col-start-1 font-normal mr-5">
-            {" "}
-            {"  clubs joined "}
-          </div>
-          <div className="md:text-[1.25rem] max-lg:justify-self-center  text-md max-lg:self-end max-lg:row-start-1 row-start-1 col-start-3  max-lg:col-start-3 mx-auto items-center h-fit flex whitespace-nowrap text-md   font-semibold">
-            {" "}
-            {props.points}
-          </div>
-          <div className="text-sm lg:text-[1.1rem]   max-lg:self-start text-center h-fit text-slate-300 max-lg:row-start-2 row-start-1 col-start-4  max-lg:col-start-3 font-normal">
+          <div className="text-sm lg:text-[1.1rem] text-slate-300 max-lg:row-start-2 row-start-1 col-start-4  max-lg:col-start-3 font-normal">
             {"  leaderboard points "}
           </div>
         </div>
@@ -102,120 +104,124 @@ function Userprofile(props) {
         {/* <div className=" col-span-12">
                   <hr  className="h-1" />
         </div> */}
-        <div className="p-2 grid border-r max-lg:border-t  border-[#626261] row-start-2 col-start-1 max-lg:row-start-3   items-center gap-0 text-center max-md:grid-cols-2 md:grid-cols-4 grid-rows-[repeat(5,minmax(5vh,auto))] max-md:grid-rows-[repeat(9,minmax(5vh,auto))] col-span-3 row-span-1  ">
-          <div className="row-span-1 col-span-4 max-md::col-span-2 font-semibold">
-            Medals
+        <div className="  my-[2vw] mr-[2vw] bg-[#130f22] shadow-xl rounded-2xl px-4 shadow-black row-start-2 col-start-1 max-lg:row-start-3 col-span-3 row-span-1">
+          <div className=" grid  max-lg:border-t   items-center gap-y-10 text-center max-md:grid-cols-2 md:grid-cols-4 grid-rows-[repeat(5,minmax(5vh,auto))] max-md:grid-rows-[repeat(9,minmax(5vh,auto))]   ">
+            <div className="row-span-1 col-span-4 max-md::col-span-2 font-semibold">
+              Medals
+            </div>
+            <div className="col-span-1 row-span-1 max-md:row-start-2">
+              <img
+                className="lg:h-[20vh] h-[20vw] mx-auto text-center"
+                src={Rank1}
+                alt=""
+              />{" "}
+            </div>
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1 row-start-3 text-[#c0bebe] max-md:row-start-3">
+              Spring 2023
+            </div>{" "}
+            <div className="col-span-1 row-span-1 max-md:row-start-2">
+              <img
+                className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
+                src={Rank20p}
+                alt=""
+              />
+            </div>
+            <div className="lg:text-xl text-xs  p-1 row-span-1 col-span-1 row-start-3 text-[#c0bebe] max-md:row-start-3">
+              Autumn 2022
+            </div>{" "}
+            <div className="col-span-1 row-span-1 max-md:row-start-4">
+              <img
+                className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
+                src={Rank3}
+                alt=""
+              />
+            </div>
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1 row-start-3 max-md:row-start-5 text-[#c0bebe]">
+              Spring 2022
+            </div>{" "}
+            <div className="col-span-1 row-span-1 max-md:row-start-4">
+              <img
+                className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
+                src={Rank5}
+                alt=""
+              />
+            </div>
+            <div className="lg:text-xl text-xs  p-1 row-span-1 row-start-3 max-md:row-start-5 col-span-1 text-[#c0bebe]">
+              Autumn 2021
+            </div>{" "}
+            <div className="col-span-1 row-span-1 max-md:row-start-6">
+              <img
+                className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
+                src={Rank2}
+                alt=""
+              />
+            </div>
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-7 text-[#c0bebe]">
+              Spring 2021
+            </div>{" "}
+            <div className="col-span-1 row-span-1 max-md:row-start-6">
+              <img
+                className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
+                src={Rank2}
+                alt=""
+              />
+            </div>
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-7 text-[#c0bebe]">
+              Spring 2021
+            </div>{" "}
+            <div className="col-span-1 row-span-1 max-md:row-start-[8] ">
+              <img
+                className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
+                src={Rank2}
+                alt=""
+              />
+            </div>
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-[9] text-[#c0bebe]">
+              Spring 2021
+            </div>{" "}
+            <div className="col-span-1 row-span-1 max-md:row-start-[8]">
+              <img
+                className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
+                src={Rank2}
+                alt=""
+              />
+            </div>
+            <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-[9] text-[#c0bebe]">
+              Spring 2021
+            </div>{" "}
           </div>
-          <div className="col-span-1 row-span-1 max-md:row-start-2">
-            <img
-              className="lg:h-[20vh] h-[20vw] mx-auto text-center"
-              src={Rank1}
-              alt=""
-            />{" "}
-          </div>
-          <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1 row-start-3 text-[#c0bebe] max-md:row-start-3">
-            Spring 2023
-          </div>{" "}
-          <div className="col-span-1 row-span-1 max-md:row-start-2">
-            <img
-              className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
-              src={Rank20p}
-              alt=""
-            />
-          </div>
-          <div className="lg:text-xl text-xs  p-1 row-span-1 col-span-1 row-start-3 text-[#c0bebe] max-md:row-start-3">
-            Autumn 2022
-          </div>{" "}
-          <div className="col-span-1 row-span-1 max-md:row-start-4">
-            <img
-              className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
-              src={Rank3}
-              alt=""
-            />
-          </div>
-          <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1 row-start-3 max-md:row-start-5 text-[#c0bebe]">
-            Spring 2022
-          </div>{" "}
-          <div className="col-span-1 row-span-1 max-md:row-start-4">
-            <img
-              className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
-              src={Rank5}
-              alt=""
-            />
-          </div>
-          <div className="lg:text-xl text-xs  p-1 row-span-1 row-start-3 max-md:row-start-5 col-span-1 text-[#c0bebe]">
-            Autumn 2021
-          </div>{" "}
-          <div className="col-span-1 row-span-1 max-md:row-start-6">
-            <img
-              className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
-              src={Rank2}
-              alt=""
-            />
-          </div>
-          <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-7 text-[#c0bebe]">
-            Spring 2021
-          </div>{" "}
-          <div className="col-span-1 row-span-1 max-md:row-start-6">
-            <img
-              className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
-              src={Rank2}
-              alt=""
-            />
-          </div>
-          <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-7 text-[#c0bebe]">
-            Spring 2021
-          </div>{" "}
-          <div className="col-span-1 row-span-1 max-md:row-start-[8] ">
-            <img
-              className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
-              src={Rank2}
-              alt=""
-            />
-          </div>
-          <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-[9] text-[#c0bebe]">
-            Spring 2021
-          </div>{" "}
-          <div className="col-span-1 row-span-1 max-md:row-start-[8]">
-            <img
-              className="lg:h-[20vh] h-[20vw]  mx-auto text-center"
-              src={Rank2}
-              alt=""
-            />
-          </div>
-          <div className="lg:text-xl text-sm  p-1 row-span-1 col-span-1  row-start-5 max-md:row-start-[9] text-[#c0bebe]">
-            Spring 2021
-          </div>{" "}
         </div>
-        <div className="p-2 items-center row=start-2 max-lg:border-t border-[#626261] max-lg:row-start-3 col-start-4 text-center grid grid-rows-[repeat(5,minmax(5vh,auto))] gap-3 grid-cols-1">
-          <div className="mt-[1vw] font-semibold"> Badges </div>
-          <div className="row-span-1 col-span-1">
-            <img
-              className="h-[20vw] rounded-full lg:h-[20vh] mx-auto text-center"
-              src={BadgeSilver}
-              alt=""
-            />
-          </div>
-          <div className="row-span-1 col-span-1">
-            <img
-              className="h-[20vw] rounded-full lg:h-[20vh] mx-auto text-center"
-              src={BadgeGolden}
-              alt=""
-            />
-          </div>
-          <div className="row-span-1 col-span-1">
-            <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
-              src={BadgeSilver}
-              alt=""
-            />
-          </div>
-          <div className="row-span-1 col-span-1">
-            <img
-              className="h-[20vw] lg:h-[20vh] mx-auto text-center"
-              src={BadgeGolden}
-              alt=""
-            />
+        <div className=" my-[2vw] mr-[2vw] row-start-2 max-lg:row-start-3 col-start-4  bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
+          <div className="p-2 items-center   text-center grid grid-rows-[repeat(5,minmax(5vh,auto))] gap-3 grid-cols-1">
+            <div className="mt-[1vw] font-semibold"> Badges </div>
+            <div className="row-span-1 col-span-1">
+              <img
+                className="h-[20vh]    mx-auto text-center"
+                src={BadgeSilver}
+                alt=""
+              />
+            </div>
+            <div className="row-span-1 col-span-1">
+              <img
+                className="h-[20vh] ] mx-auto text-center"
+                src={BadgeGolden}
+                alt=""
+              />
+            </div>
+            <div className="row-span-1 col-span-1">
+              <img
+                className="h-[20vh]  mx-auto text-center"
+                src={BadgeSilver}
+                alt=""
+              />
+            </div>
+            <div className="row-span-1 col-span-1">
+              <img
+                className="h-[20vh]  mx-auto text-center"
+                src={BadgeGolden}
+                alt=""
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <Userprofile
-        name="Uday Yadav"
+        name="John Doe"
         rollno="41521069"
         dp={zoro}
         joined="5"
