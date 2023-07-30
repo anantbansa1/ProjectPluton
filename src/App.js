@@ -1,9 +1,10 @@
 import "./App.css";
-import Navbar from "./components/Navbar";
+import Addnewclub from "./components/pages/Addnewclub";
 function App() {
   return (
     <>
-      <Navbar></Navbar>
+      <Addnewclub>
+      </Addnewclub>
     </>
   );
 }
