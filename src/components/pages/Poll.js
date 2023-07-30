@@ -73,7 +73,7 @@ function Poll(props) {
                     />{" "}
                     <div className="flex">{props.option1}</div>
                   </div>
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 text-sm py-1 max-sm:text-xs bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {props.votes1} votes
                   </div>
@@ -98,7 +98,7 @@ function Poll(props) {
                     />{" "}
                     <div className="flex">{props.option2}</div>
                   </div>
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 text-sm py-1 max-sm:text-xs bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {props.votes2} votes
                   </div>
@@ -123,7 +123,7 @@ function Poll(props) {
                     />{" "}
                     <div className="flex">{props.option3}</div>
                   </div>
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 text-sm py-1 max-sm:text-xs bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {props.votes3} votes
                   </div>
@@ -148,7 +148,7 @@ function Poll(props) {
                     />{" "}
                     <div className="flex">{props.option4}</div>
                   </div>
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 text-sm py-1 max-sm:text-xs bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {props.votes4} votes
                   </div>
