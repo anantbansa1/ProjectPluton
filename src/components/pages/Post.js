@@ -11,8 +11,8 @@ export default function Text() {
   return (
     <div>
       <Navbar></Navbar>
-      <div className="flex-col max-[710px]:mx-auto  max-[619px]:mx-auto max-[820px]:space-x-100">
-        <div className="ml-[37vw] flex items-center max-[414px]:mt-8 text-3xl w-[80vh] justify-between max-[420px]:ml-[12vw]">
+      <div className="flex-col max-[710px]:mx-auto  max-[619px]:mx-auto max-[820px]:space-x-100 mt-2">
+        <div className="ml-[37vw] flex items-center max-[414px]:ml-[10vh] max-[414px]:w-[75vw] max-[414px]:mt-1 max-[414px]:text-xl text-3xl w-[80vh] justify-between">
           <div className="flex-col">
             <button
               onClick={(e) => {
@@ -50,14 +50,14 @@ export default function Text() {
             </button>
           </div>
         </div>
-        <div className="bg-[#4B4A4A] ml-[37vw] h-[40vh] w-[80vh] mt-[3vw] mb-[5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px] max-[420px]:h-[200px]"></div>
-        <textarea className="bg-[#4B4A4A] ml-[32vw] h-[10vh] w-[100vh] mb-[1vh] text-white p-[0.5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]" onChange={(e)=>{setevent(e.target.value)}
-        }>
-
-        </textarea>
-      
-      <div className=" max-[823px]:flex-col space-x-2 flex ml-[32vw] text-black text-xl mt-[5vh] ">
-        <div>
+        <div className="max-[414px]:ml-[3vw]">
+          <div className="bg-[#4B4A4A] ml-[37vw] h-[40vh] w-[80vh] mt-[3vw] mb-[5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]  max-[420px]:h-[200px]"></div>
+          <textarea className="bg-[#4B4A4A] ml-[32vw] h-[10vh] w-[100vh] mb-[1vh] text-white p-[0.5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]" onChange={(e)=>{setevent(e.target.value)}
+          }>
+          </textarea>
+        </div>
+      <div className=" max-[823px]:flex-col space-x-2 flex ml-[32vw] max-[414px]:ml-[20vw] text-black text-xl mt-[3vh] ">
+        <div className="max-[414px]:ml-[2vw] ml-[2vw]">
           <button
             onClick={(e) => {
               console.log(1);
@@ -93,7 +93,7 @@ export default function Text() {
         onClick={(e) => {
           console.log(event);
         }}
-        className="max-[600px]:mr-[20vw] min-[375px]:ml-[75vw] ml-[100vw] text-white text-2xl mt-[7vh] hover:font-semibold"
+        className="max-sm:mr-[20vw] min-[375px]:ml-[75vw] max-[414px]:mt-[4vh] ml-[100vw] text-white  max-[414px]:text-[xl] text-2xl mt-[8vh] hover:font-semibold"
       >
         <button>Submit</button>
       </div>
