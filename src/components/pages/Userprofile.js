@@ -33,8 +33,9 @@ function Userprofile(props) {
     <div className="">
       <Navbar></Navbar>
 
-      <div className="font-montserrat grid gap-y-0 gap-x-0 mt-[7vh] max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(10vh,auto))] max-md:grid-rows-[repeat(3,minmax(14vh,auto))] lg:text-[2rem] text-white">
-        <div className="row-span-1 row-start-1 col-start-1 col-span-4  lg:border-b lg:border-[#626261]">
+      <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
+        <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
+                  <div className="row-span-1 row-start-1 col-start-1 col-span-4  lg:border-b lg:border-[#626261]">
           <div className="flex  items-center space-x-[2vw] pb-[2vw]">
             <div></div>
             <div></div>
@@ -93,6 +94,11 @@ function Userprofile(props) {
             {"  leaderboard points "}
           </div>
         </div>
+          </div>
+        </div>
+
+      <div className="font-montserrat grid gap-y-0 gap-x-0 mt-[7vh] max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(10vh,auto))] max-md:grid-rows-[repeat(3,minmax(14vh,auto))] lg:text-[2rem] text-white">
+
         {/* <div className=" col-span-12">
                   <hr  className="h-1" />
         </div> */}
