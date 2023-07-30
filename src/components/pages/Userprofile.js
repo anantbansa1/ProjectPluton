@@ -96,11 +96,6 @@ function Userprofile(props) {
             {"  leaderboard points "}
           </div>
         </div>
-          </div>
-        </div>
-
-      <div className="font-montserrat grid gap-y-0 gap-x-0 mt-[7vh] max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(10vh,auto))] max-md:grid-rows-[repeat(3,minmax(14vh,auto))] lg:text-[2rem] text-white">
-
         {/* <div className=" col-span-12">
                   <hr  className="h-1" />
         </div> */}
