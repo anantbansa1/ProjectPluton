@@ -3,6 +3,7 @@ import Navbar from "../Navbar";
 import Minions from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
 import Zoro from "../Images/zoro.jpg";
+import Post from "./Post"
 
 export default function UserFeed() {
   const [post, underline] = useState("text");
@@ -82,7 +83,7 @@ export default function UserFeed() {
           </button>
         </div>
 
-        <div className="feed ">
+         {/* <div className="feed ">
           <div>
             <div className="ml-[20vw] flex items-center text-white ">
               <div className="flex flex-row  space-x-[35vw] items-center ">
@@ -114,8 +115,9 @@ export default function UserFeed() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
+      <Post name = "Club Name" ClubImage = {Tanjiro} image = {Tanjiro} text = "Caption" date = "Date" time = "Time"></Post>
 
       <div className="logos absolute right-[4vw] top-[3vw] flex-col max-[769px]:hidden">
         <button className="">
