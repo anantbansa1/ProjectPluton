@@ -16,6 +16,7 @@ import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
 import Post from "./Post";
 import GroupIcon from "@mui/icons-material/Group";
+import Poll from "./Poll"
 
 function ClubProfile(props) {
   const [profile, setprofile] = useState(true);
@@ -448,6 +449,31 @@ function ClubProfile(props) {
           time="10:24 PM"
         ></Post>
       )}
+
+
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+
+      
+
       <Dialog
         open={open}
         onClose={handleClose}

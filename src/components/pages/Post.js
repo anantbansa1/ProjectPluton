@@ -13,7 +13,7 @@ function post(props) {
             />
             <div className="max-md:text-sm">{props.name}</div>
           </div>
-          <div className="my-5">{/* <img src={props.image} alt="" /> */}</div>
+          <div className="my-5"><img src={props.image} alt="" /></div>
           <div className="text-lg max-md:text-sm text-[#dddbdb] ">
             <span className="font-bold text-white">{props.name}</span>{" "}
             {props.text}
