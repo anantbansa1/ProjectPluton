@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function post(props) {
   return (
@@ -13,20 +13,23 @@ function post(props) {
             />
             <div className="max-md:text-sm">{props.name}</div>
           </div>
-          <div className="my-5">
-            <img src={props.image} alt="" />
-          </div>
+          <div className="my-5">{/* <img src={props.image} alt="" /> */}</div>
           <div className="text-lg max-md:text-sm text-[#dddbdb] ">
-            <span className="font-bold text-white">{props.name}</span> {props.text}
+            <span className="font-bold text-white">{props.name}</span>{" "}
+            {props.text}
           </div>
           <div className="flex justify-between mx-2 ">
-            <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">{props.date}</div>
-            <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">{props.time}</div>
+            <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">
+              {props.date}
+            </div>
+            <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">
+              {props.time}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default post
+export default post;

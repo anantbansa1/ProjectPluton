@@ -15,6 +15,7 @@ import ReactCrop from "react-image-crop";
 import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
 import Post from "./Post";
+import GroupIcon from "@mui/icons-material/Group";
 
 function ClubProfile(props) {
   const [profile, setprofile] = useState(true);
@@ -27,7 +28,7 @@ function ClubProfile(props) {
   const previewCanvasRef = useRef(null);
   const [crop, setCrop] = useState({ aspect: 1, height: 500 });
   const [changeCover, setChangeCover] = useState(false);
-
+  const [underline, setUnderline] = useState("post");
   const [upImgCover, setUpImgCover] = useState(CoverImage);
   const imgRefCover = useRef(null);
   const previewCanvasRefCover = useRef(null);
@@ -174,7 +175,11 @@ function ClubProfile(props) {
   }, []);
 
   useEffect(() => {
-    setCanvasImageCover(imgRefCover.current, previewCanvasRefCover.current, completedCropCover);
+    setCanvasImageCover(
+      imgRefCover.current,
+      previewCanvasRefCover.current,
+      completedCropCover
+    );
   }, [completedCropCover]);
   const handleClickOpenCover = () => {
     setOpenCover(true);
@@ -193,6 +198,7 @@ function ClubProfile(props) {
               src={CoverImage}
               alt=""
               className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
+              onClick={handleClickOpenCover}
               onMouseOver={(e) => {
                 setChangeCover(true);
               }}
@@ -201,14 +207,22 @@ function ClubProfile(props) {
               }}
             />
           </div>
-              <button  onMouseOver={(e) => {
-                setChangeCover(true);
-              }}
-              onClick={handleClickOpenCover}
-              onMouseOut={(e) => {
-                setChangeCover(false);
-              }} className={`${changeCover?"":"hidden"} px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}>Edit Cover Photo</button>
-          <div className="max-sm:col-start-3  row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
+          <button
+            onMouseOver={(e) => {
+              setChangeCover(true);
+            }}
+            // onClick={handleClickOpen}
+            onClick={handleClickOpenCover}
+            onMouseOut={(e) => {
+              setChangeCover(false);
+            }}
+            className={`${
+              changeCover ? "" : "hidden"
+            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+          >
+            Edit Cover Photo
+          </button>
+          <div className="max-sm:mx-auto max-sm:col-start-4 items-center row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
             <div className=" ">
               <button
                 onClick={handleClickOpen}
@@ -218,7 +232,7 @@ function ClubProfile(props) {
                 onMouseOver={(e) => {
                   setprofile(false);
                 }}
-                className="bg-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
+                className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
               >
                 {profile === false ? (
                   <img
@@ -238,24 +252,39 @@ function ClubProfile(props) {
           </div>
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
-          <div className="max-sm:col-start-2 max-sm:col-span-5 row-start-6 col-start-2  row-span-1 col-span-2">
+          <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
             <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-lg text-white font-semibold mix-blend-difference">
               {" "}
               {props.name}{" "}
             </div>
           </div>
-          <div className="row-start-7 col-start-2 row-span-2 col-span-3 max=sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
+          <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
             {props.desc}
           </div>
-          <div className="row-start-6 max-sm:col-start-2 max-sm:col-span-2 o max-sm:justify-self-start max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
-            <button className="px-4 py-2 max-sm:px-2 lg:text-lg text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white">
-              {" "}
-              Apply Now
-            </button>
-          </div>
-          <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-2 max-sm:justify-self-end max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
-            <button className="pr-4 pl-4 max-sm:px-2  lg:text-lg text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
+          {props.Role === "user" && (
+            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-self-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+              <button
+                className={`px-4 py-2 max-sm:mt-2  max-sm:w-[25vw] lg:text-lg text-xs text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                Apply Now
+              </button>
+            </div>
+          )}
+          {props.Role !== "user" && (
+            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+              <button
+                className={`px-4 py-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[25vw] lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                <GroupIcon className="scale-[80%]" />
+                &nbsp; <div>Pending</div>
+              </button>
+            </div>
+          )}
+          <div className="row-start-6 max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
+            <button className="pr-4 pl-4 max-sm:mt-2 max-sm:w-[30vw]  lg:text-lg text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
               57 members
             </button>
           </div>
@@ -264,12 +293,16 @@ function ClubProfile(props) {
         <div className="flex max-sm:mt-5  items-center ">
           <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
             <div
-              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${props.clubpoint>=props.tgold?"hidden":""} ${color}`}
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                props.clubpoint >= props.tgold ? "hidden" : ""
+              } ${color}`}
             >
               {pointleft} points to {badge}
             </div>
             <div
-              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${props.clubpoint>=props.tgold?"":"hidden"} ${color}`}
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                props.clubpoint >= props.tgold ? "" : "hidden"
+              } ${color}`}
             >
               {props.clubpoint} points
             </div>
@@ -352,44 +385,69 @@ function ClubProfile(props) {
       <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] max-md:py-4 py-8 px-4 shadow-black text-white">
         <div className="flex space-x-[5vw] max-md:space-x-4 max-md:text-lg text-3xl justify-center">
           {" "}
-          <button className="border-b border-white py-4  px-8">Post</button>
-          <button className=" border-white py-4 px-8">Poll</button>
+          <button
+            className={`${
+              underline === "post" ? "border-b" : ""
+            } border-white py-4  px-8`}
+            onClick={(e) => {
+              setUnderline("post");
+            }}
+          >
+            Post
+          </button>
+          <button
+            className={`${
+              underline === "poll" ? "border-b" : ""
+            } border-white py-4  px-8`}
+            onClick={(e) => {
+              setUnderline("poll");
+            }}
+          >
+            Poll
+          </button>
         </div>
       </div>
 
-      <Post
-        name={props.name}
-        ClubImage={props.clubimage}
-        image={Zoro}
-        text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-        date="7/29/2023"
-        time="10:24 PM"
-      ></Post>
-      <Post
-        name={props.name}
-        ClubImage={props.clubimage}
-        image={Zoro}
-        text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-        date="7/29/2023"
-        time="10:24 PM"
-      ></Post>
-      <Post
-        name={props.name}
-        ClubImage={props.clubimage}
-        image={Zoro}
-        text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-        date="7/29/2023"
-        time="10:24 PM"
-      ></Post>
-      <Post
-        name={props.name}
-        ClubImage={props.clubimage}
-        image={Zoro}
-        text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-        date="7/29/2023"
-        time="10:24 PM"
-      ></Post>
-
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -417,7 +475,6 @@ function ClubProfile(props) {
                 accept="image/*"
                 onChange={onSelectFile}
               ></input>
-              {/* <button className="hover:underline" onClick={setclubimage(gold)}> Unset Photo</button> */}
             </div>
           </DialogContentText>
         </DialogContent>
@@ -448,7 +505,7 @@ function ClubProfile(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Change Profile Picture"}
+          {"Change Cover Picture"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -483,14 +540,18 @@ function ClubProfile(props) {
           </div>
           <button
             className="mx-3 bg-black text-white px-3 py-2 "
-            onClick={() => SaveChangesCover(previewCanvasRefCover.current, completedCropCover)}
+            onClick={() =>
+              SaveChangesCover(
+                previewCanvasRefCover.current,
+                completedCropCover
+              )
+            }
             autoFocus
           >
             Save Changes
           </button>
         </DialogActions>
       </Dialog>
-
     </div>
   );
 }
