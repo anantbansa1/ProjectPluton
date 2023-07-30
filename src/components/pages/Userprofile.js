@@ -32,7 +32,7 @@ function Userprofile(props) {
   return (
     <div className="">
       <Navbar></Navbar>
-      <div className="font-montserrat grid gap-y-0 gap-x-0 mt-[7vh] max-md:ml-[15vw] ml-[20vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(10vh,auto))] max-md:grid-rows-[repeat(3,minmax(14vh,auto))] lg:text-[2rem] text-white">
+      <div className="font-montserrat grid gap-y-0 gap-x-0 mt-[7vh] max-md:ml-[18vw] mr-[2vw] ml-[22vw] text-[1.35rem] grid-cols-4 grid-rows-[repeat(2,minmax(10vh,auto))] max-md:grid-rows-[repeat(3,minmax(14vh,auto))] lg:text-[2rem] text-white">
         <div className=" bg-[#130f22] shadow-xl rounded-2xl s  col-span-4 col-start-1 row-start-1 row-span-1 py-8 px-4 shadow-black">
           <div className="  row-span-1 row-start-1 col-start-1 col-span-2 my-[2vw] ">
             {/* <div className=""> */}
