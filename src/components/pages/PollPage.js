@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar";
+import Poll from "./Poll";
 
 export default function UserFeed() {
   const [post, underline] = useState(true);
@@ -151,6 +152,11 @@ export default function UserFeed() {
           </div>
         </div>
       </div>
+      
+
+      <Poll></Poll>
+
+
 
       <div className="logos absolute right-[4vw] top-[3vw] flex-col">
         <button className="bg-white h-[6vw] w-[6vw] rounded-[50%] mb-[2vh]"></button>
