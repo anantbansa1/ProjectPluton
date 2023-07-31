@@ -3,7 +3,7 @@ import Navbar from "../Navbar";
 import Minions from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
 import Zoro from "../Images/zoro.jpg";
-import Post from "./Post";
+import Post from "./Post"
 
 export default function UserFeed() {
   const [post, underline] = useState("text");
@@ -20,30 +20,24 @@ export default function UserFeed() {
                 onClick={(e) => {
                   underline("Post");
                 }}
-                className="w-[7vw] text-center"
+                className={`p-[1vh] px-[3vh] border-white ${
+                  post === "Post" ? "border-b text-white" : "text-slate-300"
+                }`}
               >
                 Post
               </button>
-              {post === "Post" ? (
-                <hr className="max-[570px]:w-[9vw] w-[7vw] border-white border" />
-              ) : (
-                <hr className="hidden" />
-              )}
             </div>
             <div className="leading-10">
               <button
                 onClick={(e) => {
                   underline("Poll");
                 }}
-                className="w-[5vw] text-center"
+                className={`p-[1vh] px-[3vh] border-white ${
+                  post === "Poll" ? "border-b text-white" : "text-slate-300"
+                }`}
               >
                 Poll
               </button>
-              {post === "Poll" ? (
-                <hr className=" max-[570px]:w-[8vw] w-[5.5vw] border-white border" />
-              ) : (
-                <hr className="hidden" />
-              )}
             </div>
           </div>
           <hr
@@ -82,18 +76,8 @@ export default function UserFeed() {
             </div>
           </button>
         </div>
-
-        <div className="feed ">
-          <Post
-            name="Club Name"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Caption"
-            date="Date"
-            time="Time"
-          ></Post>
-        </div>
       </div>
+      <Post name = "Club Name" ClubImage = {Tanjiro} image = {Tanjiro} text = "Caption" date = "Date" time = "Time"></Post>
 
       <div className="logos absolute right-[4vw] top-[3vw] flex-col max-[769px]:hidden">
         <button className="">
@@ -223,8 +207,7 @@ export default function UserFeed() {
               alt=""
               className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
+          </button><button className="">
             <img
               src={Minions}
               alt=""
