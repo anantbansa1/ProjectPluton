@@ -205,111 +205,55 @@ export default function UserFeed() {
         />
       ) : (
         // <img src={Zoro} alt="" className="h-[20vw] w-[15vw] fixed top-10 right-1"/>
-        <div className=" min-[769px]:hidden bg-[#ffffff72] h-[100vh] w-[12vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
+        <div className=" min-[769px]:hidden flex flex-col bg-white backdrop-filter bg-opacity-10 backdrop-blur-2xl h-[100vh] w-[20vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
           <button className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] mt-[2vw] ml-[1vw]"
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
           </button>
-          <br />
           <button className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
           </button>
-          <br />
           <button className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
           </button>
-          <br />
           <button className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
           </button>
-          <br />
           <button className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
           </button>
-          <br />
           <button className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <br />
-          <button className="">
+          </button><button className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
           </button>
-          <br />
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
-            />
-          </button>
-          <br />
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
-            />
-          </button>
-          <br />
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
-            />
-          </button>
-          <br />
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
-            />
-          </button>
-          <br />
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
-            />
-          </button>
-          <br />
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[10vw] w-[10vw] rounded-[50%] mb-[2vh] ml-[1vw]"
-            />
-          </button>
-          <br />
         </div>
       )}
     </div>
