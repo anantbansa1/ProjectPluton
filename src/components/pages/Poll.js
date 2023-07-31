@@ -39,7 +39,7 @@ function Poll(props) {
 
   return (
     <div>
-      <div className="ml-[20vw] max-md:ml-[15vw] my-10">
+      <div className="ml-[10vw] max-md:ml-[15vw] my-10">
         <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
           <div className="flex font-semibold items-center space-x-5">
             <img
