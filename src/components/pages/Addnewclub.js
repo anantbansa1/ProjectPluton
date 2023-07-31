@@ -25,12 +25,12 @@ export default function Addnewclub(props) {
     <div>
     <Navbar></Navbar>
       <div className="ml-[20vw] max-md:ml-[15vw] my-10">
-        <div className=" mx-auto w-[50vw] text-center max-md:w-[75vw] h-[40vw] bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white text-2xl">
-          <div className="mx-auto px-1 py-1 h-[3vw] w-[20vw]  mb-[1vh] font-semibold font-orbitron">
+        <div className=" mx-auto w-[60vw] text-center max-md:w-[75vw] h-[80vh] bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white text-2xl">
+          <div className="flex flex-col items-start h-[60vh] max-[414px]:h-[80vh] ">
+          <div className="mx-auto h-[5vh] w-[40vh] min-[375px]:w-[30vh] mb-[2vh] min-[375px]:mb-[5vh] font-semibold ">
             Add New Club
           </div>
-          <div className="flex flex-col items-start">
-            <div className="flex items-center">
+          <div className="flex flex-col h-[8vw] w-[40vw] min-[414px]:h-[15vh] items-start">
               <button 
                 onClick={handleClickOpen}
                 onMouseOut={(e) => {
@@ -39,8 +39,8 @@ export default function Addnewclub(props) {
                 onMouseOver={(e) => {
                   setprofile(false);
                 }}
-                className="bg-white mr-auto h-[6vw] w-[6vw] min-w-[60px] min-h-[60px] object-cover rounded-[50%] "
-              >
+                className="bg-white mr-auto h-[10vw] w-[10vw] min-w-[100px] min-h-[100px] min-[375px]:w-[100px] min-[375px]:h-[100px] object-cover rounded-[50%] "
+                >
                 {profile === false ? (
                   <img
                     src={SirfPencil}
@@ -51,15 +51,13 @@ export default function Addnewclub(props) {
                   <img
                     src={ClubImage}
                     alt=""
-                    className=" rounded-[50%] object-cover border-2 border-white h-[6vw] w-[6vw] min-w-[60px] min-h-[60px]"
+                    className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[100px] min-h-[100px] min-[375px]:w-[100px] min-[375px]:h-[100px]"
                   />
                 )}
               </button>
-              <div className="ml-3">
-                Club Logo
               </div>
-            </div>
-            <div className="mt-[2vw]">
+            <div className="flex flex-col max-[414px]:justify-center max-[414px]:w-[60vw] h-[43vh] max-[414px]:mt-[25vw] max-[414px]:h-[40vh] ">
+            <div className="mt-[1vw]">
              <ThemeProvider theme={theme}>
               <TextField
               onChange={(e) => {
@@ -85,17 +83,17 @@ export default function Addnewclub(props) {
               id="myfilled-name" 
               label="Club Name" 
               variant="filled" 
-              color="secondary"
+              color="grey"
               inputProps={{
                 style: {
                   height: "3vh",
-                  width: "45vw"
+                  width: "55vw",
                 },
               }}
               />
             </ThemeProvider>
            </div>
-            <div className="mt-[3vw]">
+            <div className="max-[375px]:mt-[5vw] mt-[2vw]">
              <ThemeProvider theme={theme}>
               <TextField
               onChange={(e) => {
@@ -125,13 +123,14 @@ export default function Addnewclub(props) {
               inputProps={{
                 style: {
                   height: "3vh",
-                  width: "45vw"
+                  width: "55vw ",
                 },
               }}
+              
               />
             </ThemeProvider>
            </div>
-            <div className="mt-[3vw]">
+            <div className="max-[375px]:mt-[5vw] mt-[2vw]">
              <ThemeProvider theme={theme}>
               <TextField
               onChange={(e) => {
@@ -160,8 +159,8 @@ export default function Addnewclub(props) {
               color="secondary"
               inputProps={{
                 style: {
-                  height: "3vh",
-                  width: "45vw"
+                  height: "3vh ",
+                  width: "55vw "
                 },
               }}
               />
@@ -170,12 +169,14 @@ export default function Addnewclub(props) {
            <button
            onClick={(e) => {
             console.log(event);
-          }} 
-           className="bg-[#060606] shadow-xl rounded-lg px-6 py-2 self-center mt-[8vh] text-xl text-[#FFFFFF] hover:bg-opacity-50 ">
+            }} 
+           className="bg-[#060606] max-[414px]:self-center shadow-xl rounded-lg px-6 py-2 self-center mt-[8vh] text-xl text-[#FFFFFF] hover:bg-opacity-50 ">
             Add
            </button>
+           </div>
           </div>
-        </div>
+          </div>
+        
       </div>
     </div>
   )
