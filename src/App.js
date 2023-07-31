@@ -7,11 +7,12 @@ function App() {
   return (
     <>
       <Userprofile
-        name="Uday Yadav"
+        name="John Doe"
         rollno="41521069"
-        dp={zoro}
-        joined="5"
-        points="45"
+        clubimage={zoro}
+        coverimage={zoro}
+        desc="
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo sapiente laboriosam ratione, vero doloribus possimus et ut deserunt animi distinctio? Facilis tenetur commodi molestias minima, dicta possimus earum qui quaerat."
       ></Userprofile>
     </>
   );

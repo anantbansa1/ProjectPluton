@@ -14,15 +14,11 @@ import React, { useCallback, useRef, useEffect } from "react";
 import ReactCrop from "react-image-crop";
 import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
-import Rank5 from "../Images/rank5.png";
-import Rank1 from "../Images/rank1.png";
-import Rank3 from "../Images/rank3.png";
-import Rank20p from "../Images/rank20p.png";
-import Rank2 from "../Images/rank2.png";
-import { Leaderboard } from "@mui/icons-material";
+import Post from "./Post";
+import GroupIcon from "@mui/icons-material/Group";
+import Poll from "./Poll"
 
 function ClubProfile(props) {
-  const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
   const [ClubImage, setclubimage] = useState(props.clubimage);
   const [CoverImage, setcoverimage] = useState(props.coverimage);
@@ -33,6 +29,7 @@ function ClubProfile(props) {
   const previewCanvasRef = useRef(null);
   const [crop, setCrop] = useState({ aspect: 1, height: 500 });
   const [changeCover, setChangeCover] = useState(false);
+  const [underline, setUnderline] = useState("post");
   const [upImgCover, setUpImgCover] = useState(CoverImage);
   const imgRefCover = useRef(null);
   const previewCanvasRefCover = useRef(null);
@@ -257,241 +254,225 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
+            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-lg text-white font-semibold mix-blend-difference">
               {" "}
               {props.name}{" "}
             </div>
           </div>
-          <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
+          <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
             {props.desc}
           </div>
-
-          <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1 max-[375px]:m-0  max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
-            <button
-              className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
-            >
-              {" "}
-              &nbsp; <div>3 Clubs Joined</div>
-            </button>
-          </div>
-
+          {props.Role === "user" && (
+            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-self-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+              <button
+                className={`px-4 py-2 max-sm:mt-2  max-sm:w-[25vw] lg:text-lg text-xs text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                Apply Now
+              </button>
+            </div>
+          )}
+          {props.Role !== "user" && (
+            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+              <button
+                className={`px-4 py-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[25vw] lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                <GroupIcon className="scale-[80%]" />
+                &nbsp; <div>Pending</div>
+              </button>
+            </div>
+          )}
           <div className="row-start-6 max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
-            <button className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
-              <Leaderboard className="scale-[80%]"></Leaderboard>{" "}
-              <div>&nbsp;3 Rank</div>
+            <button className="pr-4 pl-4 max-sm:mt-2 max-sm:w-[30vw]  lg:text-lg text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
+              57 members
             </button>
           </div>
           <div className="row-start-6 col-start-7"></div>
         </div>
-      </div>
-
-      <div className="max-lg:hidden flex space-x-[3vw] md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] max-md:py-4 py-8 px-4 shadow-black text-white">
-        <div className="flex flex-col space-y-8 w-[50vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
-          <div className="p-4 max-lg:text-lg text-2xl">
-            Medals &nbsp;
-            <span className="text-green-500 font-semibold"> 8 </span>
-          </div>
-          <div className="flex  justify-start flex-wrap">
-            <img src={Rank1} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-          </div>
-        </div>
-        <div className="flex max-lg:hidden flex-col w-[20vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
-          <div className="p-4 max-lg:text-lg text-2xl">
-            Badges &nbsp;
-            <span className="text-green-500 font-semibold"> 3 </span>
-          </div>
-          <div className="flex max-[1300px]:justify-around flex-wrap">
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-center md:ml-[22vw] mr-[2vw] mt-8 ml-[18vw]">
-        <div className=" lg:hidden flex-col w-[80vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
-          <div className="flex space-x-4 justify-center">
-            <button
-              className={`px-4 py-2 ${medal ? "border-b" : ""} border-white`}
-              onClick={(e) => {
-                setmedal(true);
-              }}
+        <div className="flex max-sm:mt-5  items-center ">
+          <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
+            <div
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                props.clubpoint >= props.tgold ? "hidden" : ""
+              } ${color}`}
             >
-              Medals
-            </button>
-            <button
-              className={`px-4 py-2 ${medal ? "" : "border-b"} border-white`}
-              onClick={(e) => {
-                setmedal(false);
-              }}
+              {pointleft} points to {badge}
+            </div>
+            <div
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                props.clubpoint >= props.tgold ? "" : "hidden"
+              } ${color}`}
             >
-              Badges
-            </button>
+              {props.clubpoint} points
+            </div>
+            <div
+              className={`row-start-1 ${
+                props.clubpoint < props.tbronze ? "" : "hidden"
+              } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+              style={{
+                width:
+                  ((props.clubpoint / props.tbronze) * 100).toString() + "%",
+              }}
+            />
+            <div
+              className={`row-start-1 ${
+                props.clubpoint < props.tbronze ? "" : "hidden"
+              } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+            />
+            <div
+              className={`row-start-1 ${
+                props.clubpoint < props.tsilver &&
+                props.clubpoint >= props.tbronze
+                  ? ""
+                  : "hidden"
+              } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+              style={{
+                width:
+                  (
+                    ((props.clubpoint - props.tbronze) /
+                      (props.tsilver - props.tbronze)) *
+                    100
+                  ).toString() + "%",
+              }}
+            />
+            <div
+              className={`row-start-1 ${
+                props.clubpoint < props.tsilver &&
+                props.clubpoint >= props.tbronze
+                  ? ""
+                  : "hidden"
+              } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+            />
+            <div
+              className={`row-start-1  ${
+                props.clubpoint >= props.tsilver ? "" : "hidden"
+              }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+              style={{
+                width:
+                  props.clubpoint > props.tgold
+                    ? "100%"
+                    : (
+                        ((props.clubpoint - props.tsilver) /
+                          (props.tgold - props.tsilver)) *
+                        100
+                      ).toString() + "%",
+              }}
+            />
+            <div
+              className={`row-start-1 ${
+                props.clubpoint >= props.tsilver ? "" : "hidden"
+              }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+            />
           </div>
-          {medal && (
-            <div className="flex mt-5 justify-center  flex-wrap">
-              <img src={Rank1} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
+          <div className="grid grid-rows-1 items-center grid-cols-1">
+            <div className="  mx-auto row-start-1  col-start-1 ">
+              <img
+                src={image}
+                alt=""
+                className="sm:h-[150px]  h-[70px] object-cover "
+              />
             </div>
-          )}
-          {!medal && (
-            <div className="flex mt-5 justify-center  flex-wrap">
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-          )}
+            <img
+              src={ClubImage}
+              alt=""
+              className="row-start-1 col-start-1 mx-auto sm:h-[100px] sm:w-[100px] h-[50px] w-[50px] rounded-full  object-cover "
+            />
+          </div>
         </div>
       </div>
+
+      <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] max-md:py-4 py-8 px-4 shadow-black text-white">
+        <div className="flex space-x-[5vw] max-md:space-x-4 max-md:text-lg text-3xl justify-center">
+          {" "}
+          <button
+            className={`${
+              underline === "post" ? "border-b" : ""
+            } border-white py-4  px-8`}
+            onClick={(e) => {
+              setUnderline("post");
+            }}
+          >
+            Post
+          </button>
+          <button
+            className={`${
+              underline === "poll" ? "border-b" : ""
+            } border-white py-4  px-8`}
+            onClick={(e) => {
+              setUnderline("poll");
+            }}
+          >
+            Poll
+          </button>
+        </div>
+      </div>
+
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
+      {underline === "post" && (
+        <Post
+          name={props.name}
+          ClubImage={ClubImage}
+          image={Zoro}
+          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
+          date="7/29/2023"
+          time="10:24 PM"
+        ></Post>
+      )}
+
+
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+      {underline === "poll" && (
+        <Poll name={props.name} option1="Option 1" votes1={6} votes2={9} votes3={4} votes4={2} option2="Option 2" option3="Option 3" option4="Option 4" ClubImage={ClubImage} question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?" date="7/29/2023"
+        time="10:24 PM"></Poll>
+      )}
+
+      
 
       <Dialog
         open={open}
