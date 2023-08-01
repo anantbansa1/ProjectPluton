@@ -130,6 +130,7 @@ export default function Text() {
               <TextField
                 onChange={(e) => {
                   setevent(e.target.value);
+                  
                 }}
                 sx={{
                   "& .MuiInputBase-root": {
