@@ -3,6 +3,8 @@ import Navbar from "../Navbar";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { grey } from "@mui/material/colors";
+import { createTheme } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 
 export default function Text() {
   const [option, setoption] = useState("text");
@@ -56,187 +58,173 @@ export default function Text() {
             </button>
           </div>
         </div>
-        {option === "text" && (
-          <Text></Text>
-        )}
-        {option === "poll" && (
-          <div className="  max-md:ml-[0vw] my-10">
-          <div className=" mx-auto w-[60vw] max-md:w-[75vw] h-fit bg-[#130f22]  rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white shadow-2xl">
-          <div className="text-white p-[10px]">
+        <div className="ml-[2vw] max-md:ml-[0vw] my-10">
+          <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#0A0813] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
+              <div>
               <TextField
-                onChange={(e) => {
-                  setevent(e.target.value);
-                }}
-                sx={{
-                  "& .MuiInputBase-root": {
-                    color: "#DFE2E8",
-                  },
-                  "& .MuiFormLabel-root": {
-                    color: "#AEB1B5",
-                  },
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: "#AEB1B5",
-                  },
-                  // ".MuiInputBase-input": {
-                  //   background: "#0A0813",
-                  // },
-                  ".MuiTextField-root": {
-                    background: "#FFFFFF",
-                  },
-                }}
-                id="myfilled-name"
-                label="Question"
-                variant="standard"
-                color="grey"
-                inputProps={{
-                  style: {
-                    height: "3vh",
-                    width: "45vw",
-                  },
-                }}
+              onChange={(e) => {
+                setevent(e.target.value);
+              }}
+              sx={{ 
+              "& .MuiInputBase-root": {
+                  color: '#DFE2E8'
+              },
+              "& .MuiFormLabel-root": {
+                color: '#AEB1B5'
+              },
+              "& .MuiFormLabel-root.Mui-focused": {
+                color: '#AEB1B5'
+              },
+              ".MuiInputBase-input":  {
+                background: '#0A0813'
+              },
+              ".MuiTextField-root": {
+                background: '#FFFFFF'
+              }
+              }} 
+              id="myfilled-name" 
+              label="Question" 
+              variant="outlined" 
+              color="grey"
+              inputProps={{
+                style: {
+                  height: "3vh",
+                  width: "45vw"
+                },
+              }}
               />
-            </div>
-            <div className="text-white p-[10px]">
               <TextField
-                onChange={(e) => {
-                  setevent(e.target.value);
-                }}
-                sx={{
-                  "& .MuiInputBase-root": {
-                    color: "#DFE2E8",
-                  },
-                  "& .MuiFormLabel-root": {
-                    color: "#AEB1B5",
-                  },
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: "#AEB1B5",
-                  },
-                  // ".MuiInputBase-input": {
-                  //   background: "#0A0813",
-                  // },
-                  ".MuiTextField-root": {
-                    background: "#FFFFFF",
-                  },
-                }}
-                id="myfilled-name"
-                label="Option 1"
-                variant="standard"
-                color="grey"
-                inputProps={{
-                  style: {
-                    height: "3vh",
-                    width: "45vw",
-                  },
-                }}
+              onChange={(e) => {
+                setevent(e.target.value);
+              }}
+              sx={{ 
+              "& .MuiInputBase-root": {
+                  color: '#DFE2E8'
+              },
+              "& .MuiFormLabel-root": {
+                color: '#AEB1B5'
+              },
+              "& .MuiFormLabel-root.Mui-focused": {
+                color: '#AEB1B5'
+              },
+              ".MuiInputBase-input":  {
+                background: '#0A0813'
+              },
+              ".MuiTextField-root": {
+                background: '#FFFFFF'
+              }
+              }} 
+              id="myfilled-name" 
+              label="Option 1" 
+              variant="outlined" 
+              color="grey"
+              inputProps={{
+                style: {
+                  height: "3vh",
+                  width: "45vw"
+                },
+              }}
               />
-            </div>
-            <div className="text-white p-[10px]">
               <TextField
-                onChange={(e) => {
-                  setevent(e.target.value);
-                  
-                }}
-                sx={{
-                  "& .MuiInputBase-root": {
-                    color: "#DFE2E8",
-                  },
-                  "& .MuiFormLabel-root": {
-                    color: "#AEB1B5",
-                  },
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: "#AEB1B5",
-                  },
-                  // ".MuiInputBase-input": {
-                  //   background: "#0A0813",
-                  // },
-                  ".MuiTextField-root": {
-                    background: "#FFFFFF",
-                  },
-                }}
-                id="myfilled-name"
-                label="Option 2"
-                variant="standard"
-                color="grey"
-                inputProps={{
-                  style: {
-                    height: "3vh",
-                    width: "45vw",
-                  },
-                }}
+              onChange={(e) => {
+                setevent(e.target.value);
+              }}
+              sx={{ 
+              "& .MuiInputBase-root": {
+                  color: '#DFE2E8'
+              },
+              "& .MuiFormLabel-root": {
+                color: '#AEB1B5'
+              },
+              "& .MuiFormLabel-root.Mui-focused": {
+                color: '#AEB1B5'
+              },
+              ".MuiInputBase-input":  {
+                background: '#0A0813'
+              },
+              ".MuiTextField-root": {
+                background: '#FFFFFF'
+              }
+              }} 
+              id="myfilled-name" 
+              label="Option 2" 
+              variant="outlined" 
+              color="grey"
+              inputProps={{
+                style: {
+                  height: "3vh",
+                  width: "45vw"
+                },
+              }}
               />
-            </div>
-
-            <div className="text-white p-[10px]">
               <TextField
-                onChange={(e) => {
-                  setevent(e.target.value);
-                }}
-                sx={{
-                  "& .MuiInputBase-root": {
-                    color: "#DFE2E8",
-                  },
-                  "& .MuiFormLabel-root": {
-                    color: "#AEB1B5",
-                  },
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: "#AEB1B5",
-                  },
-                  // ".MuiInputBase-input": {
-                  //   background: "#0A0813",
-                  // },
-                  ".MuiTextField-root": {
-                    background: "#FFFFFF",
-                  },
-                }}
-                id="myfilled-name"
-                label="Option 3"
-                variant="standard"
-                color="grey"
-                inputProps={{
-                  style: {
-                    height: "3vh",
-                    width: "45vw",
-                  },
-                }}
+              onChange={(e) => {
+                setevent(e.target.value);
+              }}
+              sx={{ 
+              "& .MuiInputBase-root": {
+                  color: '#DFE2E8'
+              },
+              "& .MuiFormLabel-root": {
+                color: '#AEB1B5'
+              },
+              "& .MuiFormLabel-root.Mui-focused": {
+                color: '#AEB1B5'
+              },
+              ".MuiInputBase-input":  {
+                background: '#0A0813'
+              },
+              ".MuiTextField-root": {
+                background: '#FFFFFF'
+              }
+              }} 
+              id="myfilled-name" 
+              label="Option 3" 
+              variant="outlined" 
+              color="grey"
+              inputProps={{
+                style: {
+                  height: "3vh",
+                  width: "45vw"
+                },
+              }}
               />
-            </div>
-            <div className="text-white p-[10px]">
               <TextField
-                onChange={(e) => {
-                  setevent(e.target.value);
-                }}
-                sx={{
-                  "& .MuiInputBase-root": {
-                    color: "#DFE2E8",
-                  },
-                  "& .MuiFormLabel-root": {
-                    color: "#AEB1B5",
-                  },
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: "#AEB1B5",
-                  },
-                  // ".MuiInputBase-input": {
-                  //   background: "#0A0813",
-                  // },
-                  ".MuiTextField-root": {
-                    background: "#FFFFFF",
-                  },
-                }}
-                id="myfilled-name"
-                label="Option 4"
-                variant="standard"
-                color="grey"
-                inputProps={{
-                  style: {
-                    height: "3vh",
-                    width: "45vw",
-                  },
-                }}
+              onChange={(e) => {
+                setevent(e.target.value);
+              }}
+              sx={{ 
+              "& .MuiInputBase-root": {
+                  color: '#DFE2E8'
+              },
+              "& .MuiFormLabel-root": {
+                color: '#AEB1B5'
+              },
+              "& .MuiFormLabel-root.Mui-focused": {
+                color: '#AEB1B5'
+              },
+              ".MuiInputBase-input":  {
+                background: '#0A0813'
+              },
+              ".MuiTextField-root": {
+                background: '#FFFFFF'
+              }
+              }} 
+              id="myfilled-name" 
+              label="Option 4" 
+              variant="outlined" 
+              color="grey"
+              inputProps={{
+                style: {
+                  height: "3vh",
+                  width: "45vw"
+                },
+              }}
               />
-            </div>
+              </div>
           </div>
         </div>
-        )}
+        
       </div>
     </div>
   );
