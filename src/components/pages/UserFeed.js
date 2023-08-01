@@ -7,7 +7,7 @@ import Post from "./Post";
 import Poll from "./Poll";
 
 export default function UserFeed() {
-  const [post, underline] = useState("text");
+  const [post, underline] = useState("Post");
   const [club, setclub] = useState(false);
 
   return (
