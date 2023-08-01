@@ -3,7 +3,8 @@ import Navbar from "../Navbar";
 import Minions from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
 import Zoro from "../Images/zoro.jpg";
-import Post from "./Post"
+import Post from "./Post";
+import Poll from "./Poll";
 
 export default function UserFeed() {
   const [post, underline] = useState("text");
@@ -82,42 +83,70 @@ export default function UserFeed() {
             </div>
           </button>
         </div>
-
-         {/* <div className="feed ">
-          <div>
-            <div className="ml-[20vw] flex items-center text-white ">
-              <div className="flex flex-row  space-x-[35vw] items-center ">
-                <div className="flex items-center">
-                  <div>
-                    <img
-                      src={Minions}
-                      alt=""
-                      className="max-[750px]:h-[10vw] max-[750px]:w-[10vw] h-[5vw] w-[5vw] rounded-[50%] ml-[2vw]"
-                    />
-                  </div>
-                  <div className="text-xl max-[750px]:ml-2 ml-8 ">
-                    Club Name
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="  ml-[23vw] text-white">
-              <div>
-                <img
-                  src={Tanjiro}
-                  alt=""
-                  className="max-md:w-[70vw] max-md:h-[250px] h-[350px] w-[59vw] bg-white mt-[2vh]"
-                />
-              </div>
-              <div className="flex">
-                <div>Date</div>
-                <div>Time</div>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
-      <Post name = "Club Name" ClubImage = {Tanjiro} image = {Tanjiro} text = "Caption" date = "Date" time = "Time"></Post>
+
+      {post === "Post" && (
+        <div>
+        <Post
+          name="Club Name"
+          ClubImage={Tanjiro}
+          image={Tanjiro}
+          text="Caption"
+          date="Date"
+          time="Time"
+        ></Post>
+        <Post
+          name="Club Name"
+          ClubImage={Tanjiro}
+          image={Tanjiro}
+          text="Caption"
+          date="Date"
+          time="Time"
+        ></Post>
+        <Post
+          name="Club Name"
+          ClubImage={Tanjiro}
+          image={Tanjiro}
+          text="Caption"
+          date="Date"
+          time="Time"
+        ></Post>
+        <Post
+          name="Club Name"
+          ClubImage={Tanjiro}
+          image={Tanjiro}
+          text="Caption"
+          date="Date"
+          time="Time"
+        ></Post>
+        <Post
+          name="Club Name"
+          ClubImage={Tanjiro}
+          image={Tanjiro}
+          text="Caption"
+          date="Date"
+          time="Time"
+        ></Post>
+        <Post
+          name="Club Name"
+          ClubImage={Tanjiro}
+          image={Tanjiro}
+          text="Caption"
+          date="Date"
+          time="Time"
+        ></Post>
+      </div>
+      )}
+      
+      {post === "Poll" && (
+        <div>
+          <Poll name = "Club Name" ClubImage = {Minions} question = "Question" option1 = "Option 1" option2 = "Option 2" option3 = "Option 3" option4 = "Option 4"></Poll>
+          <Poll name = "Club Name" ClubImage = {Minions} question = "Question" option1 = "Option 1" option2 = "Option 2" option3 = "Option 3" option4 = "Option 4"></Poll>
+          <Poll name = "Club Name" ClubImage = {Minions} question = "Question" option1 = "Option 1" option2 = "Option 2" option3 = "Option 3" option4 = "Option 4"></Poll>
+          <Poll name = "Club Name" ClubImage = {Minions} question = "Question" option1 = "Option 1" option2 = "Option 2" option3 = "Option 3" option4 = "Option 4"></Poll>
+          <Poll name = "Club Name" ClubImage = {Minions} question = "Question" option1 = "Option 1" option2 = "Option 2" option3 = "Option 3" option4 = "Option 4"></Poll>
+        </div>
+      )}
 
       <div className="logos absolute right-[4vw] top-[3vw] flex-col max-[769px]:hidden">
         <button className="">
@@ -247,7 +276,50 @@ export default function UserFeed() {
               alt=""
               className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button><button className="">
+          </button>
+          <button className="">
+            <img
+              src={Minions}
+              alt=""
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+            />
+          </button>
+          <button className="">
+            <img
+              src={Minions}
+              alt=""
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+            />
+          </button>
+          <button className="">
+            <img
+              src={Minions}
+              alt=""
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+            />
+          </button>
+          <button className="">
+            <img
+              src={Minions}
+              alt=""
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+            />
+          </button>
+          <button className="">
+            <img
+              src={Minions}
+              alt=""
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+            />
+          </button>
+          <button className="">
+            <img
+              src={Minions}
+              alt=""
+              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+            />
+          </button>
+          <button className="">
             <img
               src={Minions}
               alt=""
