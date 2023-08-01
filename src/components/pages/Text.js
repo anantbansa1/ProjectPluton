@@ -8,47 +8,8 @@ export default function Text() {
   const [submit, setsubmit] = useState("");
   const [text,settext] = useState("");
   return (
-    <div className="mt-[-2vw]">
-      <Navbar></Navbar>
+    <div className="">
       <div className="flex-col max-md:ml-[20vw] max-md:w-[75vw] ml-[28vw] w-[64vw]">
-        <div className=" bg-none  max-md:text-xl  flex items-center mt-[9vh] text-3xl justify-between">
-          <div className="flex-col">
-            <button
-              onClick={(e) => {
-                setoption("text");
-              }}
-              className={`p-[1vh] px-[3vh] border-white ${
-                option === "text" ? "border-b text-white" : "text-slate-300"
-              }`}
-            >
-              Text
-            </button>
-          </div>
-          <div className="flex-col">
-            <button
-              onClick={(e) => {
-                setoption("post");
-              }}
-              className={`p-[1vh] px-[3vh] border-white ${
-                option === "post" ? "border-b text-white" : "text-slate-300"
-              }`}
-            >
-              Post
-            </button>
-          </div>
-          <div className="flex-col">
-          <button
-              onClick={(e) => {
-                setoption("poll");
-              }}
-              className={`p-[1vh] px-[3vh] border-white ${
-                option === "poll" ? "border-b text-white" : "text-slate-300"
-              }`}
-            >
-              Poll
-            </button>
-          </div>
-        </div>
         <div>
           <textarea
             onChange={(e) => {
