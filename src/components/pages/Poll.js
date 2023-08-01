@@ -56,7 +56,11 @@ export default function Text() {
             </button>
           </div>
         </div>
-        <div className="  max-md:ml-[0vw] my-10">
+        {option === "text" && (
+          <Text></Text>
+        )}
+        {option === "poll" && (
+          <div className="  max-md:ml-[0vw] my-10">
           <div className=" mx-auto w-[60vw] max-md:w-[75vw] h-fit bg-[#130f22]  rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white shadow-2xl">
           <div className="text-white p-[10px]">
               <TextField
@@ -232,6 +236,7 @@ export default function Text() {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
