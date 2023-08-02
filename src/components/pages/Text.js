@@ -63,10 +63,13 @@ export default function Text() {
         </div>
         )}
         {option === "post" && (
-          <Image></Image>
+          <div className="max-sm:mb-[10vh] mb-[20vh]">
+            <Image></Image>
+          </div>
         )}
         {option === "poll" && (
-          <Poll></Poll>
+            <Poll></Poll>
+          
         )}
         <div className=" flex max-md:text-sm max-[1076px]:flex-col justify-around text-black text-xl  mt-[4vh]">
           <button
