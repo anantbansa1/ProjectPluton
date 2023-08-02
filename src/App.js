@@ -1,11 +1,11 @@
 import "./App.css";
-// import FAQ from "./components/pages/FAQ";
-import ClubProfile from "./components/pages/Clubprofile"
+import Navbar from "./components/Navbar";
+import AddUserAdmin from "./components/AddUserAdmin";
 function App() {
   return (
     <>
-      {/* <FAQ></FAQ> */}
-      <ClubProfile ></ClubProfile>
+      <Navbar></Navbar>
+      <AddUserAdmin filename="filename.csv"></AddUserAdmin>
     </>
   );
 }
