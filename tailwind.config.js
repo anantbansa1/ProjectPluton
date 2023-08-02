@@ -8,6 +8,7 @@ module.exports = {
         lato: ["Lato"],
         garamond: ["Garamond"],
         roboto: ["Roboto", "sans-serif"],
+        presstart: ["Press Start 2P"],
       },
     },
   },
