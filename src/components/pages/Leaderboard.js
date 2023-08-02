@@ -8,15 +8,17 @@ export default function Leaderboard() {
       <div className='mt-[3vw] ml-[20vw] text-white'>
       <div className=' text-center text-3xl font-pressStart'>
         Leaderboard
+        <br />
+        <br />
       </div>
       <div className='flex flex-col'>
         <div className="part1">
-            <hr className='mt-[3vw]'/>
+            {/* <hr className='mt-[3vw]'/> */}
             <div className='flex max-md:text-xl text-2xl justify-around'>
                 <div className='ml-[-4vw]'>
-                    <div>
+                    <div className='font-bold'>
                         Rank
-                        <hr className=' fixed top-[9vw] left-[34vw] border border-white h-[100vh]'/>
+                        {/* <hr className=' fixed top-[9vw] left-[34vw] border border-white h-[100vh]'/> */}
                     </div>
                     <div className='text-center'>
                         1
@@ -35,7 +37,7 @@ export default function Leaderboard() {
                     </div>
                 </div>
                 <div>
-                    <div className='text-center'>
+                    <div className='text-center font-bold'>
                         Name
                     </div>
                     <div className='items-center'>
@@ -44,7 +46,7 @@ export default function Leaderboard() {
                 </div>
                 <div className='flex mr-[-4vw] space-x-[12vw]'>
                     <div>
-                        <div>
+                        <div className='font-bold'>
                             Roll No.
                         </div>
                         <div className='text-center'>
@@ -52,7 +54,7 @@ export default function Leaderboard() {
                         </div>
                     </div>
                     <div>
-                        <div>
+                        <div className='font-bold'>
                             Points
                         </div>
                         <div className='text-center'>
@@ -61,7 +63,7 @@ export default function Leaderboard() {
                     </div>
                 </div>
             </div>
-            <hr className='fixed top-[11.5vw] left-0 w-[100vw]'/>
+            {/* <hr className='fixed top-[11.5vw] left-0 w-[100vw]'/> */}
         </div>
       </div>
       </div>
