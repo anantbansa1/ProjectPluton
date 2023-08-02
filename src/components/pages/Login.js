@@ -1,16 +1,45 @@
 import React from "react";
 import { TextField } from "@mui/material";
 import { useState } from "react";
+import { signIn, useAuth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
 
 function Login() {
   const [Email, setEmail] = useState("");
   const [Password, setPass] = useState("");
+  const [Loading, setLoading] = useState(false);
+  const user = useAuth();
+  const navigate = useNavigate();
+
+  async function handleLogin() {
+    setLoading(true);
+    try {
+   
+      await signIn(Email, Password);
+      console.log(user?.email);
+      redirectIn();
+    } catch {
+      alert("errorrrrrrrrrrrrrrrrrrrrrr")
+    }
+    setLoading(false);
+  }
+
+  function redirectIn() {
+    // console.log("hello");
+    if (user) {   console.log("hello2");navigate("/");}
+  }
+
   function handlePass(e) {
     setPass(e.target.value);
     console.log(Password);
   }
+
   return (
-    <div>
+     <div>
+      {redirectIn()}
       <div className="sm:bg-[#a7c7e7] sm:h-[100vh] lg:flex lg:justify-between overflow-hidden max-[640px]: bg-[#232323] max-[640px]: h-[500vh]">
         <div className="bg-[#232323] h-[100vh] z-0 scale-150 w-[39%] rotate-[-10deg]"></div>
         <div className=" max-[1024px]:absolute top-[10%] left-[20%] px-4 items-end bg-white max-[1024px]:w-[40vw] max-[640px]:w-[60vw] lg:w-[28vw] lg:flex-col my-auto mx-auto lg:mr-[8vw] rounded-[10px] shadow-md shadow-black z-2  lg:flex">
@@ -41,7 +70,10 @@ function Login() {
             />
           </div>
 
-          <button className="bg-[#232323] p-3 mt-10 w-[100%] mx-auto text-white ">
+          <button
+            onClick={handleLogin}
+            className="bg-[#232323] p-3 mt-10 w-[100%] mx-auto text-white "
+          >
             Sign in
           </button>
           <button className="p-2 pt-4 mt- w-auto  text-[#232323] hover:underline">
@@ -49,6 +81,14 @@ function Login() {
           </button>
         </div>
       </div>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={Loading}
+        close={Loading}
+
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

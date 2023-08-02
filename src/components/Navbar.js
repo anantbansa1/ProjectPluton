@@ -8,22 +8,69 @@ import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import Pluton from "./Images/spaceship.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-
+import { logOut, useAuth } from "../firebase";
+import { useState } from "react";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 
 // bg-[#1c1733]
 export default function Navbar(props) {
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   const navigate = useNavigate();
+  const [Loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  function handleLogOut() {
-    navigate("/login")
+  const handleNo = () => {
+    setOpen(false);
+  };
+
+  const handleYes = () => {
+    setOpen(false);
+    handleLogOut();
+  };
+
+  const user = useAuth();
+  const Title = ({ children }) => <div className="title">{children}</div>;
+
+  async function handleLogOut() {
+    // navigate("/login")
+    setLoading(true);
+    try {
+      await logOut();
+      // setTimeout(1000);
+      redirectIn();
+    } catch {
+      alert("erorrrrrrrrrrrrrrrrrrrrrr.");
+    }
+    setLoading(false);
+  }
+
+  function redirectIn() {
+    if (user) {
+      console.log(user?.email);
+    } else {
+      navigate("/login");
+    }
   }
 
   return (
     <div className="">
+      {redirectIn()}
       <div className="flex-col shadow-2xl shadow-black bg-white bg-opacity-5 backdrop-blur-2xl backdrop-filter text-white  font-semibold flex  fixed left-0 top-0 h-full w-[15vw] md:w-[20vw]  place-content-around">
-        <Link to="/" className="flex items-center flex-col font-bold italic text-3xl mx-2 ">
+        <Link
+          to="/"
+          className="flex items-center flex-col font-bold italic text-3xl mx-2 "
+        >
           <img src={Pluton} alt="" className=" justify-center md:h-[80px] " />
 
           <button className="max-lg:hidden font-roboto font-light ">
@@ -31,7 +78,8 @@ export default function Navbar(props) {
           </button>
         </Link>
         <div className="flex flex-col space-y-[1.5vw]">
-          <Link to="/"
+          <Link
+            to="/"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${
               props.selected === "home" ? " bg-opacity-10  bg-white" : ""
             } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-xl`}
@@ -41,7 +89,8 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;Home</button>
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <Link to="/faq"
+          <Link
+            to="/faq"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${
               props.selected === "faq"
                 ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
@@ -73,7 +122,8 @@ export default function Navbar(props) {
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;About Us</button>
           </div>
-          <Link to="/userprofile"
+          <Link
+            to="/userprofile"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
             } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-xl`}
@@ -90,15 +140,48 @@ export default function Navbar(props) {
               &nbsp;&nbsp;
               {/* <button>Anant</button> */}
             </button>
-            <button className="max-lg:hidden">&nbsp;&nbsp;Profile</button>
+            <button className="max-lg:hidden">&nbsp;&nbsp; Profile </button>
           </Link>
         </div>
 
-        <button onClick={handleLogOut} className="flex  max-lg:text-center  items-center  text-[#E73A37]  text-xl max-lg:justify-center justify-start max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  hover:bg-white hover:bg-opacity-10 rounded-full ">
+        <button
+          onClick={() => {
+            setOpen(true);
+          }}
+          className="flex  max-lg:text-center  items-center  text-[#E73A37]  text-xl max-lg:justify-center justify-start max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  hover:bg-white hover:bg-opacity-10 rounded-full "
+        >
           <PowerSettingsNewIcon />
           <div className="  max-lg:hidden">&nbsp;&nbsp;Logout</div>
         </button>
       </div>
+      <Dialog
+        open={open}
+        PaperProps={{
+          style: {
+            background: "#232323",
+            color: "#fff",
+          },
+        }}
+        // TransitionComponent={Transition}
+        fullWidth
+        maxWidth="sm"
+        keepMounted
+        onClose={handleNo}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle><div className="">{"Logout"}</div></DialogTitle>
+        <DialogContent>
+          <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="" onClick={handleNo}>
+            No
+          </Button>
+          <Button variant="outlined" color="error" onClick={handleYes}>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
