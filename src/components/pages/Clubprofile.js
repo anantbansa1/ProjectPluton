@@ -19,8 +19,6 @@ import GroupIcon from "@mui/icons-material/Group";
 import Poll from "./Poll";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { collection, addDoc, getDocs, onSnapshot } from "firebase/firestore";
-import {db} from '../../firebase';
 
 import { TextField } from "@mui/material";
 
@@ -131,11 +129,6 @@ function ClubProfile(props) {
     setOpen(false);
   };
 
-  useEffect(()=>{
-    onSnapshot(collection(db,"test"), (snapshot)=>{
-      console.log(snapshot.docs.map((doc)=>doc.data()));
-    })
-  },[])
 
   function SaveChangesCover(canvas, crop) {
     if (!crop || !canvas) {
