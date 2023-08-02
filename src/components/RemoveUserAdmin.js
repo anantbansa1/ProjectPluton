@@ -5,6 +5,16 @@ function RemoveAlert(e){
 }
 
 export default function RemoveUserAdmin(props){
+    const [file, setFile] = useState(null)
+    const onSelectFile = (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const reader = new FileReader();
+            reader.addEventListener("load", () => setFile(reader.result)); 
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    };
+
+
     return(
         <>
         <div>
@@ -23,7 +33,15 @@ export default function RemoveUserAdmin(props){
             </div>
         </div>
         <div className="bg-[#232323] text-white items-center flex justify-center h-[5vh] ml-[23vw] my-6">
-        <button className="rounded-full bg-white text-black px-4 py-2 mx-5">Upload</button>
+        <input
+                            className=" text-white px-4 py-2 mx-5"
+                            type="file"
+                            id="uploadbtn"
+                            accept=".csv"
+                            onChange={onSelectFile}
+                            hidden
+                        ></input>
+                        <label for="uploadbtn" className="rounded-full bg-white text-black px-4 py-2 mx-5 cursor-pointer">Upload File</label>
         <button className="rounded-full bg-white text-black px-4 py-2 mx-5" onClick={RemoveAlert}>Confirm</button>
         </div>
             
