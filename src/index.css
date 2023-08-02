@@ -7,12 +7,9 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  background-color: #323232;
+  /* background-color: #323232; */
   -moz-osx-font-smoothing: grayscale;
   background-color: #1c1733;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
 }
 
 .scrollbar-hide {
@@ -22,4 +19,10 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+
+nav {
+  background: linear-gradient(to bottom left rgb(255,255,255,0.4) rgb(255,255,255,0.1));
+  background-color: white;
 }
