@@ -36,11 +36,14 @@ export default function AddUserAdmin(props) {
                     </div>
                     <div className="bg-[#232323] text-white items-center flex justify-center h-[5vh] ml-[23vw] my-6">
                         <input
-                            className="rounded-full bg-white text-black px-4 py-2 mx-5"
+                            className=" text-white px-4 py-2 mx-5"
                             type="file"
+                            id="uploadbtn"
                             accept=".csv"
                             onChange={onSelectFile}
+                            hidden
                         ></input>
+                        <label for="uploadbtn" className="rounded-full bg-white text-black px-4 py-2 mx-5 cursor-pointer">Upload File</label>
                         <button className="rounded-full bg-white text-black px-4 py-2 mx-5" onClick={AddAlert}>Confirm</button>
                     </div>
 
