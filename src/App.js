@@ -1,11 +1,10 @@
 import "./App.css";
-import FAQ from "./components/pages/FAQ";
-import ClubProfile from "./components/pages/Clubprofile";
+import Addnewclub from "./components/pages/Addnewclub";
 function App() {
   return (
     <>
-      <FAQ></FAQ>
-      {/* <ClubProfile ></ClubProfile> */}
+      <Addnewclub>
+      </Addnewclub>
     </>
   );
 }
