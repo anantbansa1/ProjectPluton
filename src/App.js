@@ -1,9 +1,9 @@
 import "./App.css";
-import UserFeed from "./components/pages/UserFeed";
+import Leaderboard from "./components/pages/Leaderboard";
 function App() {
   return (
     <>
-      <UserFeed></UserFeed>
+      <Leaderboard></Leaderboard>
     </>
   );
 }
