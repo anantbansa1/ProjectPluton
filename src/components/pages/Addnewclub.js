@@ -119,7 +119,7 @@ export default function Addnewclub(props) {
               id="myfilled-name" 
               label="Club Description" 
               variant="filled" 
-              color="secondary"
+              color="grey"
               inputProps={{
                 style: {
                   height: "3vh",
@@ -156,7 +156,7 @@ export default function Addnewclub(props) {
               id="myfilled-name" 
               label="President E-mail Id" 
               variant="filled" 
-              color="secondary"
+              color="grey"
               inputProps={{
                 style: {
                   height: "3vh ",
@@ -170,7 +170,7 @@ export default function Addnewclub(props) {
            onClick={(e) => {
             console.log(event);
             }} 
-           className="bg-[#060606] max-[414px]:self-center shadow-xl rounded-lg px-6 py-2 self-center mt-[8vh] text-xl text-[#FFFFFF] hover:bg-opacity-50 ">
+           className="bg-[#060606] max-[414px]:self-center shadow-xl rounded-lg px-6 py-2 self-center mt-[3vh] text-xl text-[#FFFFFF] hover:bg-opacity-50 ">
             Add
            </button>
            </div>
