@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar";
 import Image from "./Image"
+import Poll from "./Poll"
 export default function Text() {
   const [option, setoption] = useState("text");
   const [event, setevent] = useState("");
@@ -56,13 +57,16 @@ export default function Text() {
             onChange={(e) => {
               settext(e.target.value);
             }}
-            className="p-[1vw] max-sm:h-[70vw] max-md:h-[40vw] max-md:w-[75vw] text-white text-xl bg-[#4b4a4a7e] h-[25vw] w-[64vw] mt-[3vw]"
+            className="p-[1vw] max-sm:h-[70vw] max-md:h-[40vw] max-md:w-[75vw] text-white text-xl bg-[#070315] h-[25vw] w-[64vw] mt-[3vw] shadow-lg shadow-black rounded-lg"
             placeholder="Enter your Text"
           ></textarea>
         </div>
         )}
         {option === "post" && (
           <Image></Image>
+        )}
+        {option === "poll" && (
+          <Poll></Poll>
         )}
         <div className=" flex max-md:text-sm max-[1076px]:flex-col justify-around text-black text-xl  mt-[4vh]">
           <button

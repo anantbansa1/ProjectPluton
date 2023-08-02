@@ -140,7 +140,7 @@ function Image() {
         </div> */}
         <div className="ml-[20vw] max-md:ml-[15vw] my-10">
           <div className=" ">
-            <div className="max-[414px]:ml-[3vw]">
+            <div className="max-[414px]:ml-[0vw]">
               {/* <div className="bg-[#f8f6f6] ml-[2vw] h-[40vh] w-[80vh] mt-[3vw] mb-[5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]  max-[420px]:h-[200px]">
                 <input type="file" onChange={handleChange} />
                 <img src={file} className="h-[35vh] w-[80vw] object-cover" />
