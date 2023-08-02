@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar";
+import Image from "./Image"
 export default function Text() {
   const [option, setoption] = useState("text");
   const [event, setevent] = useState("");
@@ -49,7 +50,8 @@ export default function Text() {
             </button>
           </div>
         </div>
-        <div>
+        {option === "text" && (
+          <div>
           <textarea
             onChange={(e) => {
               settext(e.target.value);
@@ -58,6 +60,10 @@ export default function Text() {
             placeholder="Enter your Text"
           ></textarea>
         </div>
+        )}
+        {option === "post" && (
+          <Image></Image>
+        )}
         <div className=" flex max-md:text-sm max-[1076px]:flex-col justify-around text-black text-xl  mt-[4vh]">
           <button
             onClick={(e) => {
