@@ -490,6 +490,7 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
+
         </div>
       </div>
 

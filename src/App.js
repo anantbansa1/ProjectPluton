@@ -7,6 +7,8 @@ import UserProfile from "./components/pages/Userprofile"
 import FAQ from "./components/pages/FAQ"
 import LoginPage from "./components/pages/Login"
 import ClubProfile from "./components/pages/Clubprofile";
+import Resetpass from './components/pages/resetpass';
+
 function App() {
   return (
     <Router>
@@ -17,6 +19,7 @@ function App() {
           <Route path="/clubprofile" element={<ClubProfile />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/getemail" element={<Resetpass /> } />
         </Routes>
     </Router>
 

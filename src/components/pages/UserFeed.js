@@ -193,7 +193,7 @@ export default function UserFeed() {
         </div>
       )}
 
-      <div className="flex max-[769px]:hidden scrollbar-hide flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll top-0 right-0  py-4  space-y-10 bg-white bg-opacity-10 backdrop-filter backdrop-blur-3xl ">
+      <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  space-y-10 bg-white bg-opacity-10 backdrop-filter backdrop-blur-3xl ">
         <Link to="/clubprofile" className="h-[7vw] w-[7vw] border-white rounded-full" >
           <Tooltip title="clubname">
             {" "}

@@ -9,7 +9,10 @@ body {
   -webkit-font-smoothing: antialiased;
   /* background-color: #323232; */
   -moz-osx-font-smoothing: grayscale;
-  background-color: #1c1733;
+  /* background-color: #1c1733; */
+  background-color: rgba(230, 219, 219, 0.87);
+
+  /* background:  linear-gradient(#174689, #FF82CE); */
 }
 
 scrollbar-hide::-webkit-scrollbar {
@@ -26,8 +29,26 @@ code {
     monospace;
 }
 
+         
+.btn-grad {
+  background-color: #21D4FD;
+  background-image: linear-gradient(19deg, #21D4FD 0%, #B721FF 100%);
+  
 
-nav {
-  background: linear-gradient(to bottom left rgb(255,255,255,0.4) rgb(255,255,255,0.1));
-  background-color: white;
+  margin: 10px;
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  display: block;
+  width:100%;
+  border-radius: 50px;
 }
+
+
+
+

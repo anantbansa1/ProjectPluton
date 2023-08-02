@@ -16,7 +16,7 @@ const Accordion = ({ title, content }) => {
       </div>
       <div className="hidden">{content}</div>
       {isActive && (
-        <div className=" transition-transform duration-1000 p-2 text-xl ml-[1vw] w-[80%] shadow-2xl shadow-black  text-white bg-[#130f22]">
+        <div className=" transition-transform duration-1000 p-4 text-xl ml-[1vw] w-[80%] shadow-2xl shadow-black  text-white bg-[#130f22]">
           {content}
         </div>
       )}

@@ -430,7 +430,7 @@ function ClubProfile(props) {
         <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
           <div className="flex font-semibold items-center space-x-5">
             <img
-              src={props.clubimage}
+              src={ClubImage}
               alt=""
               className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
             />
