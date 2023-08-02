@@ -99,7 +99,7 @@ function Image() {
   return (
     <div>
       {/* <Navbar></Navbar> */}
-      <div className="flex justify-center ml-[-20vw]">
+      <div className="flex justify-center ml-[-20vw] h-[50vw] w-[80vw]">
         {/* <div className="ml-[37vw] flex items-center max-[414px]:ml-[10vh] max-[414px]:w-[75vw] max-[414px]:mt-1 max-[414px]:text-xl text-3xl w-[80vh] justify-between">
           <div className="flex-col">
             <button
@@ -139,7 +139,7 @@ function Image() {
           </div>
         </div> */}
         <div className="flex flex-col ml-[20vw] max-md:ml-[15vw] my-5 h-[30vw] w-[30vw]">
-          <div className="mb-[3vw]">
+          <div className="">
             <div className="max-[414px]:ml-[0vw] ">
               {/* <div className="bg-[#f8f6f6] ml-[2vw] h-[40vh] w-[80vh] mt-[3vw] mb-[5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]  max-[420px]:h-[200px]">
                 <input type="file" onChange={handleChange} />
