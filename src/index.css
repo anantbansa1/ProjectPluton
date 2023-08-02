@@ -9,8 +9,8 @@ body {
   -webkit-font-smoothing: antialiased;
   /* background-color: #323232; */
   -moz-osx-font-smoothing: grayscale;
-  /* background-color: #1c1733; */
-  background-color: rgba(230, 219, 219, 0.87);
+  background-color: #1c1733;
+  /* background:linear-gradient(-45deg, #00dfed 0%, #001cb0 100%) */
 
   /* background:  linear-gradient(#174689, #FF82CE); */
 }

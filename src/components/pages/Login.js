@@ -71,13 +71,13 @@ function Login() {
   return (
     <div className="  ">
       {redirectIn()}
-      <div className="flex justify-end h-[100vh]  items-center">
+      <div className="flex justify-center h-[100vh] bg-white bg-[url('https://upload.wikimedia.org/wikipedia/commons/3/33/Microsoft_login_screen.svg')] items-center">
         
-        <div className="flex flex-row w-[60vw] h-[100vh] ">
+        {/* <div className="flex flex-row w-[60vw] h-[100vh] ">
 
-          <div className="animation " ref={animation}></div>
-        </div>
-        <div className="flex flex-col bg-white rounded-bl-[50px] shadow-2xl shadow-slate-200 rounded-tl-[100px] p-6 items-center space-y-10 justify-start h-[100vh] pt-[20vh] pb-10 px-[10vw] w-[40vw]">
+           <div className="animation " ref={animation}></div> 
+        </div> */}
+        <div className="flex flex-col bg-white rounded-3xl shadow-2xl shadow-slate-300 p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 w-[25vw]">
           <span className="text-4xl font-semibold">Login</span>
           <div className="mt-1 w-[100%]">
             <TextField
@@ -86,6 +86,11 @@ function Login() {
                 setHelperText("");
                 setError(false);
               }}
+              value={Email}
+              helperText={helperText}
+              error={error}
+
+              className="shadow-blue-600 active:shadow-2xl"
               sx={{
                 "& .MuiInputBase-root": {
                   color: "#000",
@@ -105,6 +110,10 @@ function Login() {
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#000",
                 },
+                '&:before, &:after': {
+                  borderRadius: "50px",
+                },
+                // boxShadow: 10
               }}
               // InputProps={{
               //   startAdornment: (
@@ -128,10 +137,14 @@ function Login() {
           <div className="mt-1 w-[100%]">
             <TextField
               onChange={(e) => {
-                setEmail(e.target.value);
+                setPass(e.target.value);
                 setHelperText("");
                 setError(false);
               }}
+              type="password"
+              value={Password}
+              helperText={helperText}
+              error={error}
               sx={{
                 "& .MuiInputBase-root": {
                   color: "#000",
@@ -187,7 +200,7 @@ function Login() {
             Sign In
           </Button> */}
           
-          <button className="btn-grad text-black">Sign In</button>
+          <button className="btn-grad text-black" onClick={handleLogin}>Sign In</button>
           <Link
             to="/getemail"
             className="self-end text-[#232323] hover:underline"
@@ -209,10 +222,12 @@ function Login() {
               fullWidth
               id="outlined-basic"
               label="Email ID"
-              helperText={helperText}
-              error={error}
+
+              
               variant="outlined"
               value={Email}
+              helperText={helperText}
+              error={error}
               onChange={(e) => {
                 setEmail(e.target.value);
                 setHelperText("");
