@@ -1,9 +1,11 @@
 import "./App.css";
-import FAQ from "./components/pages/FAQ";
+// import FAQ from "./components/pages/FAQ";
+import ClubProfile from "./components/pages/Clubprofile"
 function App() {
   return (
     <>
-      <FAQ></FAQ>
+      {/* <FAQ></FAQ> */}
+      <ClubProfile ></ClubProfile>
     </>
   );
 }
