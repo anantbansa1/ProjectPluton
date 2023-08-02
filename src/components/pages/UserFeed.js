@@ -12,7 +12,7 @@ export default function UserFeed() {
 
   return (
     <div>
-      <Navbar />
+      <Navbar selected="home" />
       <div className="">
         <div className="max-lg:ml-[15vw] max-lg:mr-0 ml-[20vw] flex text-white  mr-[12vw] justify-center">
           <div className="flex-row flex space-x-20 my-[5vh] text-xl ">
@@ -90,7 +90,7 @@ export default function UserFeed() {
       </div>
 
       {post === "Post" && (
-        <div>
+        <div className="-ml-[12vw] max-[769px]:m-0">
           <Post
             name="Club Name"
             ClubImage={Tanjiro}
@@ -143,7 +143,7 @@ export default function UserFeed() {
       )}
 
       {post === "Poll" && (
-        <div>
+          <div className="-ml-[12vw] max-[769px]:m-0">
           <Poll
             name="Club Name"
             ClubImage={Minions}
