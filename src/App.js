@@ -6,6 +6,7 @@ import UserFeed from "./components/pages/UserFeed"
 import UserProfile from "./components/pages/Userprofile"
 import FAQ from "./components/pages/FAQ"
 import LoginPage from "./components/pages/Login"
+import ClubProfile from "./components/pages/Clubprofile";
 function App() {
   return (
     <Router>
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<UserFeed/>} />
           <Route path="/home" element={<UserFeed />} />
           <Route path="/userprofile" element={<UserProfile />} />
+          <Route path="/clubprofile" element={<ClubProfile />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

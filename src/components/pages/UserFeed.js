@@ -5,6 +5,7 @@ import Tanjiro from "../Images/Tanjiro.jpg";
 import Post from "./Post";
 import Poll from "./Poll";
 import Tooltip from "@mui/material/Tooltip";
+import { Link } from "react-router-dom";
 
 export default function UserFeed() {
   const [post, underline] = useState("Post");
@@ -193,7 +194,7 @@ export default function UserFeed() {
       )}
 
       <div className="flex max-[769px]:hidden scrollbar-hide flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll top-0 right-0  py-4  space-y-10 bg-white bg-opacity-10 backdrop-filter backdrop-blur-3xl ">
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
+        <Link to="/clubprofile" className="h-[7vw] w-[7vw] border-white rounded-full" >
           <Tooltip title="clubname">
             {" "}
             <img
@@ -202,7 +203,7 @@ export default function UserFeed() {
               alt=""
             />
           </Tooltip>
-        </div>
+        </Link>
         <div className="h-[7vw] w-[7vw] border-white rounded-full">
           <Tooltip title="clubname">
             {" "}
