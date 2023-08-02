@@ -98,9 +98,9 @@ function Image() {
     setOpenCover(false);
   };
   return (
-    <div>
+    <div className="max-md:h-[62vw]">
       {/* <Navbar></Navbar> */}
-      <div className="flex justify-center align-middle max-md:ml-[-10vw] ml-[-15vw] h-[40vw] w-[80vw]">
+      <div className="flex justify-center align-middle max-md:ml-[-10vw] ml-[-15vw] h-[40vw] max-[767px]:h-[60vw] w-[80vw]">
         {/* <div className="ml-[37vw] flex items-center max-[414px]:ml-[10vh] max-[414px]:w-[75vw] max-[414px]:mt-1 max-[414px]:text-xl text-3xl w-[80vh] justify-between">
           <div className="flex-col">
             <button
@@ -150,7 +150,7 @@ function Image() {
               <img 
               src={CoverImage}
               alt=""
-              className="object-cover cursor-pointer max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1  "
+              className="object-cover cursor-pointer max-[768px]:w-[50vw] max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1  "
               onClick={handleClickOpenCover}
               onMouseOver={(e) => {
                 setChangeCover(true);
@@ -171,7 +171,7 @@ function Image() {
             }}
             className={`${
               changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            } px-4 py-2 shadow-inner shadow-black max-[768px]:w-[50vw] row-start-1 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
            >
             Add Post
               </button>

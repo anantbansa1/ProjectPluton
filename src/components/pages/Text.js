@@ -63,7 +63,7 @@ export default function Text() {
         </div>
         )}
         {option === "post" && (
-          <div className="max-sm:mb-[20vh] mb-[5vh]">
+          <div className="max-sm:mb-[10vh] mb-[5vh]">
             <Image></Image>
           </div>
         )}
