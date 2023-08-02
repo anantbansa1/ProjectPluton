@@ -10,10 +10,11 @@ import { useEffect } from "react";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 // import zoro from "../Images/zoro.jpg";
-import default_img from "../Images/zoro.jpg";
+//import default_img from "../Images/zoro.jpg";
+import def_img from "../Images/def_img.jpg";
 
 function Image() {
-  const [CoverImage, setcoverimage] =useState(default_img);
+  const [CoverImage, setcoverimage] =useState(def_img);
   const [upImgCover, setUpImgCover] = useState(CoverImage);
   const imgRefCover = useRef(null);
   const previewCanvasRefCover = useRef(null);
@@ -99,7 +100,7 @@ function Image() {
   return (
     <div>
       {/* <Navbar></Navbar> */}
-      <div className="flex justify-center ml-[-20vw] h-[50vw] w-[80vw]">
+      <div className="flex justify-center align-middle max-md:ml-[-10vw] ml-[-15vw] h-[40vw] w-[80vw]">
         {/* <div className="ml-[37vw] flex items-center max-[414px]:ml-[10vh] max-[414px]:w-[75vw] max-[414px]:mt-1 max-[414px]:text-xl text-3xl w-[80vh] justify-between">
           <div className="flex-col">
             <button
@@ -138,8 +139,8 @@ function Image() {
             </button>
           </div>
         </div> */}
-        <div className="flex flex-col ml-[20vw] max-md:ml-[15vw] my-5 h-[30vw] w-[30vw]">
-          <div className="">
+        <div className="flex flex-col items-center ml-[20vw] max-md:ml-[15vw] my-5 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw]">
+          <div className="mb-[3vw]">
             <div className="max-[414px]:ml-[0vw] ">
               {/* <div className="bg-[#f8f6f6] ml-[2vw] h-[40vh] w-[80vh] mt-[3vw] mb-[5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]  max-[420px]:h-[200px]">
                 <input type="file" onChange={handleChange} />
@@ -149,7 +150,7 @@ function Image() {
               <img 
               src={CoverImage}
               alt=""
-              className="object-cover cursor-pointer h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1  "
+              className="object-cover cursor-pointer max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1  "
               onClick={handleClickOpenCover}
               onMouseOver={(e) => {
                 setChangeCover(true);
@@ -170,16 +171,16 @@ function Image() {
             }}
             className={`${
               changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            } px-4 py-2 shadow-inner shadow-black row-start-1 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
            >
-            Edit Cover Photo
+            Add Post
               </button>
           </div>
                <textarea
               onChange={(e) => {
                 setoption(e.target.value);
               }}
-              className="p-[1vw] ml-[-4vw] max-sm:h-[10vw] max-md:h-[10vw] max-md:w-[40vw] text-white text-xl bg-[#070315] h-[5vw] w-[40vw] mt-[1vw] shadow-lg shadow-black rounded-lg"
+              className="p-[1vw] max-[768px]:ml-0 max-[768px]:w-[50vw]  ml-[-4vw] max-md:h-[10vw] max-md:w-[40vw] text-white text-xl bg-[#070315] h-[7vw] w-[40vw] mt-[1vw] shadow-lg shadow-black rounded-lg"
               placeholder="Enter your Text"
               >
               </textarea>
