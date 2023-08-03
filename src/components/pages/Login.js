@@ -77,7 +77,7 @@ function Login() {
 
            <div className="animation " ref={animation}></div> 
         </div> */}
-        <div className="flex flex-col bg-white rounded-3xl shadow-2xl shadow-slate-300 p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 w-[25vw]">
+        <div className="flex flex-col bg-white rounded-3xl shadow-2xl shadow-slate-300 p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 ">
           <span className="text-4xl font-semibold">Login</span>
           <div className="mt-1 w-[100%]">
             <TextField
@@ -90,7 +90,7 @@ function Login() {
               helperText={helperText}
               error={error}
 
-              className="shadow-blue-600 active:shadow-2xl"
+              className=""
               sx={{
                 "& .MuiInputBase-root": {
                   color: "#000",
@@ -200,10 +200,10 @@ function Login() {
             Sign In
           </Button> */}
           
-          <button className="btn-grad text-black" onClick={handleLogin}>Sign In</button>
+          <button className="btn-grad font-semibold" onClick={handleLogin}>Sign In</button>
           <Link
             to="/getemail"
-            className="self-end text-[#232323] hover:underline"
+            className="self-end text-[#232323] "
           >
             Forgot Password?
           </Link>
