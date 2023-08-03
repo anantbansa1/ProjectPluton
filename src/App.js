@@ -25,6 +25,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/getemail" element={<Resetpass /> } />
           <Route path="/leaderboard" element={<Leaderboard /> } />
+          <Route path="/addingpost" element={<Addtext /> } />
         </Routes>
     </Router>
 
