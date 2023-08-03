@@ -1,4 +1,7 @@
 import "./App.css";
+import React, { Component } from "react";
+import Row from "./components/pages/Row"
+
 import Navbar from "./components/Navbar";
 import AddUserAdmin from "./components/AddUserAdmin";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
@@ -8,6 +11,7 @@ import FAQ from "./components/pages/FAQ"
 import LoginPage from "./components/pages/Login"
 import ClubProfile from "./components/pages/Clubprofile";
 import Resetpass from './components/pages/resetpass';
+import Leaderboard from "./components/pages/Leaderboard";
 
 function App() {
   return (
@@ -20,6 +24,7 @@ function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/getemail" element={<Resetpass /> } />
+          <Route path="/leaderboard" element={<Leaderboard /> } />
         </Routes>
     </Router>
 

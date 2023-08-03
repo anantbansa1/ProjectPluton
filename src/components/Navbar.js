@@ -98,7 +98,7 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div
+          <Link to="/leaderboard"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "leaderboard"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
@@ -107,7 +107,7 @@ export default function Navbar(props) {
           >
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
-          </div>
+          </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <div
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
