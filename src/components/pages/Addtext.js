@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../Navbar";
-import Image from "./Image"
-import Poll from "./Poll"
+import Addimage from "./AddImage"
+import Addpoll from "./AddPoll"
 export default function Text() {
   const [option, setoption] = useState("text");
   const [event, setevent] = useState("");
@@ -64,11 +64,11 @@ export default function Text() {
         )}
         {option === "post" && (
           <div className="max-sm:mb-[10vh] mb-[5vh]">
-            <Image></Image>
+            <Addimage></Addimage>
           </div>
         )}
         {option === "poll" && (
-            <Poll></Poll>
+            <Addpoll></Addpoll>
           
         )}
         <div className=" flex max-md:text-sm max-[1076px]:flex-col justify-around text-black text-xl  mt-[4vh]">

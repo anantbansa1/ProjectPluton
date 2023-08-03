@@ -18,7 +18,7 @@ function Image() {
   const [upImgCover, setUpImgCover] = useState(CoverImage);
   const imgRefCover = useRef(null);
   const previewCanvasRefCover = useRef(null);
-  const [cropCover, setCropCover] = useState({ aspect: 1, height: 500 });
+  const [cropCover, setCropCover] = useState({ aspect: 1, height: 80 });
   const [completedCropCover, setCompletedCropCover] = useState(null);
   const [completedCrop, setCompletedCrop] = useState(null);
  const [changeCover, setChangeCover] = useState(false);

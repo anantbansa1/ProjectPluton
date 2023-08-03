@@ -19,6 +19,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import Poll from "./Poll";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { Link } from "react-router-dom";
 
 import { TextField } from "@mui/material";
 
@@ -436,7 +437,7 @@ function ClubProfile(props) {
             />
             {/* <div className="max-md:text-sm">{props.name}</div> */}
             
-            <div className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4">Add a Post/Poll</div>
+            <Link to="/add" className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4">Add a Post/Poll</Link>
           </div>
           {/* <div className="my-5"><img src={props.image}   alt="" /></div> */}
           {/* <div className="flex items-center text-lg max-md:text-sm text-[#dddbdb] ">

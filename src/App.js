@@ -12,6 +12,7 @@ import LoginPage from "./components/pages/Login"
 import ClubProfile from "./components/pages/Clubprofile";
 import Resetpass from './components/pages/resetpass';
 import Leaderboard from "./components/pages/Leaderboard";
+import Addtext from "./components/pages/Addtext";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/getemail" element={<Resetpass /> } />
           <Route path="/leaderboard" element={<Leaderboard /> } />
-          <Route path="/addingpost" element={<Addtext /> } />
+          <Route path="/add" element={<Addtext /> } />
         </Routes>
     </Router>
 
