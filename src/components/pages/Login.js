@@ -77,7 +77,7 @@ function Login() {
 
            <div className="animation " ref={animation}></div> 
         </div> */}
-        <div className="flex flex-col bg-white rounded-3xl shadow-2xl shadow-slate-300 p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 ">
+        <div className="flex flex-col bg-white rounded-3xl shadow-2xl shadow-slate-300 p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 max-[450px]:w-[100%] max-[450px]:h-[100%] w-[450px] xl:w-[25vw] ">
           <span className="text-4xl font-semibold">Login</span>
           <div className="mt-1 w-[100%]">
             <TextField
