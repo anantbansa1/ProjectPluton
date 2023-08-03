@@ -51,26 +51,6 @@ function ClubProfile(props) {
       ? Silverbadge
       : Goldbadge;
 
-  const badge =
-    props.clubpoint < props.tbronze
-      ? "bronze"
-      : props.clubpoint <= props.tsilver
-      ? "silver"
-      : "gold";
-
-  const pointleft =
-    props.clubpoint < props.tbronze
-      ? props.tbronze - props.clubpoint
-      : props.clubpoint <= props.tsilver
-      ? props.tsilver - props.clubpoint
-      : props.tgold - props.clubpoint;
-
-  const color =
-    props.clubpoint < props.tbronze
-      ? "text-[#824a02]"
-      : props.clubpoint <= props.tsilver
-      ? "text-[#d7d7d7]"
-      : "text-[#fee101]";
 
   function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {

@@ -23,6 +23,13 @@ import tanjiro from "../Images/Tanjiro.jpg";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
+import minion from "../Images/Minions.jpg"
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import CampaignIcon from '@mui/icons-material/Campaign';
+
 
 function ClubProfile(props) {
   const [profile, setprofile] = useState(true);
@@ -45,34 +52,43 @@ function ClubProfile(props) {
   const [member, setmember] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
+  
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openfilter = Boolean(anchorEl);
+  const handleClickfilter = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClosefilter = () => {
+    setAnchorEl(null);
+  };
 
   const image =
     props.clubpoint < props.tbronze
       ? Bronzebadge
       : props.clubpoint <= props.tsilver
-      ? Silverbadge
-      : Goldbadge;
+        ? Silverbadge
+        : Goldbadge;
 
   const badge =
     props.clubpoint < props.tbronze
       ? "bronze"
       : props.clubpoint <= props.tsilver
-      ? "silver"
-      : "gold";
+        ? "silver"
+        : "gold";
 
   const pointleft =
     props.clubpoint < props.tbronze
       ? props.tbronze - props.clubpoint
       : props.clubpoint <= props.tsilver
-      ? props.tsilver - props.clubpoint
-      : props.tgold - props.clubpoint;
+        ? props.tsilver - props.clubpoint
+        : props.tgold - props.clubpoint;
 
   const color =
     props.clubpoint < props.tbronze
       ? "text-[#824a02]"
       : props.clubpoint <= props.tsilver
-      ? "text-[#d7d7d7]"
-      : "text-[#fee101]";
+        ? "text-[#d7d7d7]"
+        : "text-[#fee101]";
 
   function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
@@ -226,9 +242,8 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${changeCover ? "" : "hidden"
+              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
@@ -285,11 +300,11 @@ function ClubProfile(props) {
           {props.Role !== "user" && (
             <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
-                className={`px-4 py-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[25vw] lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+                className={`px-4 py-2 max-sm:pr-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
                 <GroupIcon className="scale-[80%]" />
-                &nbsp; <div>Pending</div>
+                &nbsp; <div>Pending</div> &nbsp;
               </button>
             </div>
           )}
@@ -308,40 +323,35 @@ function ClubProfile(props) {
         <div className="flex max-sm:mt-5  items-center ">
           <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
             <div
-              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                props.clubpoint >= props.tgold ? "hidden" : ""
-              } ${color}`}
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${props.clubpoint >= props.tgold ? "hidden" : ""
+                } ${color}`}
             >
               {pointleft} points to {badge}
             </div>
             <div
-              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                props.clubpoint >= props.tgold ? "" : "hidden"
-              } ${color}`}
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${props.clubpoint >= props.tgold ? "" : "hidden"
+                } ${color}`}
             >
               {props.clubpoint} points
             </div>
             <div
-              className={`row-start-1 ${
-                props.clubpoint < props.tbronze ? "" : "hidden"
-              } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+              className={`row-start-1 ${props.clubpoint < props.tbronze ? "" : "hidden"
+                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
               style={{
                 width:
                   ((props.clubpoint / props.tbronze) * 100).toString() + "%",
               }}
             />
             <div
-              className={`row-start-1 ${
-                props.clubpoint < props.tbronze ? "" : "hidden"
-              } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+              className={`row-start-1 ${props.clubpoint < props.tbronze ? "" : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
             />
             <div
-              className={`row-start-1 ${
-                props.clubpoint < props.tsilver &&
+              className={`row-start-1 ${props.clubpoint < props.tsilver &&
                 props.clubpoint >= props.tbronze
-                  ? ""
-                  : "hidden"
-              } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                ? ""
+                : "hidden"
+                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
               style={{
                 width:
                   (
@@ -352,32 +362,29 @@ function ClubProfile(props) {
               }}
             />
             <div
-              className={`row-start-1 ${
-                props.clubpoint < props.tsilver &&
+              className={`row-start-1 ${props.clubpoint < props.tsilver &&
                 props.clubpoint >= props.tbronze
-                  ? ""
-                  : "hidden"
-              } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                ? ""
+                : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
             />
             <div
-              className={`row-start-1  ${
-                props.clubpoint >= props.tsilver ? "" : "hidden"
-              }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+              className={`row-start-1  ${props.clubpoint >= props.tsilver ? "" : "hidden"
+                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
               style={{
                 width:
                   props.clubpoint > props.tgold
                     ? "100%"
                     : (
-                        ((props.clubpoint - props.tsilver) /
-                          (props.tgold - props.tsilver)) *
-                        100
-                      ).toString() + "%",
+                      ((props.clubpoint - props.tsilver) /
+                        (props.tgold - props.tsilver)) *
+                      100
+                    ).toString() + "%",
               }}
             />
             <div
-              className={`row-start-1 ${
-                props.clubpoint >= props.tsilver ? "" : "hidden"
-              }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+              className={`row-start-1 ${props.clubpoint >= props.tsilver ? "" : "hidden"
+                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
             />
           </div>
           <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -403,9 +410,8 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${
-                underline === "post" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "post" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -413,9 +419,8 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${
-                underline === "poll" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "poll" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -425,12 +430,38 @@ function ClubProfile(props) {
           </div>
           <div className="">
             {" "}
-            <button className="flex items-center text-xl ">
+            <button className="flex items-center text-xl " onClick={handleClickfilter}>
               {" "}
-              <FilterAltIcon className="scale-[150%]"></FilterAltIcon>
-              <div className="ml-3">Filter</div>
-              <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
+              <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
+              <div className="ml-3 max-lg:hidden">Filter</div>
+              <div className="max-lg:hidden">
+                <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}</div>
             </button>
+            <div className="">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openfilter}
+                  onClose={handleClosefilter}
+                  sx={{
+                    '& .MuiPaper-root': {
+                      bgcolor: '#130f22',
+                      color: '#fff',
+                      margin: 2,
+                    },
+                  }}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+
+                  }}
+                >
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}> <EmojiEventsIcon /> &nbsp;Achievements</MenuItem>
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}><EventAvailableIcon />&nbsp;Events</MenuItem>
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}><CampaignIcon />&nbsp;Announcements</MenuItem>
+                </Menu>
+              </div>
           </div>
         </div>
       </div>
@@ -464,7 +495,7 @@ function ClubProfile(props) {
         <Post
           name={props.name}
           ClubImage={ClubImage}
-          image={Zoro}
+          image={tanjiro}
           text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
           date="7/29/2023"
           time="10:24 PM"
@@ -474,7 +505,7 @@ function ClubProfile(props) {
         <Post
           name={props.name}
           ClubImage={ClubImage}
-          image={Zoro}
+          image={tanjiro}
           text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
           date="7/29/2023"
           time="10:24 PM"
@@ -646,7 +677,7 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color:'white', borderColor:'#100d1e', "&:hover": { borderColor:'#0a0813', color:'white' } }}
+            sx={{ color: 'white', borderColor: '#100d1e', "&:hover": { borderColor: '#0a0813', color: 'white' } }}
             onClick={handleClose}
           >
             Cancel{" "}
@@ -658,7 +689,7 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
+            sx={{ background: "#130f22", color: 'white', borderColor: '#100d1e', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
             onClick={() => SaveChanges(previewCanvasRef.current, completedCrop)}
           >
             save changes{" "}
@@ -726,7 +757,7 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color:'white', borderColor:'#100d1e', "&:hover": { borderColor:'#0a0813', color:'white' } }}
+            sx={{ color: 'white', borderColor: '#100d1e', "&:hover": { borderColor: '#0a0813', color: 'white' } }}
             onClick={handleCloseCover}
           >
             Cancel{" "}
@@ -738,7 +769,7 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
+            sx={{ background: "#130f22", color: 'white', borderColor: '#100d1e', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
             onClick={() => SaveChangesCover(previewCanvasRefCover.current, completedCropCover)}
           >
             save changes{" "}
@@ -755,13 +786,13 @@ function ClubProfile(props) {
           },
         }}
         PaperProps={{
-          style: {
+          sx: {
             background: "#1e1936",
             color: "#fff",
-            width: "25%",
-            height: "50%",
-            borderRadius: 30,
-            padding: "10px",
+            width: { xs: '100%', md: '75%', lg: '100%' },
+            height: { xs: '50%', md: '50%', lg: '50%' },
+            borderRadius: 15,
+            padding: "15px",
           },
         }}
         // TransitionComponent={Transition}
@@ -786,17 +817,70 @@ function ClubProfile(props) {
           }}
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
-          <div className="flex scrollbar-hide flex-col space-y-5 ">
-            <div className="text-lg flex justify-between">
+          <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
+            <div className=" flex justify-between">
+              <div className="flex items-center space-x-2 ">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#a77044] font-semibold">Anant Bansal</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={minion}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
               <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="text-[#00ffff] font-semibold">Anant</div>
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={tanjiro}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#fee101] font-semibold">Duke Dhal</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={minion}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#fee101] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#00ffff] font-semibold">Ricky Chandra Paul Minj</div>
               </div>
               <div className="grid grid-rows-1 items-center grid-cols-1">
                 <img
@@ -806,16 +890,33 @@ function ClubProfile(props) {
                 />
               </div>
             </div>
-            <div className="text-lg flex justify-between">
+            <div className=" flex justify-between">
               <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className=" font-semibold">Samrath Ahluwalia</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={minion}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#00ffff] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#fee101] font-semibold">Madhav Nakra</div>
               </div>
               <div className="grid grid-rows-1 items-center grid-cols-1">
                 <img
@@ -825,35 +926,15 @@ function ClubProfile(props) {
                 />
               </div>
             </div>
-            <div className="text-lg flex justify-between">
+            <div className=" flex justify-between">
               <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
                 <img
-                  src={tanjiro}
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
                   alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
                 />
-              </div>
-            </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="text-[#00ffff] font-semibold">Anant</div>
+
+                <div className="text-[#00ffff] font-semibold">Shubham Yadav</div>
               </div>
               <div className="grid grid-rows-1 items-center grid-cols-1">
                 <img
@@ -863,139 +944,7 @@ function ClubProfile(props) {
                 />
               </div>
             </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#fee101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#fee101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="text-lg flex justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-[40px] h-[40px] flex items-center rounded-full border-2 border-white">
-                  <img
-                    src={Zoro}
-                    className="w-[30px] h-[30px] rounded-full"
-                    alt=""
-                  />
-                </div>
-                <div className="">Anant</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                {/* <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#fee101] h-[50px] w-[50px] rounded-full  object-cover "
-                /> */}
-              </div>
-            </div>
+
           </div>
         </DialogContent>
       </Dialog>

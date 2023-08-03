@@ -23,18 +23,18 @@ function Post(props) {
 
   return (
     <div>
-      <div className="ml-[20vw] max-md:ml-[15vw] my-10">
-        <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
+      <div className="ml-[20vw] max-md:ml-[15vw] my-10 max-sm:mr-0">
+        <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 max-sm:px-0 shadow-black text-white">
           <div className="flex justify-between font-semibold items-center ">
-            <div className="flex items-center space-x-5">
+            <div className="flex items-center max-sm:space-x-2 space-x-5">
               <img
                 src={props.ClubImage}
                 alt=""
-                className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
+                className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px] max-sm:m-2"
               />
               <div className="max-md:text-sm">{props.name}</div>
             </div>
-            <div className="text-[#962a28] cursor-pointer hover:text-[#c43836] px-4" onClick={()=>{setOpen(true)}}><DeleteIcon className="scale-[130%]" /></div>
+            <div className="text-[#962a28] cursor-pointer hover:text-[#c43836] px-4" onClick={()=>{setOpen(true)}}><DeleteIcon className="max-sm:scale-[80%] lg:scale-[130%]" /></div>
           </div>
           <div className="my-5">
             <img src={props.image} alt="" />
@@ -57,8 +57,16 @@ function Post(props) {
         open={open}
         PaperProps={{
           style: {
-            background: "#232323",
+            background: "#1e1936",
             color: "#fff",
+            borderRadius: 25,
+            padding: '10px',
+          },
+          
+        }}
+        sx={{
+          '& .MuiBackdrop-root': {
+            backdropFilter: 'blur(20px)',
           },
         }}
         // TransitionComponent={Transition}
@@ -73,10 +81,10 @@ function Post(props) {
           <div className="text-[#e4e2e2] text-lg">Are you sure you want to delete?</div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={handleNo}>
+           <Button variant="" onClick={handleNo} sx={{borderRadius: '15px'}}>
             No
           </Button>
-          <Button variant="outlined" color="error" onClick={handleYes}>
+          <Button variant="outlined" color="error" sx={{borderRadius: '15px'}} onClick={handleYes}>
             Yes
           </Button>
         </DialogActions>

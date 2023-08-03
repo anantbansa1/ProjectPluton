@@ -117,7 +117,7 @@ function Poll(props) {
                     />{" "}
                     <div className="flex">{props.option2}</div>
                   </div>
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3  text-sm py-1 bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {props.votes2} votes
                   </div>
@@ -191,9 +191,16 @@ function Poll(props) {
           style: {
             background: "#232323",
             color: "#fff",
+            borderRadius: 25,
+            padding: '10px',
           },
         }}
         // TransitionComponent={Transition}
+        sx={{
+          '& .MuiBackdrop-root': {
+            backdropFilter: 'blur(20px)',
+          },
+        }}
         fullWidth
         maxWidth="sm"
         keepMounted
@@ -205,10 +212,10 @@ function Poll(props) {
           <div className="text-[#e4e2e2] text-lg">Are you sure you want to delete?</div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={handleNo}>
+        <Button variant="" onClick={handleNo} sx={{borderRadius: '15px'}}>
             No
           </Button>
-          <Button variant="outlined" color="error" onClick={handleYes}>
+          <Button variant="outlined" color="error" sx={{borderRadius: '15px'}} onClick={handleYes}>
             Yes
           </Button>
         </DialogActions>
