@@ -109,7 +109,7 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div
+          <Link to = "/aboutus"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "aboutus"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
@@ -118,7 +118,7 @@ export default function Navbar(props) {
           >
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;About Us</button>
-          </div>
+          </Link>
           <Link
             to="/userprofile"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${

@@ -13,6 +13,7 @@ import ClubProfile from "./components/pages/Clubprofile";
 import Resetpass from './components/pages/resetpass';
 import Leaderboard from "./components/pages/Leaderboard";
 import Addtext from "./components/pages/Addtext";
+import AboutUs from "./components/AboutUs";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/getemail" element={<Resetpass /> } />
           <Route path="/leaderboard" element={<Leaderboard /> } />
           <Route path="/add" element={<Addtext /> } />
+          <Route path="/aboutus" element={<AboutUs /> } />
         </Routes>
     </Router>
 
