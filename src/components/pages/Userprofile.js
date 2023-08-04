@@ -537,7 +537,7 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color:'white', borderColor:'#100d1e', "&:hover": { borderColor:'#0a0813', color:'white' } }}
+            sx={{ color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { borderColor:'#0a0813', color:'white' } }}
             onClick={handleClose}
           >
             Cancel{" "}
@@ -549,7 +549,7 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
+            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
             onClick={() => SaveChanges(previewCanvasRef.current, completedCrop)}
           >
             save changes{" "}
@@ -617,7 +617,7 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color:'white', borderColor:'#100d1e', "&:hover": { borderColor:'#0a0813', color:'white' } }}
+            sx={{ color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { borderColor:'#0a0813', color:'white' } }}
             onClick={handleCloseCover}
           >
             Cancel{" "}
@@ -629,7 +629,7 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
+            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
             onClick={() => SaveChangesCover(previewCanvasRefCover.current, completedCropCover)}
           >
             save changes{" "}
