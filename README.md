@@ -12,7 +12,9 @@ npm install react-image-crop@^8.6.12\
 npm install @fontsource/roboto\
 npm install @mui/icons-material\
 npm install firebase\
-npm install react-router-dom
+npm install react-router-dom\
+npm install tailwind-scrollbar-hide\
+npm install --save @fontsource/press-start-2p
 
 ## Available Scripts
 

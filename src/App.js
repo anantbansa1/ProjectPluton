@@ -4,6 +4,8 @@ import Row from "./components/pages/Row";
 
 import Navbar from "./components/Navbar";
 import AddUserAdmin from "./components/AddUserAdmin";
+import minion from "./components/Images/Minions.jpg";
+import cover from "./components/Images/zoro.jpg";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import UserFeed from "./components/pages/UserFeed";
 import UserProfile from "./components/pages/Userprofile";
@@ -14,8 +16,6 @@ import Resetpass from "./components/pages/resetpass";
 import Leaderboard from "./components/pages/Leaderboard";
 import Addtext from "./components/pages/Addtext";
 import AboutUs from "./components/pages/AboutUs";
-import minion from "./components/Images/Minions.jpg";
-import cover from "./components/Images/cover.jpg";
 
 function App() {
   return (
