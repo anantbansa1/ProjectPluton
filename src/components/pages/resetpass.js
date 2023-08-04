@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import Backdrop from "@mui/material/CircularProgress";
 
+import {CircularProgress} from "@mui/material";
 const auth = getAuth();
 
 export default function Resetpass(props) {
@@ -16,6 +18,7 @@ export default function Resetpass(props) {
   const [error, setError] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [helperText, sethelperText] = useState("");
+  const [Disabled, setDisabled] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [time,setTime] = useState(30);
 
@@ -56,6 +59,7 @@ export default function Resetpass(props) {
 
   async function displayemail(e) {
     // console.log(Email);
+    setDisabled(true);
     setLoading(true);
     sendPasswordResetEmail(auth, Email)
       .then(() => {
@@ -63,12 +67,13 @@ export default function Resetpass(props) {
         sethelperText("   ");
         setOpen(true);
           sleep(2000).then(() => {
-            setLoading(false);
+            setDisabled(false);
           });
+          
       
         // for(let i=0;i<31;i++) {
         //   if (time === 0) {
-        //     setLoading(false);
+        //     setDisabled(false);
         //     setTime(30);
         //   }
         //   sleep(1000).then(() => {
@@ -76,7 +81,7 @@ export default function Resetpass(props) {
         //   });
         // }
         
-        // setLoading(false);
+        // setDisabled(false);
         // navigate("/login");
 
         // ..
@@ -94,10 +99,11 @@ export default function Resetpass(props) {
         }
         setError(true);
         setEmail("");
-        setLoading(false);
+        setDisabled(false);
 
         // ..
       });
+      setLoading(false);
   }
 
   return (
@@ -195,7 +201,7 @@ export default function Resetpass(props) {
             />
           </div>
           <button
-            disabled={Loading}
+            disabled={Disabled}
             className="btn-grad font-semibold"
             onClick={displayemail}
           >
@@ -211,6 +217,13 @@ export default function Resetpass(props) {
           Password reset mail sent successfully!
         </Alert>
       </Snackbar>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={Loading}
+        close={Loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

@@ -98,7 +98,7 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <div
+          <Link to="/leaderboard"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "leaderboard"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
@@ -107,7 +107,7 @@ export default function Navbar(props) {
           >
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
-          </div>
+          </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <div
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
@@ -155,8 +155,16 @@ export default function Navbar(props) {
         open={open}
         PaperProps={{
           style: {
-            background: "#232323",
+            background: "#1e1936",
             color: "#fff",
+            borderRadius: 25,
+            padding: '10px',
+            
+          },
+        }}
+        sx={{
+          '& .MuiBackdrop-root': {
+            backdropFilter: 'blur(20px)',
           },
         }}
         // TransitionComponent={Transition}
@@ -171,10 +179,10 @@ export default function Navbar(props) {
           <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={handleNo}>
+          <Button variant="" onClick={handleNo} sx={{borderRadius: '15px'}}>
             No
           </Button>
-          <Button variant="outlined" color="error" onClick={handleYes}>
+          <Button variant="outlined" color="error" sx={{borderRadius: '15px'}} onClick={handleYes}>
             Yes
           </Button>
         </DialogActions>

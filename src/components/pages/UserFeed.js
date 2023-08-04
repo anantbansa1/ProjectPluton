@@ -6,190 +6,220 @@ import Post from "./Post";
 import Poll from "./Poll";
 import Tooltip from "@mui/material/Tooltip";
 import { Link } from "react-router-dom";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import GroupsIcon from '@mui/icons-material/Groups';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import CampaignIcon from '@mui/icons-material/Campaign';
 
 export default function UserFeed() {
-  const [post, underline] = useState("Post");
+  const [post, underline] = useState("post");
   const [club, setclub] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div>
       <Navbar selected="home" />
       <div className="">
-        <div className="max-lg:ml-[15vw] max-lg:mr-0 ml-[20vw] flex text-white  mr-[12vw] justify-center">
-          <div className="flex-row flex space-x-20 my-[5vh] text-xl ">
-            <div className="leading-10">
+        <div className=" md:ml-[22vw] ml-[18vw] max-[769px]:mt-[8vh]  my-[2vw] max-[769px]:mr-0 mr-[12vw] max-md:py-0 py-8 px-4  text-white ">
+          <div className="flex max-md:text-lg text-3xl items-center justify-between  ">
+            {" "}
+            <div className=""> </div>
+            <div className="flex space-x-[5vw] max-md:space-x-4  ">
               <button
+                className={`${post === "post" ? "border-b" : ""
+                  } border-white py-4  px-8`}
                 onClick={(e) => {
-                  underline("Post");
+                  underline("post");
                 }}
-                className={` ${
-                  post === "Post" ? "border-b" : ""
-                } border-white px-8 py-2 text-center`}
               >
                 Post
               </button>
-              {post === "Post"
-                ? // <hr className="max-[570px]:w-[9vw] w-[7vw] border-white border" />
-                  ""
-                : // <hr className="hidden" />
-                  ""}
-            </div>
-            <div className="leading-10">
               <button
+                className={`${post === "poll" ? "border-b" : ""
+                  } border-white py-4  px-8`}
                 onClick={(e) => {
-                  underline("Poll");
+                  underline("poll");
                 }}
-                className={` ${
-                  post === "Poll" ? "border-b" : ""
-                } border-white px-8 py-2 text-center`}
               >
                 Poll
               </button>
-              {post === "Poll"
-                ? // <hr className=" max-[570px]:w-[8vw] w-[5.5vw] border-white border" />""
-                  ""
-                : // <hr className="hidden" />
-                  ""}
+            </div>
+            <div className="">
+              {" "}
+              <button className="flex justify-center items-center text-xl " onClick={handleClick}>
+                {" "}
+                <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
+                <div className="ml-3 max-lg:hidden">Filter</div>
+                <div className="max-lg:hidden">
+                  <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}</div>
+              </button>
+              <div className="">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  sx={{
+                    '& .MuiPaper-root': {
+                      bgcolor: '#130f22',
+                      color: '#fff',
+                      margin: 2,
+                    },
+                  }}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+
+                  }}
+                >
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}> <EmojiEventsIcon /> &nbsp;Achievements</MenuItem>
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}><EventAvailableIcon />&nbsp;Events</MenuItem>
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}><CampaignIcon />&nbsp;Announcements</MenuItem>
+                </Menu>
+              </div>
             </div>
           </div>
-          {/* <hr
-            width="1"
-            size="500"
-            className=" mx-auto border-white border h-[100vh] fixed right-[15vw] top-0 max-md:hidden"
-          /> */}
         </div>
 
-        <div className="flex ml-[70vw] mt-[-4vh] text-white">
-          <button className="flex items-center ">
-            <div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-funnel-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z" />
-              </svg>
-            </div>
-            <div className="text-lg ml-[0.7vw]">Filters</div>
-            <div className="ml-[0.5vw]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                class="bi bi-caret-down-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-              </svg>
-            </div>
-          </button>
-        </div>
+
       </div>
 
-      {post === "Post" && (
+      {post === "post" && (
         <div className="-ml-[12vw] max-[769px]:m-0">
           <Post
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
-            text="Caption"
-            date="Date"
-            time="Time"
+            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
+            date="08/03/2023"
+            time="09:06"
           ></Post>
           <Post
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
-            text="Caption"
-            date="Date"
-            time="Time"
+            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
+            date="08/03/2023"
+            time="09:06"
           ></Post>
           <Post
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
-            text="Caption"
-            date="Date"
-            time="Time"
+            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
+            date="08/03/2023"
+            time="09:06"
           ></Post>
           <Post
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
-            text="Caption"
-            date="Date"
-            time="Time"
+            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
+            date="08/03/2023"
+            time="09:06"
           ></Post>
           <Post
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
-            text="Caption"
-            date="Date"
-            time="Time"
+            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
+            date="08/03/2023"
+            time="09:06"
           ></Post>
           <Post
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
-            text="Caption"
-            date="Date"
-            time="Time"
+            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
+            date="08/03/2023"
+            time="09:06"
           ></Post>
+
+
         </div>
       )}
 
-      {post === "Poll" && (
-          <div className="-ml-[12vw] max-[769px]:m-0">
+      {post === "poll" && (
+        <div className="-ml-[12vw] max-[769px]:m-0">
           <Poll
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Minions}
-            question="Question"
+            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
             option1="Option 1"
             option2="Option 2"
             option3="Option 3"
             option4="Option 4"
+            votes1={5}
+            votes2={1}
+            votes3={6}
+            votes4={2}
           ></Poll>
           <Poll
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Minions}
-            question="Question"
+            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
             option1="Option 1"
             option2="Option 2"
             option3="Option 3"
             option4="Option 4"
+            votes1={5}
+            votes2={1}
+            votes3={6}
+            votes4={2}
           ></Poll>
           <Poll
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Minions}
-            question="Question"
+            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
             option1="Option 1"
             option2="Option 2"
             option3="Option 3"
             option4="Option 4"
+            votes1={5}
+            votes2={1}
+            votes3={6}
+            votes4={2}
           ></Poll>
           <Poll
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Minions}
-            question="Question"
+            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
             option1="Option 1"
             option2="Option 2"
             option3="Option 3"
             option4="Option 4"
+            votes1={5}
+            votes2={1}
+            votes3={6}
+            votes4={2}
           ></Poll>
           <Poll
-            name="Club Name"
+            name="Club of Programmers"
             ClubImage={Minions}
-            question="Question"
+            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
             option1="Option 1"
             option2="Option 2"
             option3="Option 3"
             option4="Option 4"
+            votes1={5}
+            votes2={1}
+            votes3={6}
+            votes4={2}
           ></Poll>
+
         </div>
       )}
 
@@ -343,7 +373,7 @@ export default function UserFeed() {
         }}
         className="min-[769px]:hidden flex items-center  space-x-1 text-white fixed top-3 right-2"
       >
-        <div>
+        {/* <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -361,8 +391,8 @@ export default function UserFeed() {
               d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
             />
           </svg>
-        </div>
-        <div>All Clubs</div>
+        </div> */}
+        <div><GroupsIcon></GroupsIcon> Clubs</div>
       </button>
       {club === false ? (
         <img
@@ -372,98 +402,57 @@ export default function UserFeed() {
         />
       ) : (
         // <img src={Zoro} alt="" className="h-[20vw] w-[15vw] fixed top-10 right-1"/>
-        <div className=" min-[769px]:hidden scrollbar-hide  flex flex-col bg-white backdrop-filter bg-opacity-10 backdrop-blur-2xl h-[100vh] w-[20vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
-          <button className="">
+        <div className=" min-[769px]:hidden scrollbar-hide  flex flex-col bg-white backdrop-filter bg-opacity-10 backdrop-blur-2xl h-[100vh] w-[30vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
+          <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
+          </Link>
+          <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
+          </Link>
+          <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
+          </Link>
+          <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
+          </Link>
+          <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
+          </Link>
+          <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
+          </Link>
+          <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
             />
-          </button>
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
-            />
-          </button>
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
-            />
-          </button>
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
-            />
-          </button>
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
-            />
-          </button>
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
-            />
-          </button>
-          <button className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[15vw] w-[15vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
-            />
-          </button>
+          </Link>
+
         </div>
       )}
     </div>

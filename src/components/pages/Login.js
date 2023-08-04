@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import { InputAdornment } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import HttpsIcon from "@mui/icons-material/Https";
-import Lottie from "lottie-web";
+// import Lottie from 'lottie-web';
 import animationData from "./loginanimation.json";
 
 function Login() {
@@ -17,7 +17,7 @@ function Login() {
   const [Password, setPass] = useState("");
   const [helperText, setHelperText] = useState("");
   const [error, setError] = useState(false);
-  const animObj = useRef(null);
+  // const animObj = useRef(null);
 
   const [Loading, setLoading] = useState(false);
   const user = useAuth();
@@ -25,16 +25,16 @@ function Login() {
 
   const animation = useRef(null);
 
-  useEffect(() => {
-    const instance = Lottie.loadAnimation({
-      container: animation.current,
-      renderer: "svg",
-      loop: true,
-      autoplay: true,
-      animationData: require("./loginanimation.json"),
-    });
-    return () => instance.destroy();
-  }, []);
+  // useEffect(()=>{
+  //   const instance = Lottie.loadAnimation({
+  //     container: animation.current,
+  //     renderer: 'svg',
+  //     loop: true,
+  //     autoplay: true,
+  //     animationData: require('./loginanimation.json')
+  //   })
+  //   return () => instance.destroy();
+  // }, []);
 
   async function handleLogin() {
     setLoading(true);
