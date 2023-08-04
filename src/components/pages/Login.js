@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { TextField } from "@mui/material";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { signIn, useAuth } from "../../firebase";
 import { useNavigate, Link } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
@@ -10,7 +10,7 @@ import { InputAdornment } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import HttpsIcon from "@mui/icons-material/Https";
 // import Lottie from 'lottie-web';
-import animationData from './loginanimation.json';
+import animationData from "./loginanimation.json";
 
 function Login() {
   const [Email, setEmail] = useState("");
@@ -58,7 +58,7 @@ function Login() {
     // console.log("hello");
     if (user) {
       console.log("hello2");
-      navigate("/");
+      navigate("/home");
     }
   }
 
@@ -72,7 +72,6 @@ function Login() {
     <div className="  ">
       {redirectIn()}
       <div className="flex justify-center h-[100vh] bg-white bg-[url('https://upload.wikimedia.org/wikipedia/commons/3/33/Microsoft_login_screen.svg')] items-center">
-        
         {/* <div className="flex flex-row w-[60vw] h-[100vh] ">
 
            <div className="animation " ref={animation}></div> 
@@ -89,7 +88,6 @@ function Login() {
               value={Email}
               helperText={helperText}
               error={error}
-
               className=""
               sx={{
                 "& .MuiInputBase-root": {
@@ -110,7 +108,7 @@ function Login() {
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#000",
                 },
-                '&:before, &:after': {
+                "&:before, &:after": {
                   borderRadius: "50px",
                 },
                 // boxShadow: 10
@@ -125,7 +123,7 @@ function Login() {
               InputProps={{
                 style: {
                   borderRadius: "50px",
-                }
+                },
               }}
               id="myfilled-name"
               label="Email"
@@ -175,7 +173,7 @@ function Login() {
               InputProps={{
                 style: {
                   borderRadius: "50px",
-                }
+                },
               }}
               id="myfilled-name"
               label="Password"
@@ -199,12 +197,11 @@ function Login() {
           >
             Sign In
           </Button> */}
-          
-          <button className="btn-grad font-semibold" onClick={handleLogin}>Sign In</button>
-          <Link
-            to="/getemail"
-            className="self-end text-[#232323] "
-          >
+
+          <button className="btn-grad font-semibold" onClick={handleLogin}>
+            Sign In
+          </button>
+          <Link to="/getemail" className="self-end text-[#232323] ">
             Forgot Password?
           </Link>
           {/* </div> */}

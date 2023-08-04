@@ -155,8 +155,16 @@ export default function Navbar(props) {
         open={open}
         PaperProps={{
           style: {
-            background: "#232323",
+            background: "#1e1936",
             color: "#fff",
+            borderRadius: 25,
+            padding: '10px',
+            
+          },
+        }}
+        sx={{
+          '& .MuiBackdrop-root': {
+            backdropFilter: 'blur(20px)',
           },
         }}
         // TransitionComponent={Transition}
@@ -171,10 +179,10 @@ export default function Navbar(props) {
           <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={handleNo}>
+          <Button variant="" onClick={handleNo} sx={{borderRadius: '15px'}}>
             No
           </Button>
-          <Button variant="outlined" color="error" onClick={handleYes}>
+          <Button variant="outlined" color="error" sx={{borderRadius: '15px'}} onClick={handleYes}>
             Yes
           </Button>
         </DialogActions>

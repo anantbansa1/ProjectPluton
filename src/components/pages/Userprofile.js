@@ -20,6 +20,7 @@ import Rank3 from "../Images/rank3.png";
 import Rank20p from "../Images/rank20p.png";
 import Rank2 from "../Images/rank2.png";
 import { Leaderboard } from "@mui/icons-material";
+import {Button} from "@mui/material"
 
 function ClubProfile(props) {
   const [medal, setmedal] = useState(true);
@@ -39,6 +40,9 @@ function ClubProfile(props) {
   const [cropCover, setCropCover] = useState({ aspect: 3.8, height: 500 });
   const [completedCropCover, setCompletedCropCover] = useState(null);
   const [completedCrop, setCompletedCrop] = useState(null);
+  const profileinput = React.useRef();
+  const Coverinput = React.useRef();
+
 
   const image =
     props.clubpoint < props.tbronze
@@ -47,26 +51,6 @@ function ClubProfile(props) {
       ? Silverbadge
       : Goldbadge;
 
-  const badge =
-    props.clubpoint < props.tbronze
-      ? "bronze"
-      : props.clubpoint <= props.tsilver
-      ? "silver"
-      : "gold";
-
-  const pointleft =
-    props.clubpoint < props.tbronze
-      ? props.tbronze - props.clubpoint
-      : props.clubpoint <= props.tsilver
-      ? props.tsilver - props.clubpoint
-      : props.tgold - props.clubpoint;
-
-  const color =
-    props.clubpoint < props.tbronze
-      ? "text-[#824a02]"
-      : props.clubpoint <= props.tsilver
-      ? "text-[#d7d7d7]"
-      : "text-[#fee101]";
 
   function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
@@ -499,6 +483,19 @@ function ClubProfile(props) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            background: "#1e1936",
+            color: "#fff",
+            borderRadius: 25,
+            padding: "10px",
+          },
+        }}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
       >
         <DialogTitle id="alert-dialog-title">
           {"Change Profile Picture"}
@@ -515,40 +512,71 @@ function ClubProfile(props) {
               onComplete={(c) => setCompletedCrop(c)}
             />
             <div className="flex my-5 justify-between">
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  background: "#130f22",
+                  "&:hover": { background: "#100d1e" },
+                }}
+                onClick={() => profileinput.current.click()}
+              >
+                Upload File{" "}
+              </Button>
               <input
-                className=" text-[#5d5d5d] file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
+                className=" text-[#5d5d5d] hidden  file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
                 type="file"
                 accept="image/*"
+                ref={profileinput}
                 onChange={onSelectFile}
               ></input>
             </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <button
-            className="mx-3 hover:underline px-3 py-2 "
+          <Button
+            variant="outlined"
+            color="primary"
+            sx={{ color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { borderColor:'#0a0813', color:'white' } }}
             onClick={handleClose}
           >
-            Cancel
-          </button>
+            Cancel{" "}
+          </Button>
+
           <div className="hidden">
             <canvas ref={previewCanvasRef} />
           </div>
-          <button
-            className="mx-3 bg-black text-white px-3 py-2 "
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
             onClick={() => SaveChanges(previewCanvasRef.current, completedCrop)}
-            autoFocus
           >
-            Save Changes
-          </button>
+            save changes{" "}
+          </Button>
+
         </DialogActions>
       </Dialog>
+
 
       <Dialog
         open={openCover}
         onClose={handleCloseCover}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            background: "#1e1936",
+            color: "#fff",
+            borderRadius: 25,
+            padding: "10px",
+          },
+        }}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
       >
         <DialogTitle id="alert-dialog-title">
           {"Change Cover Picture"}
@@ -564,38 +592,49 @@ function ClubProfile(props) {
               onComplete={(c) => setCompletedCropCover(c)}
             />
             <div className="flex my-5 justify-between">
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  background: "#130f22",
+                  "&:hover": { background: "#100d1e" },
+                }}
+                onClick={() => Coverinput.current.click()}
+              >
+                Upload File{" "}
+              </Button>
               <input
-                className=" text-[#5d5d5d] file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
+                className=" text-[#5d5d5d] hidden  file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
                 type="file"
                 accept="image/*"
+                ref={Coverinput}
                 onChange={onSelectFileCover}
               ></input>
-              {/* <button className="hover:underline" onClick={setclubimage(gold)}> Unset Photo</button> */}
             </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <button
-            className="mx-3 hover:underline px-3 py-2 "
+          <Button
+            variant="outlined"
+            color="primary"
+            sx={{ color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { borderColor:'#0a0813', color:'white' } }}
             onClick={handleCloseCover}
           >
-            Cancel
-          </button>
+            Cancel{" "}
+          </Button>
+
           <div className="hidden">
             <canvas ref={previewCanvasRefCover} />
           </div>
-          <button
-            className="mx-3 bg-black text-white px-3 py-2 "
-            onClick={() =>
-              SaveChangesCover(
-                previewCanvasRefCover.current,
-                completedCropCover
-              )
-            }
-            autoFocus
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
+            onClick={() => SaveChangesCover(previewCanvasRefCover.current, completedCropCover)}
           >
-            Save Changes
-          </button>
+            save changes{" "}
+          </Button>
+
         </DialogActions>
       </Dialog>
     </div>
