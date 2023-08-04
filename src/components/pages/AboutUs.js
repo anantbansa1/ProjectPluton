@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "./Navbar";
-import Minions from "./Images/Minions.jpg";
-import Rengoku from "./Images/Rengoku.png";
-import Deadpool from "./Images/Deadpool.jpg";
-import Sasuke from "./Images/Sasuke.jpg";
-import Temp from "./Images/Temp.jpg";
-import Beetles from "./Images/Beetles.jpg";
+import Navbar from "../Navbar";
+import Minions from "../Images/Minions.jpg";
+import Rengoku from "../Images/Rengoku.png";
+import Deadpool from "../Images/Deadpool.jpg";
+import Sasuke from "../Images/Sasuke.jpg";
+import Temp from "../Images/Temp.jpg";
+import Beetles from "../Images/Beetles.jpg";
 
 export default function AboutUs() {
   return (

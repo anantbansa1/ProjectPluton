@@ -13,7 +13,9 @@ import ClubProfile from "./components/pages/Clubprofile";
 import Resetpass from "./components/pages/resetpass";
 import Leaderboard from "./components/pages/Leaderboard";
 import Addtext from "./components/pages/Addtext";
-import AboutUs from "./components/AboutUs";
+import AboutUs from "./components/pages/AboutUs";
+import minion from "./components/Images/Minions.jpg";
+import cover from "./components/Images/cover.jpg";
 
 function App() {
   return (
