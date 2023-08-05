@@ -45,7 +45,7 @@ export default function Leaderboard(props) {
             </div>
 
           </div>
-          <div className="w-[33%] max-md:w-[100%] max-md:order-1 max-md:h-[200px] h-[300px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]">
+          <div className="w-[33%]  max-md:w-[100%] max-md:order-1 max-md:h-[200px] h-[300px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]">
 
             <div className="flex flex-col shadow-[#39495f] bg-[#130f22] max-md:h-[180px] h-[280px] shadow-md rounded-lg row-start-2 col-start-1 row-span-4 col-span-3">
             </div>

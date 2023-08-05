@@ -223,7 +223,7 @@ export default function UserFeed() {
         </div>
       )}
 
-      <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  space-y-10 bg-white bg-opacity-10 backdrop-filter backdrop-blur-3xl ">
+      <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  shadow-2xl shadow-black space-y-10 bg-white bg-opacity-5 backdrop-blur-2xl ">
         <Link to="/clubprofile" className="h-[7vw] w-[7vw] border-white rounded-full" >
           <Tooltip title="clubname">
             {" "}
@@ -402,56 +402,50 @@ export default function UserFeed() {
         />
       ) : (
         // <img src={Zoro} alt="" className="h-[20vw] w-[15vw] fixed top-10 right-1"/>
-        <div className=" min-[769px]:hidden scrollbar-hide  flex flex-col bg-white backdrop-filter bg-opacity-10 backdrop-blur-2xl h-[100vh] w-[30vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
+        <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
           <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
           </Link>
           <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
           </Link>
           <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
           </Link>
           <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
           </Link>
           <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
           </Link>
           <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
-              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
+              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
           </Link>
-          <Link to="/clubprofile" className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[25vw] w-[25vw] rounded-[50%] mb-[2vh] mt-[2vw] mx-auto"
-            />
-          </Link>
+          
 
         </div>
       )}

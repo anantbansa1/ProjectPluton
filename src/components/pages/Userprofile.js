@@ -21,6 +21,9 @@ import Rank20p from "../Images/rank20p.png";
 import Rank2 from "../Images/rank2.png";
 import { Leaderboard } from "@mui/icons-material";
 import {Button} from "@mui/material"
+import { Link } from "react-router-dom";
+import minion from "../Images/Minions.jpg"
+import Tanjiro from "../Images/Tanjiro.jpg"
 
 function ClubProfile(props) {
   const [medal, setmedal] = useState(true);
@@ -40,6 +43,7 @@ function ClubProfile(props) {
   const [cropCover, setCropCover] = useState({ aspect: 3.8, height: 500 });
   const [completedCropCover, setCompletedCropCover] = useState(null);
   const [completedCrop, setCompletedCrop] = useState(null);
+  const [clubs,setclubs] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
 
@@ -252,7 +256,7 @@ function ClubProfile(props) {
           </div>
 
           <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1 max-[375px]:m-0  max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
-            <button
+            <button onClick={()=>{setclubs(true)}}
               className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
@@ -261,10 +265,10 @@ function ClubProfile(props) {
           </div>
 
           <div className="row-start-6 max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
-            <button className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
+            <Link to="/leaderboard" className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
               <Leaderboard className="scale-[80%]"></Leaderboard>{" "}
               <div>&nbsp;3 Rank</div>
-            </button>
+            </Link>
           </div>
           <div className="row-start-6 col-start-7"></div>
         </div>
@@ -636,6 +640,107 @@ function ClubProfile(props) {
           </Button>
 
         </DialogActions>
+      </Dialog>
+
+
+      <Dialog
+        open={clubs}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
+        PaperProps={{
+          sx: {
+            background: "#1e1936",
+            color: "#fff",
+            width: { xs: '100%', md: '75%', lg: '100%' },
+            height: { xs: '50%', md: '50%', lg: '50%' },
+            borderRadius: 15,
+            padding: "15px",
+          },
+        }}
+        // TransitionComponent={Transition}
+        // fullWidth
+        height={50}
+        keepMounted
+        onClose={() => {
+          setclubs(false);
+        }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <div className="">{"Clubs Joined"}</div>
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            overflow: "auto",
+            scrollbarWidth: "none", // Hide the scrollbar for Firefox
+            "&::-webkit-scrollbar": {
+              display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+            },
+          }}
+        >
+          {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
+          <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
+            <div className=" flex justify-between">
+              <div className="flex items-center space-x-2 ">
+              <img
+                  src={minion}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                />
+
+                <div className="font-semibold">Club Of Programmers</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={minion}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            <div className=" flex justify-between">
+              <div className="flex items-center space-x-2 ">
+              <img
+                  src={Tanjiro}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                />
+
+                <div className="font-semibold">Music Club</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={Tanjiro}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            <div className=" flex justify-between">
+              <div className="flex items-center space-x-2 ">
+              <img
+                  src={CoverImage}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                />
+
+                <div className="font-semibold">Sports Club</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={CoverImage}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            
+
+          </div>
+        </DialogContent>
       </Dialog>
     </div>
   );

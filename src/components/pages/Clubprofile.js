@@ -29,6 +29,8 @@ import MenuItem from '@mui/material/MenuItem';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import DoneIcon from '@mui/icons-material/Done';
+import { Cancel, CheckCircle, Settings } from "@mui/icons-material";
 
 
 function ClubProfile(props) {
@@ -50,9 +52,12 @@ function ClubProfile(props) {
   const [completedCropCover, setCompletedCropCover] = useState(null);
   const [completedCrop, setCompletedCrop] = useState(null);
   const [member, setmember] = useState(false);
+  const [pending, setpending] = useState(false);
+
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
-  
+
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openfilter = Boolean(anchorEl);
   const handleClickfilter = (event) => {
@@ -299,7 +304,7 @@ function ClubProfile(props) {
           )}
           {props.Role !== "user" && (
             <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
-              <button
+              <button onClick={() => { setpending(true) }}
                 className={`px-4 py-2 max-sm:pr-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
@@ -438,30 +443,30 @@ function ClubProfile(props) {
                 <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}</div>
             </button>
             <div className="">
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={openfilter}
-                  onClose={handleClosefilter}
-                  sx={{
-                    '& .MuiPaper-root': {
-                      bgcolor: '#130f22',
-                      color: '#fff',
-                      margin: 2,
-                    },
-                  }}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openfilter}
+                onClose={handleClosefilter}
+                sx={{
+                  '& .MuiPaper-root': {
+                    bgcolor: '#130f22',
+                    color: '#fff',
+                    margin: 2,
+                  },
+                }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
 
-                  }}
-                >
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}> <EmojiEventsIcon /> &nbsp;Achievements</MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}><EventAvailableIcon />&nbsp;Events</MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}><CampaignIcon />&nbsp;Announcements</MenuItem>
-                </Menu>
-              </div>
+                }}
+              >
+                <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}> <EmojiEventsIcon /> &nbsp;Achievements</MenuItem>
+                <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}><EventAvailableIcon />&nbsp;Events</MenuItem>
+                <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}><CampaignIcon />&nbsp;Announcements</MenuItem>
+              </Menu>
+            </div>
           </div>
         </div>
       </div>
@@ -677,7 +682,7 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color: 'white', borderColor: '#100d1e',borderRadius: '15px', "&:hover": { borderColor: '#0a0813', color: 'white' } }}
+            sx={{ color: 'white', borderColor: '#100d1e', borderRadius: '15px', "&:hover": { borderColor: '#0a0813', color: 'white' } }}
             onClick={handleClose}
           >
             Cancel{" "}
@@ -689,7 +694,7 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22", color: 'white', borderColor: '#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
+            sx={{ background: "#130f22", color: 'white', borderColor: '#100d1e', borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
             onClick={() => SaveChanges(previewCanvasRef.current, completedCrop)}
           >
             save changes{" "}
@@ -757,7 +762,7 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color: 'white', borderColor: '#100d1e',borderRadius: '15px', "&:hover": { borderColor: '#0a0813', color: 'white' } }}
+            sx={{ color: 'white', borderColor: '#100d1e', borderRadius: '15px', "&:hover": { borderColor: '#0a0813', color: 'white' } }}
             onClick={handleCloseCover}
           >
             Cancel{" "}
@@ -769,7 +774,7 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22", color: 'white', borderColor: '#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
+            sx={{ background: "#130f22", color: 'white', borderColor: '#100d1e', borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
             onClick={() => SaveChangesCover(previewCanvasRefCover.current, completedCropCover)}
           >
             save changes{" "}
@@ -805,7 +810,10 @@ function ClubProfile(props) {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
-          <div className="">{"Members"}</div>
+          <div className="flex justify-between items-center">
+            <div>Members</div>
+            <div className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"> <Settings className="scale-[80%]" /> Manage</div>
+          </div>
         </DialogTitle>
         <DialogContent
           sx={{
@@ -942,6 +950,157 @@ function ClubProfile(props) {
                   alt=""
                   className="row-start-1 col-start-1 mx-auto border-4 border-[#00ffff] h-[50px] w-[50px] rounded-full  object-cover "
                 />
+              </div>
+            </div>
+
+          </div>
+        </DialogContent>
+      </Dialog>
+
+
+      <Dialog
+        open={pending}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
+        PaperProps={{
+          sx: {
+            background: "#1e1936",
+            color: "#fff",
+            width: { xs: '100%', md: '75%', lg: '100%' },
+            height: { xs: '50%', md: '50%', lg: '50%' },
+            borderRadius: 15,
+            padding: "15px",
+          },
+        }}
+        // TransitionComponent={Transition}
+        // fullWidth
+        height={50}
+        keepMounted
+        onClose={() => {
+          setpending(false);
+        }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <div className="">{"Pending Applications"}</div>
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            overflow: "auto",
+            scrollbarWidth: "none", // Hide the scrollbar for Firefox
+            "&::-webkit-scrollbar": {
+              display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+            },
+          }}
+        >
+          {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
+          <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="flex space-x-5">
+                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="flex space-x-5">
+                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="flex space-x-5">
+                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="flex space-x-5">
+                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="flex space-x-5">
+                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="flex space-x-5">
+                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-2">
+                <img
+                  src={Zoro}
+                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                  alt=""
+                />
+
+                <div className="text-[#d7d7d7] font-semibold">Deepanshu Pal</div>
+              </div>
+              <div className="flex space-x-5">
+                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
               </div>
             </div>
 
