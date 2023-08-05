@@ -8,13 +8,13 @@ import Tooltip from "@mui/material/Tooltip";
 import { Link } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import GroupsIcon from '@mui/icons-material/Groups';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import CampaignIcon from '@mui/icons-material/Campaign';
+import GroupsIcon from "@mui/icons-material/Groups";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import CampaignIcon from "@mui/icons-material/Campaign";
 
 export default function UserFeed() {
   const [post, underline] = useState("post");
@@ -38,8 +38,9 @@ export default function UserFeed() {
             <div className=""> </div>
             <div className="flex space-x-[5vw] max-md:space-x-4  ">
               <button
-                className={`${post === "post" ? "border-b" : ""
-                  } border-white py-4  px-8`}
+                className={`${
+                  post === "post" ? "border-b" : ""
+                } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("post");
                 }}
@@ -47,8 +48,9 @@ export default function UserFeed() {
                 Post
               </button>
               <button
-                className={`${post === "poll" ? "border-b" : ""
-                  } border-white py-4  px-8`}
+                className={`${
+                  post === "poll" ? "border-b" : ""
+                } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("poll");
                 }}
@@ -58,12 +60,16 @@ export default function UserFeed() {
             </div>
             <div className="">
               {" "}
-              <button className="flex justify-center items-center text-xl " onClick={handleClick}>
+              <button
+                className="flex justify-center items-center text-xl "
+                onClick={handleClick}
+              >
                 {" "}
                 <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
                 <div className="ml-3 max-lg:hidden">Filter</div>
                 <div className="max-lg:hidden">
-                  <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}</div>
+                  <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
+                </div>
               </button>
               <div className="">
                 <Menu
@@ -72,29 +78,35 @@ export default function UserFeed() {
                   open={open}
                   onClose={handleClose}
                   sx={{
-                    '& .MuiPaper-root': {
-                      bgcolor: '#130f22',
-                      color: '#fff',
+                    "& .MuiPaper-root": {
+                      bgcolor: "#130f22",
+                      color: "#fff",
                       margin: 2,
                     },
                   }}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "center" }}
                   MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-
+                    "aria-labelledby": "basic-button",
                   }}
                 >
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}> <EmojiEventsIcon /> &nbsp;Achievements</MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}><EventAvailableIcon />&nbsp;Events</MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}><CampaignIcon />&nbsp;Announcements</MenuItem>
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                    {" "}
+                    <EmojiEventsIcon /> &nbsp;Achievements
+                  </MenuItem>
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                    <EventAvailableIcon />
+                    &nbsp;Events
+                  </MenuItem>
+                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                    <CampaignIcon />
+                    &nbsp;Announcements
+                  </MenuItem>
                 </Menu>
               </div>
             </div>
           </div>
         </div>
-
-
       </div>
 
       {post === "post" && (
@@ -147,8 +159,6 @@ export default function UserFeed() {
             date="08/03/2023"
             time="09:06"
           ></Post>
-
-
         </div>
       )}
 
@@ -219,12 +229,14 @@ export default function UserFeed() {
             votes3={6}
             votes4={2}
           ></Poll>
-
         </div>
       )}
 
       <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  shadow-2xl shadow-black space-y-10 bg-white bg-opacity-5 backdrop-blur-2xl ">
-        <Link to="/clubprofile" className="h-[7vw] w-[7vw] border-white rounded-full" >
+        <Link
+          to="/clubprofile"
+          className="h-[7vw] w-[7vw] border-white rounded-full"
+        >
           <Tooltip title="clubname">
             {" "}
             <img
@@ -392,7 +404,9 @@ export default function UserFeed() {
             />
           </svg>
         </div> */}
-        <div><GroupsIcon></GroupsIcon> Clubs</div>
+        <div>
+          <GroupsIcon></GroupsIcon> Clubs
+        </div>
       </button>
       {club === false ? (
         <img
@@ -445,8 +459,6 @@ export default function UserFeed() {
               className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
           </Link>
-          
-
         </div>
       )}
     </div>
