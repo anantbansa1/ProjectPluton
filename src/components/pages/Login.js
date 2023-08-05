@@ -55,12 +55,26 @@ function Login() {
   }
 
   function redirectIn() {
-    // console.log("hello");
     if (user) {
-      console.log("hello2");
+      // console.log("hello2");
       navigate("/home");
     }
   }
+
+  useEffect(()=>{
+    setLoading(true);
+  },[])
+
+  useEffect(() => {
+    setLoading(true);
+    if (user) {
+      console.log("hello2");
+      setLoading(false);
+      navigate("/home");
+    }
+    setLoading(false);
+
+  }, [user])
 
   function handlePass(e) {
     setPass(e.target.value);
@@ -70,7 +84,7 @@ function Login() {
 
   return (
     <div className="  ">
-      {redirectIn()}
+      {/* {redirectIn()} */}
       <div className="flex justify-center h-[100vh] bg-white bg-[url('https://upload.wikimedia.org/wikipedia/commons/3/33/Microsoft_login_screen.svg')] items-center">
         {/* <div className="flex flex-row w-[60vw] h-[100vh] ">
 
@@ -258,7 +272,7 @@ function Login() {
         </div>
       </div> */}
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1, backdropFilter: "blur(20px)", }}
         open={Loading}
         close={Loading}
       >

@@ -9,12 +9,13 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { Button } from "@mui/material";
 // import zoro from "../Images/zoro.jpg";
 //import default_img from "../Images/zoro.jpg";
 import def_img from "../Images/def_img.jpg";
 
 function Image() {
-  const [CoverImage, setcoverimage] =useState(def_img);
+  const [CoverImage, setcoverimage] =useState(null);
   const [upImgCover, setUpImgCover] = useState(CoverImage);
   const imgRefCover = useRef(null);
   const previewCanvasRefCover = useRef(null);
@@ -23,8 +24,10 @@ function Image() {
   const [completedCrop, setCompletedCrop] = useState(null);
  const [changeCover, setChangeCover] = useState(false);
   const [openCover, setOpenCover] = React.useState(false);
+  const uploadRef= useRef(null);
   
   const [file, setFile] = useState();
+  const Coverinput = useRef(null);
   function handleChange(e) {
     console.log(e.target.files);
     setFile(URL.createObjectURL(e.target.files[0]));
@@ -101,52 +104,12 @@ function Image() {
     <div className="max-md:h-[62vw]">
       {/* <Navbar></Navbar> */}
       <div className="flex justify-center align-middle max-md:ml-[-10vw] ml-[-15vw] h-[40vw] max-[767px]:h-[60vw] w-[80vw]">
-        {/* <div className="ml-[37vw] flex items-center max-[414px]:ml-[10vh] max-[414px]:w-[75vw] max-[414px]:mt-1 max-[414px]:text-xl text-3xl w-[80vh] justify-between">
-          <div className="flex-col">
-            <button
-              onClick={(e) => {
-                setoption("text");
-              }}
-              className={`p-[1vh] px-[3vh] border-white ${
-                option === "text" ? "border-b text-white" : "text-slate-300"
-              }`}
-            >
-              Text
-            </button>
-          </div>
-          <div className="flex-col">
-            <button
-              onClick={(e) => {
-                setoption("image");
-              }}
-              className={`p-[1vh] px-[3vh] border-white  ${
-                option === "image" ? "border-b text-white" : "text-slate-300"
-              }`}
-            >
-              Posts
-            </button>
-          </div>
-          <div className="flex-col">
-            <button
-              onClick={(e) => {
-                setoption("Poll");
-              }}
-              className={` p-[1vh] px-[3vh] border-white ${
-                option === "Poll" ? "border-b text-white" : "text-slate-300"
-              }`}
-            >
-              Poll
-            </button>
-          </div>
-        </div> */}
+     
         <div className="flex flex-col items-center ml-[20vw] max-md:ml-[15vw] my-5 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw]">
           <div className="mb-[3vw]">
             <div className="max-[414px]:ml-[0vw] ">
-              {/* <div className="bg-[#f8f6f6] ml-[2vw] h-[40vh] w-[80vh] mt-[3vw] mb-[5vh] max-[420px]:ml-[20vw] max-[420px]:w-[250px]  max-[420px]:h-[200px]">
-                <input type="file" onChange={handleChange} />
-                <img src={file} className="h-[35vh] w-[80vw] object-cover" />
-              </div> */}
               <div className="grid grid-rows-1 grid-cols-1">
+                {CoverImage ? (
               <img 
               src={CoverImage}
               alt=""
@@ -159,11 +122,18 @@ function Image() {
                 setChangeCover(false);
               }}
             />
+                ): (
+                  <div onClick={handleClickOpenCover} className="text-slate-200 text-lg hover:bg-[#0e0b1a] cursor-pointer max-[768px]:w-[50vw] max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1 bg-[#130f22] flex justify-center items-center">
+                    <div>Click to add an Image</div>
+                  </div>
+                )}
+
               
            <button
             onMouseOver={(e) => {
               setChangeCover(true);
             }}
+            useRef={uploadRef}
             // onClick={handleClickOpen}
             onClick={handleClickOpenCover}
             onMouseOut={(e) => {
@@ -171,60 +141,21 @@ function Image() {
             }}
             className={`${
               changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black max-[768px]:w-[50vw] row-start-1 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            } px-4 py-2 shadow-inner shadow-black z-10 max-[768px]:w-[50vw] row-start-1 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
            >
-            Add Post
+            Change Image
               </button>
           </div>
-               <textarea
+
+        </div>
+        <textarea
               onChange={(e) => {
                 setoption(e.target.value);
               }}
-              className="p-[1vw] max-[768px]:ml-0 max-[768px]:w-[50vw]  ml-[-4vw] max-md:h-[10vw] max-md:w-[40vw] text-white text-xl bg-[#070315] h-[7vw] w-[40vw] mt-[1vw] shadow-lg shadow-black rounded-lg"
+              className="p-[1vw] max-[768px]:ml-0 text-base  max-[768px]:w-[50vw] w-[30vw] outline-none border-none  max-md:h-[10vw] max-md:w-[40vw] text-white  bg-[#070315] h-[7vw]  mt-[1vw] shadow-lg shadow-black rounded-lg"
               placeholder="Enter your Text"
               >
               </textarea>
-        </div>
-            {/*<div className=" max-[823px]:flex-col space-x-2 flex max-[414px]:ml-[20vw] text-black text-xl mt-[3vh] ">
-              <div className="max-[414px]:ml-[2vw] ml-[2vw]">
-                <button
-                  onClick={(e) => {
-                    console.log(1);
-                  }}
-                  className="bg-white p-[1vh] px-[4vh] rounded-full hover:text-red-500"
-                >
-                  +Event
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={(e) => {
-                    console.log(2);
-                  }}
-                  className="bg-white p-[1vh] px-[4vh] rounded-full hover:text-red-500 max-[823px]:mt-[10px] max-[823px]:mb-[10px]"
-                >
-                  +Announcement
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={(e) => {
-                    console.log(3);
-                  }}
-                  className="bg-white p-[1vh] px-[4vh] rounded-full hover:text-red-500"
-                >
-                  +Achievement
-                </button>
-              </div>
-            </div> */}
-            {/* <button
-            onClick={(e) => {
-              console.log(event);
-            }}
-            className="justify-self-end max-sm: min-[375px]: max-[414px]:mt-[4vh]  text-white  max-[414px]:text-[xl] text-2xl mt-[8vh] hover:font-semibold"
-          >
-            Submit
-          </button> */}
           </div>
           
         </div>
@@ -234,9 +165,22 @@ function Image() {
         onClose={handleCloseCover}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            background: "#1e1936",
+            color: "#fff",
+            borderRadius: 25,
+            padding: "10px",
+          },
+        }}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
       >
         <DialogTitle id="alert-dialog-title">
-          {"Change Cover Picture"}
+          {"Select Photo"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -249,40 +193,52 @@ function Image() {
               onComplete={(c) => setCompletedCropCover(c)}
             />
             <div className="flex my-5 justify-between">
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  background: "#130f22",
+                  "&:hover": { background: "#100d1e" },
+                }}
+                onClick={() => Coverinput.current.click()}
+              >
+                Upload File{" "}
+              </Button>
               <input
-                className=" text-[#5d5d5d] file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
+                className=" text-[#5d5d5d] hidden  file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
                 type="file"
                 accept="image/*"
+                ref={Coverinput}
                 onChange={onSelectFileCover}
               ></input>
-              {/* <button className="hover:underline" onClick={setclubimage(gold)}> Unset Photo</button> */}
             </div>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <button
-            className="mx-3 hover:underline px-3 py-2 "
+          <Button
+            variant="outlined"
+            color="primary"
+            sx={{ color: 'white', borderColor: '#100d1e', borderRadius: '15px', "&:hover": { borderColor: '#0a0813', color: 'white' } }}
             onClick={handleCloseCover}
           >
-            Cancel
-          </button>
+            Cancel{" "}
+          </Button>
+
           <div className="hidden">
             <canvas ref={previewCanvasRefCover} />
           </div>
-          <button
-            className="mx-3 bg-black text-white px-3 py-2 "
-            onClick={() =>
-              SaveChangesCover(
-                previewCanvasRefCover.current,
-                completedCropCover
-              )
-            }
-            autoFocus
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ background: "#130f22", color: 'white', borderColor: '#100d1e', borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
+            onClick={() => SaveChangesCover(previewCanvasRefCover.current, completedCropCover)}
           >
-            Save Changes
-          </button>
+            save changes{" "}
+          </Button>
+
         </DialogActions>
       </Dialog>
+
     </div>
   );
 }

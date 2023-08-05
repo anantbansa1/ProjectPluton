@@ -47,7 +47,7 @@ export default function Navbar(props) {
       // setTimeout(1000);
       redirectIn();
     } catch {
-      alert("erorrrrrrrrrrrrrrrrrrrrrr.");
+      alert("Something went wrong! Please try again later.");
     }
     setLoading(false);
   }
