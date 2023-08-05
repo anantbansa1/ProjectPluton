@@ -3,7 +3,7 @@ import Minions from "../Images/Minions.jpg";
 
 export default function Row(props) {
   return (
-    <div className="w-[100%]">
+    <div>
       <div
         className={`grid bg-[#130f22]  font-semibold ${
           props.rankno <= 5
@@ -15,7 +15,7 @@ export default function Row(props) {
             : "text-[#cda678]"
         } ${
           props.rankno % 2 == 0 ? "bg-[#130f22]" : "bg-[#17132b]"
-        } shadow-slate-900 shadow-lg rounded-2xl ml-1 max-sm:gap-2 grid-cols-[10%_10%_35%_22.5%_19%] mb-[1.2vw] max-md:text-sm text-xl   items-center`}
+        } shadow-slate-900 shadow-lg rounded-2xl  max-sm:gap-1 grid-cols-[10%_10%_35%_22.5%_22.5%] mb-[1.2vw] max-md:text-sm text-xl   items-center`}
       >
         <div className=" ">
           <div className="flex justify-center py-3 max-md:px-0 px-2">
