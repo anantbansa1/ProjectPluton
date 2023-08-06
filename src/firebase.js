@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import {
@@ -11,11 +10,6 @@ import {
 import { useEffect, useState } from "react";
 import { getFirestore } from "firebase/firestore";
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyAGNB7Q_ZQXC1OQxIwiG8o8CYh5UatsHkA",
   authDomain: "pluton-684e6.firebaseapp.com",
@@ -26,7 +20,6 @@ const firebaseConfig = {
   measurementId: "G-B9FQKHTNDZ",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const db = getFirestore(app);
@@ -52,7 +45,3 @@ export function signUp(email, password) {
 export function logOut() {
   return signOut(auth);
 }
-
-// export function adduser(){
-
-// }

@@ -1,126 +1,120 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
 import Papa from "papaparse";
 import Navbar from "../Navbar";
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-// import { Auth } from "firebase/auth";
 import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-// function AddAlert(e) {
-//   alert("Added Successfully");
-// }
-import { signUp } from "../../firebase";
 import { db } from "../../firebase";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const allowedExtensions = ["csv"];
 export default function AddUserAdmin(props) {
+  const allowedExtensions = ["csv"];
   const [file, setFile] = useState([]);
-  const [error, setError] = useState("");
-  const [data, setData] = useState([]);
   const [loading, setloading] = useState(false);
-  const [values, setvalue] = useState([]);
   const [open, setOpen] = useState(false);
+  const [etype, setetype] = useState("success");
+  const [message, setmessage] = useState("Successfully Added!");
+  const [isfile, setisfile] = useState(0);
+
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
-  const onSelectFile = (e) => {
-    setError("");
 
-    // Check if user has entered the file
+  async function signup(email, docref, payload) {
+    await setDoc(docref, payload);
+    createUserWithEmailAndPassword(auth, email, "chhotahathi")
+      .then((userCredential) => {
+        setOpen(true);
+        const user = userCredential.user;
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        setOpen(true);
+        const errorMessage = error.message;
+        setetype("error");
+
+        switch (errorCode) {
+          case "auth/email-already-in-use":
+            setmessage("Email already in use!");
+            break;
+          case "auth/invalid-email":
+            setmessage("Invalid email!");
+            break;
+          case "auth/operation-not-allowed":
+            setmessage("Operation not allowed");
+            break;
+          default:
+            setmessage("Something went wrong! Please try again later.");
+            break;
+        }
+      });
+  }
+
+  const onSelectFile = (e) => {
+    setisfile(e.target.files.length);
     if (e.target.files.length) {
       const inputFile = e.target.files[0];
-
-      // Check the file extensions, if it not
-      // included in the allowed extensions
-      // we show the error
       const fileExtension = inputFile?.type.split("/")[1];
       if (!allowedExtensions.includes(fileExtension)) {
-        setError("Please input a csv file");
         return;
       }
-
-      // If input type is correct set the state
+      console.log(70);
       setFile(inputFile);
     }
   };
 
-  async function handleParse() {
-    console.log("here");
-    // setloading(true);
-    try {
-      console.log("here");
-      const reader = new FileReader();
-      reader.onload = ({ target }) => {
-        const csv = Papa.parse(target.result, { header: true });
-        const parsedData = csv?.data;
-        const rowsArray = [];
-        const valuesArray = [];
-        csv.data.map((d) => {
-          rowsArray.push(Object.keys(d));
-          valuesArray.push(Object.values(d));
-        });
-        console.log(csv);
-        setvalue(valuesArray);
-      };
-      reader.readAsText(file);
-      console.log(file);
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-      // setloading(true);
-      values.map(async (value, index) => {
-        const docref = doc(db, "user", value[0]);
+  async function handleParse() {
+    if (!isfile) {
+      setOpen(true);
+      setetype("error");
+      setmessage("Please upload a file");
+      return;
+    }
+    const valuesArray = [];
+    console.log(78);
+    const reader = new FileReader();
+    reader.onload = async ({ target }) => {
+      const csv = Papa.parse(target.result, { header: true });
+      const parsedData = csv?.data;
+      setloading(true);
+      sleep(2000).then(() => {
+        setloading(false);
+      });
+      parsedData.map(async (d) => {
+        const data = Object.values(d);
+        const docref = doc(db, "user", data[0]);
         const payload = {
-          name: value[1],
-          email: value[2],
+          name: data[1],
+          email: data[2],
           isadmin: false,
           coverimage:
             "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
           profileimage:
             "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
         };
-        try {
-          // setloading(true);
-          await setDoc(docref, payload);
-          // setloading(false);
-        } catch {}
-        console.log(value[0]);
-        console.log(index);
-
-        createUserWithEmailAndPassword(auth, value[2], "chhotahathi")
-          .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.log(user);
-            // ...
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ..
-            console.log(errorCode);
-          });
+        await signup(data[2], docref, payload);
       });
-      // setloading(false);
-      console.log("here");
-    } catch {
-      setOpen(true);
-    }
+    };
+    reader.readAsText(file);
   }
 
   return (
     <>
       <Navbar selected="Adduser"></Navbar>
-
       <div>
         <div className=" text-white items-center ml-[20vw] mt-[10vh] flex justify-center text-2xl my-10">
           Add Users
@@ -138,7 +132,6 @@ export default function AddUserAdmin(props) {
               </button>{" "}
               <br></br> <br></br>
             </div>
-
             <div className=" my-3 flex py-3 max-[823px]:justify-center">
               <div>
                 Add a Excel/CSV file: <strong>{props.filename}</strong>
@@ -150,7 +143,6 @@ export default function AddUserAdmin(props) {
               className=" text-[#5d5d5d] file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
               type="file"
               accept="csv"
-              // ref={Coverinput}
               onChange={onSelectFile}
             ></input>
             <button
@@ -174,8 +166,8 @@ export default function AddUserAdmin(props) {
         <CircularProgress color="inherit" />
       </Backdrop>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
-          Invalid File;
+        <Alert onClose={handleClose} severity={etype} sx={{ width: "100%" }}>
+          {message}
         </Alert>
       </Snackbar>
     </>
