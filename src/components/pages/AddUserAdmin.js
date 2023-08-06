@@ -5,6 +5,9 @@ import Navbar from "../Navbar";
 import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+// import { Auth } from "firebase/auth";
+import { auth } from "../../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 // function AddAlert(e) {
 //   alert("Added Successfully");
 // }
@@ -52,10 +55,13 @@ export default function AddUserAdmin(props) {
     }
   };
 
-  const handleParse = () => {
+  async function handleParse() {
+    console.log("here");
+    // setloading(true);
     try {
+      console.log("here");
       const reader = new FileReader();
-      reader.onload = async ({ target }) => {
+      reader.onload = ({ target }) => {
         const csv = Papa.parse(target.result, { header: true });
         const parsedData = csv?.data;
         const rowsArray = [];
@@ -64,10 +70,13 @@ export default function AddUserAdmin(props) {
           rowsArray.push(Object.keys(d));
           valuesArray.push(Object.values(d));
         });
+        console.log(csv);
         setvalue(valuesArray);
       };
       reader.readAsText(file);
-      setloading(true);
+      console.log(file);
+
+      // setloading(true);
       values.map(async (value, index) => {
         const docref = doc(db, "user", value[0]);
         const payload = {
@@ -79,30 +88,34 @@ export default function AddUserAdmin(props) {
           profileimage:
             "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
         };
-        // await setDoc(docref, payload);
-        // docref = doc(db, "user", value[0], "medal");
-        // payload = {};
-        // await setDoc(docref, payload);
-        // docref = doc(db, "user", value[0], "clubs");
-        // payload = {};
-        // await setDoc(docref, payload);
-        // docref = doc(db, "user", value[0], "badges");
-        // payload = {};
-        // await setDoc(docref, payload);
+        try {
+          // setloading(true);
+          await setDoc(docref, payload);
+          // setloading(false);
+        } catch {}
         console.log(value[0]);
         console.log(index);
 
-        try {
-          await signUp(value[2]);
-        } catch {
-          setOpen(true);
-        }
+        createUserWithEmailAndPassword(auth, value[2], "chhotahathi")
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+            console.log(errorCode);
+          });
       });
-      setloading(false);
+      // setloading(false);
+      console.log("here");
     } catch {
       setOpen(true);
     }
-  };
+  }
 
   return (
     <>
@@ -133,20 +146,6 @@ export default function AddUserAdmin(props) {
             </div>
           </div>
           <div className=" text-white items-center flex justify-center h-[5vh] ml-[23vw] my-6 ">
-            {/* <input
-              className=" text-white px-4 py-2 mx-5"
-              type="file"
-              id="uploadbtn"
-              accept=".csv"
-              onChange={onSelectFile}
-              hidden
-            ></input>
-            <label
-              for="uploadbtn"
-              className="rounded-full bg-white text-black px-4 py-2 mx-5 cursor-pointer max-[820px]:text-xs"
-            >
-              Upload File
-            </label> */}
             <input
               className=" text-[#5d5d5d] file:mr-5 file:px-4 file:py-2 file:border-[1px] file:text-xs file:font-medium file:bg-black file:text-white hover:file:cursor-pointer hover:file:bg-black hover:file:text-white"
               type="file"

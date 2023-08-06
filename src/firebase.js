@@ -30,7 +30,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const db = getFirestore(app);
-const auth = getAuth();
+export const auth = getAuth();
 
 export function useAuth() {
   const [user, setUser] = useState();
@@ -45,8 +45,8 @@ export function useAuth() {
 export function signIn(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
-export function signUp(email) {
-  return createUserWithEmailAndPassword(auth, email, "chhotahathi");
+export function signUp(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password);
 }
 
 export function logOut() {
