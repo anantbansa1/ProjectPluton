@@ -10,9 +10,9 @@ import Beetles from "../Images/Beetles.jpg";
 export default function AboutUs() {
   return (
     <div className="ml-[22vw]">
-      <Navbar selected="aboutus"></Navbar>
+      <Navbar selected="ourteam"></Navbar>
       <div className="text-white text-3xl items-center  mt-[2vw] text-center font-semibold">
-        About Us
+        Our Team
       </div>
       <div>
         <div className="Line1 max-sm:space-y-10 my-10 max-sm:flex-col flex justify-around ">
