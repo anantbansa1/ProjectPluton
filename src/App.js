@@ -15,6 +15,7 @@ import ClubProfile from "./components/pages/Clubprofile";
 import Resetpass from "./components/pages/resetpass";
 import Leaderboard from "./components/pages/Leaderboard";
 import Addtext from "./components/pages/Addtext";
+import Manage from "./components/pages/Manage";
 import AboutUs from "./components/pages/AboutUs";
 
 function App() {
@@ -56,7 +57,12 @@ function App() {
         <Route path="/getemail" element={<Resetpass />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/add" element={<Addtext />} />
-        <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/ourteam" element={<AboutUs />} />
+        <Route path="/manage" element={<Manage name="Club of Programmers"
+          desc="
+    Lorem ipsum dolor s sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
+          clubimage={minion}
+          coverimage={cover} />} />
       </Routes>
     </Router>
   );

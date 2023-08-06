@@ -30,7 +30,8 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import DoneIcon from '@mui/icons-material/Done';
-import { Cancel, CheckCircle, Settings } from "@mui/icons-material";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { Cancel, CheckCircle, ManageAccounts, Settings } from "@mui/icons-material";
 
 
 function ClubProfile(props) {
@@ -53,7 +54,7 @@ function ClubProfile(props) {
   const [completedCrop, setCompletedCrop] = useState(null);
   const [member, setmember] = useState(false);
   const [pending, setpending] = useState(false);
-
+  
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
 
@@ -812,7 +813,7 @@ function ClubProfile(props) {
         <DialogTitle>
           <div className="flex justify-between items-center">
             <div>Members</div>
-            <div className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"> <Settings className="scale-[80%]" /> Manage</div>
+            <Link to="/manage" className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"> <Settings className="scale-[80%]" /> Manage</Link>
           </div>
         </DialogTitle>
         <DialogContent
@@ -956,6 +957,7 @@ function ClubProfile(props) {
           </div>
         </DialogContent>
       </Dialog>
+
 
 
       <Dialog
