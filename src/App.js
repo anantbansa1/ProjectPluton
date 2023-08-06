@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import Row from "./components/pages/Row";
 
 import Navbar from "./components/Navbar";
-import AddUserAdmin from "./components/AddUserAdmin";
+import AddUserAdmin from "./components/pages/AddUserAdmin";
 import minion from "./components/Images/Minions.jpg";
 import cover from "./components/Images/zoro.jpg";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
@@ -59,11 +59,18 @@ function App() {
         <Route path="/add" element={<Addtext />} />
         <Route path="/adduser" element={<AddUserAdmin />} />
         <Route path="/ourteam" element={<AboutUs />} />
-        <Route path="/manage" element={<Manage name="Club of Programmers"
-          desc="
+        <Route
+          path="/manage"
+          element={
+            <Manage
+              name="Club of Programmers"
+              desc="
     Lorem ipsum dolor s sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
-          clubimage={minion}
-          coverimage={cover} />} />
+              clubimage={minion}
+              coverimage={cover}
+            />
+          }
+        />
       </Routes>
     </Router>
   );
