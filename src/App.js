@@ -57,6 +57,7 @@ function App() {
         <Route path="/getemail" element={<Resetpass />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/add" element={<Addtext />} />
+        <Route path="/adduser" element={<AddUserAdmin />} />
         <Route path="/ourteam" element={<AboutUs />} />
         <Route
           path="/manage"

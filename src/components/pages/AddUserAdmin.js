@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Papa from "papaparse";
+import Navbar from "../Navbar";
 
 // function AddAlert(e) {
 //   alert("Added Successfully");
@@ -58,6 +59,8 @@ export default function AddUserAdmin(props) {
 
   return (
     <>
+      <Navbar selected="Adduser"></Navbar>
+
       <div>
         <div className=" text-white items-center ml-[20vw] mt-[10vh] flex justify-center text-2xl my-10">
           Add Users
