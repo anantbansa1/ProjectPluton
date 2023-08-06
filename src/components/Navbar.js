@@ -16,7 +16,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 // bg-[#1c1733]
 export default function Navbar(props) {
   const Transition = React.forwardRef(function Transition(props, ref) {
@@ -87,6 +88,28 @@ export default function Navbar(props) {
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
+            to="/leaderboard"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "leaderboard"
+                ? " bg-opacity-10  bg-white  border-[#323232]"
+                : ""
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
+          >
+            <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
+            <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
+          </Link>
+          <Link
+            to="/adduser"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "manageusers"
+                ? " bg-opacity-10  bg-white  border-[#323232]"
+                : ""
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
+          >
+            <ManageAccountsIcon className=" scale-[120%]"></ManageAccountsIcon>
+            <button className="max-lg:hidden">&nbsp;&nbsp;Manage </button>
+          </Link>
+          <Link
             to="/faq"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${
               props.selected === "faq"
@@ -98,17 +121,6 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <Link
-            to="/leaderboard"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
-              props.selected === "leaderboard"
-                ? " bg-opacity-10  bg-white  border-[#323232]"
-                : ""
-            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
-          >
-            <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
-            <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
-          </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/ourteam"

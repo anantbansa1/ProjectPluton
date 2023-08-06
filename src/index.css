@@ -13,7 +13,11 @@
   /* .striped div:nth-child(6n+1), .striped div:nth-child(6n+2),.striped div:nth-child(6n+3) {
     @apply bg-[#0b0914]
   } */
-  .no-scrollbar {
+
+  .striped div:nth-child(8n+1), .striped div:nth-child(8n+2),.striped div:nth-child(8n+3),.striped div:nth-child(8n+4) {
+    @apply bg-[#0b0914]
+  }
+    .no-scrollbar {
     -ms-overflow-style: none;
     /* IE and Edge */
     scrollbar-width: none;
