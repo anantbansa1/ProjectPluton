@@ -54,7 +54,7 @@ export default function Navbar(props) {
 
   function redirectIn() {
     if (user) {
-      console.log(user?.email);
+      // console.log(user?.email);
     } else {
       navigate("/login");
     }
@@ -98,7 +98,8 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <Link to="/leaderboard"
+          <Link
+            to="/leaderboard"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "leaderboard"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
@@ -109,7 +110,8 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
           </Link>
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          <Link to = "/ourteam"
+          <Link
+            to="/ourteam"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "ourteam"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
@@ -158,13 +160,12 @@ export default function Navbar(props) {
             background: "#1e1936",
             color: "#fff",
             borderRadius: 25,
-            padding: '10px',
-            
+            padding: "10px",
           },
         }}
         sx={{
-          '& .MuiBackdrop-root': {
-            backdropFilter: 'blur(20px)',
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
           },
         }}
         // TransitionComponent={Transition}
@@ -174,15 +175,24 @@ export default function Navbar(props) {
         onClose={handleNo}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle><div className="">{"Logout"}</div></DialogTitle>
+        <DialogTitle>
+          <div className="">{"Logout"}</div>
+        </DialogTitle>
         <DialogContent>
-          <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div>
+          <div className="text-[#e4e2e2] text-lg">
+            Are you sure you want to logout?
+          </div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={handleNo} sx={{borderRadius: '15px'}}>
+          <Button variant="" onClick={handleNo} sx={{ borderRadius: "15px" }}>
             No
           </Button>
-          <Button variant="outlined" color="error" sx={{borderRadius: '15px'}} onClick={handleYes}>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: "15px" }}
+            onClick={handleYes}
+          >
             Yes
           </Button>
         </DialogActions>
