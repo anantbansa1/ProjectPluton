@@ -68,7 +68,6 @@ export default function AddUserAdmin(props) {
       if (!allowedExtensions.includes(fileExtension)) {
         return;
       }
-      console.log(70);
       setFile(inputFile);
     }
   };
@@ -85,7 +84,6 @@ export default function AddUserAdmin(props) {
       return;
     }
     const valuesArray = [];
-    console.log(78);
     const reader = new FileReader();
     reader.onload = async ({ target }) => {
       const csv = Papa.parse(target.result, { header: true });
