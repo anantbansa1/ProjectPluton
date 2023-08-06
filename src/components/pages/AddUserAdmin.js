@@ -42,7 +42,6 @@ export default function AddUserAdmin(props) {
         setOpen(true);
         const errorMessage = error.message;
         setetype("error");
-
         switch (errorCode) {
           case "auth/email-already-in-use":
             setmessage("Email already in use!");
