@@ -201,8 +201,8 @@ export default function AddUserAdmin(props) {
           )}
         </div>
       </div>
-      <div className=" md:ml-[22vw] flex flex-col space-y-5 max-md:grid-cols-[repeat(4,minmax(auto,20vw))] text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
-        <div className="grid gap-y-2 text-slate-200  grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-sm max-lg:text-base">
+      <div className=" md:ml-[22vw] flex flex-col space-y-5 text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
+        <div className="grid gap-y-2 text-slate-200  max-md:grid-cols-[repeat(4,minmax(auto,20vw))] text-ellipsis w-[100%] grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-sm max-lg:text-base">
           <div className="row-start-1 col-start-1 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">S.No</div>
           <div className="row-start-1 col-start-2 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">Roll No</div>
           <div className="row-start-1 col-start-3 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">Name</div>
