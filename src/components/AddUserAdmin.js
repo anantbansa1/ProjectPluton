@@ -1,17 +1,59 @@
 import React, { useState } from "react";
+import Papa from "papaparse"
+import {Button} from "@mui/material/Button"
 
 function AddAlert(e) {
   alert("Added Successfully");
 }
+const allowedExtensions = ["csv"];
 export default function AddUserAdmin(props) {
-  const [file, setFile] = useState(null);
+    const [file,setFile] = useState([]);
+    const [error, setError] = useState("");
+  const [data, setData] = useState([]);
+
   const onSelectFile = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => setFile(reader.result));
-      reader.readAsDataURL(e.target.files[0]);
+    setError("");
+
+    // Check if user has entered the file
+    if (e.target.files.length) {
+        const inputFile = e.target.files[0];
+
+        // Check the file extensions, if it not
+        // included in the allowed extensions
+        // we show the error
+        const fileExtension = inputFile?.type.split("/")[1];
+        if (!allowedExtensions.includes(fileExtension)) {
+            setError("Please input a csv file");
+            return;
+        }
+
+        // If input type is correct set the state
+        setFile(inputFile);
     }
-  };
+};
+  const handleParse = () => {
+ 
+    // If user clicks the parse button without
+    // a file we show a error
+    if (!file) return setError("Enter a valid file");
+
+    // Initialize a reader which allows user
+    // to read any file or blob.
+    const reader = new FileReader();
+
+    // Event listener on reader when the file
+    // loads, we parse it and set the data.
+    reader.onload = async ({ target }) => {
+        const csv = Papa.parse(target.result, { header: true });
+        const parsedData = csv?.data;
+        const columns = Object.keys(parsedData[0]);
+        const value = Object.values(parsedData);
+        console.log(columns);
+        console.log(value);
+        setData(columns);
+    };
+    reader.readAsText(file);
+};
   return (
     <>
       <div>
@@ -51,7 +93,7 @@ export default function AddUserAdmin(props) {
             </label>
             <button
               className="rounded-full bg-white text-black px-4 py-2 mx-5"
-              onClick={AddAlert}
+              onClick={handleParse}
             >
               Confirm
             </button>
