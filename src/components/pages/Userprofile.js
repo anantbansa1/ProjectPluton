@@ -25,18 +25,13 @@ import { Link } from "react-router-dom";
 import minion from "../Images/Minions.jpg"
 import Tanjiro from "../Images/Tanjiro.jpg"
 
+// import { useAuth, upload } from "./firebase";
 
-import { collection } from "@firebase/firestore";
+import { collection,getDocs } from "@firebase/firestore";
 import { useCollectionData} from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 
 function ClubProfile(props) {
-
-  const query = collection(db,"user/41521005/clubs");
-  const [docs , loading , error] = useCollectionData(query);
-  console.log(docs);
-
-
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
   const [ClubImage, setclubimage] = useState(props.clubimage);
@@ -57,6 +52,17 @@ function ClubProfile(props) {
   const [clubs,setclubs] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
+
+  const query = collection(db,"user");
+  const [docs , loading , error] = useCollectionData(query);
+  console.log(docs);
+  
+
+  // const currentUser = useAuth();
+  // const [photo, setPhoto] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
+
 
 
   const image =
