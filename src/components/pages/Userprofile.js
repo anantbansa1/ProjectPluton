@@ -30,9 +30,14 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 
 function ClubProfile(props) {
-  const query = collection(db, "user/41521005/clubs");
-  const [docs, loading, error] = useCollectionData(query);
+
+  const query = collection(db,"user");
+  const[docs,loading,error] = useCollectionData(query);
   console.log(docs);
+
+  const query2 = collection(db, "user/41521005/clubs");
+  const [docs2, loading2, error2] = useCollectionData(query2);
+  console.log(docs2);
 
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -251,10 +256,12 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
+            {docs?.map((doc) => (
+              <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
               {" "}
-              {props.name}{" "}
+              {doc.username}{" "}
             </div>
+            ))}
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
@@ -725,7 +732,7 @@ function ClubProfile(props) {
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            {docs?.map((doc) => (
+            {docs2?.map((doc) => (
               <div className=" flex justify-between">
                 <div className="flex items-center space-x-2 ">
                   <img
