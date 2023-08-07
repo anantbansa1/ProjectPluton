@@ -25,19 +25,29 @@ import { Link } from "react-router-dom";
 import minion from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
 
-import { collection } from "@firebase/firestore";
+import { collection , where , query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
+import { useAuth } from "../../firebase";
+import { getDocs } from "firebase/firestore";
 
 function ClubProfile(props) {
 
-  const query = collection(db,"user");
-  const[docs,loading,error] = useCollectionData(query);
-  console.log(docs);
+  const user = useAuth();
+  if(user){
+    const q = query(collection(db,"user"),where("email","==",user?.email));
+    console.log(getDocs(q));
+    const querySnapshot =  getDocs(q);
+    if(querySnapshot){
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+  
+      });
+    }
+  }
+  
 
-  const query2 = collection(db, "user/41521005/clubs");
-  const [docs2, loading2, error2] = useCollectionData(query2);
-  console.log(docs2);
+
 
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -256,12 +266,10 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            {docs?.map((doc) => (
-              <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
+            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
               {" "}
-              {doc.username}{" "}
+              {props.name}{" "}
             </div>
-            ))}
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
@@ -276,7 +284,7 @@ function ClubProfile(props) {
               className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
-              &nbsp; <div>3 Clubs Joineds</div>
+              &nbsp; <div>3 Clubs Joined</div>
             </button>
           </div>
 
@@ -732,27 +740,7 @@ function ClubProfile(props) {
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            {docs2?.map((doc) => (
-              <div className=" flex justify-between">
-                <div className="flex items-center space-x-2 ">
-                  <img
-                    src={minion}
-                    alt=""
-                    className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                  />
-
-                  <div className="font-semibold">{doc.name}</div>
-                </div>
-                <div className="grid grid-rows-1 items-center grid-cols-1">
-                  <img
-                    src={minion}
-                    alt=""
-                    className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
-                  />
-                </div>
-              </div>
-            ))}
-            {/* <div className=" flex justify-between">
+          <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
               <img
                   src={Tanjiro}
@@ -769,8 +757,26 @@ function ClubProfile(props) {
                   className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
                 />
               </div>
-            </div> */}
-            {/* <div className=" flex justify-between">
+            </div>
+            <div className=" flex justify-between">
+              <div className="flex items-center space-x-2 ">
+              <img
+                  src={Tanjiro}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                />
+
+                <div className="font-semibold">Music Club</div>
+              </div>
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={Tanjiro}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>
+            <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
               <img
                   src={CoverImage}
@@ -787,7 +793,7 @@ function ClubProfile(props) {
                   className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
                 />
               </div>
-            </div> */}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
