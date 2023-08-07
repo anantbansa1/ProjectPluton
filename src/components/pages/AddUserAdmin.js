@@ -43,13 +43,26 @@ export default function AddUserAdmin() {
     }
   }, [user]);
 
-  const fetchData = async () => {
+  const deleteusers = async (parsedData) => {
+
     if (token) {
-      axios.get("http://localhost:5000/api/pluton", {
+      const parsedDataString = encodeURIComponent(JSON.stringify(parsedData));
+      console.log(parsedDataString)
+      const url = `http://localhost:5000/api/pluton?parsedData=${parsedDataString}`;
+      setloading(true);
+      await axios.get(url, {
         headers: {
-          Authorization: token,
+          Authorization: token,       
         },
+      }).then((response)=> {
+        setOpen(true);
+        setmessage(response.data.message);
+        setetype(response.data.type);
+        setloading(false);
+        console.log("respone: ",response.data.message, " ", response.data.type)
       })
+
+
     }
   }
 
@@ -73,6 +86,8 @@ export default function AddUserAdmin() {
     createUserWithEmailAndPassword(auth, email, "chhotahathi")
       .then((userCredential) => {
         setOpen(true);
+        setetype('success')
+        setmessage("Successfully added!")
         const user = userCredential.user;
       })
       .catch((error) => {
@@ -127,7 +142,7 @@ export default function AddUserAdmin() {
   }
 
   async function handleParse() {
-    if (add === "add") {
+    // if (add === "add") {
       if (!isfile) {
         setOpen(true);
         setetype("error");
@@ -139,29 +154,36 @@ export default function AddUserAdmin() {
       reader.onload = async ({ target }) => {
         const csv = Papa.parse(target.result, { header: true });
         const parsedData = csv?.data;
-        setloading(true);
-        sleep(2000).then(() => {
-          setloading(false);
-        });
-        parsedData.map(async (d) => {
-          const data = Object.values(d);
-
-          const docref = doc(db, "user", data[0]);
-          const payload = {
-            name: data[1],
-            email: data[2],
-            isadmin: false,
-            coverimage:
-              "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
-            profileimage:
-              "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
-          };
-          await signup(data[2], docref, payload);
-        });
+        if (add=="add") {
+          setloading(true);
+          sleep(2000).then(() => {
+            setloading(false);
+          });
+          parsedData.map(async (d) => {
+            const data = Object.values(d);
+            if (data[0]) {
+              const docref = doc(db, "user", data[0]);
+              const payload = {
+                name: data[1],
+                email: data[2],
+                isadmin: false,
+                coverimage:
+                  "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
+                profileimage:
+                  "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
+              };
+              await signup(data[2], docref, payload);
+            }
+  
+          });
+        } else {
+         await deleteusers(parsedData);
+          // console.log(parsedData);
+        }
       };
       reader.readAsText(file);
-    } else {
-      fetchData();
+    // } else {
+      // fetchData();
       // if (!isfile) {
       //   setOpen(true);
       //   setetype("error");
@@ -189,7 +211,7 @@ export default function AddUserAdmin() {
       // deleteusers();
       // deleteusers.listAllUsers()
 
-    }
+    // }
   }
 
   return (
