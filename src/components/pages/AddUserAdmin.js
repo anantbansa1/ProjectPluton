@@ -21,7 +21,7 @@ export default function AddUserAdmin() {
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
   const [isfile, setisfile] = useState(0);
-  const [add, setadd] = useState(true);
+  const [add, setadd] = useState("add");
   const inputaddref = useRef();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
@@ -34,6 +34,8 @@ export default function AddUserAdmin() {
     }
     setOpen(false);
   };
+
+  async function remove(email, docref) {}
 
   async function signup(email, docref, payload) {
     await setDoc(docref, payload);
@@ -58,7 +60,7 @@ export default function AddUserAdmin() {
             setmessage("Operation not allowed");
             break;
           default:
-            setmessage("Something went wrong! Please try again later.");
+            setmessage("Something went wrong! Pslease try again later.");
             break;
         }
       });
@@ -94,38 +96,65 @@ export default function AddUserAdmin() {
   }
 
   async function handleParse() {
-    if (!isfile) {
-      setOpen(true);
-      setetype("error");
-      setmessage("Please upload a file");
-      return;
-    }
-    const valuesArray = [];
-    const reader = new FileReader();
-    reader.onload = async ({ target }) => {
-      const csv = Papa.parse(target.result, { header: true });
-      const parsedData = csv?.data;
-      setloading(true);
-      sleep(2000).then(() => {
-        setloading(false);
-      });
-      parsedData.map(async (d) => {
-        const data = Object.values(d);
+    if (add === "add") {
+      if (!isfile) {
+        setOpen(true);
+        setetype("error");
+        setmessage("Please upload a file");
+        return;
+      }
+      const valuesArray = [];
+      const reader = new FileReader();
+      reader.onload = async ({ target }) => {
+        const csv = Papa.parse(target.result, { header: true });
+        const parsedData = csv?.data;
+        setloading(true);
+        sleep(2000).then(() => {
+          setloading(false);
+        });
+        parsedData.map(async (d) => {
+          const data = Object.values(d);
 
-        const docref = doc(db, "user", data[0]);
-        const payload = {
-          name: data[1],
-          email: data[2],
-          isadmin: false,
-          coverimage:
-            "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
-          profileimage:
-            "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
-        };
-        await signup(data[2], docref, payload);
-      });
-    };
-    reader.readAsText(file);
+          const docref = doc(db, "user", data[0]);
+          const payload = {
+            name: data[1],
+            email: data[2],
+            isadmin: false,
+            coverimage:
+              "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
+            profileimage:
+              "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
+          };
+          await signup(data[2], docref, payload);
+        });
+      };
+      reader.readAsText(file);
+    } else {
+      if (!isfile) {
+        setOpen(true);
+        setetype("error");
+        setmessage("Please upload a file");
+        return;
+      }
+      const valuesArray = [];
+      const reader = new FileReader();
+      reader.onload = async ({ target }) => {
+        const csv = Papa.parse(target.result, { header: true });
+        const parsedData = csv?.data;
+        setloading(true);
+        sleep(2000).then(() => {
+          setloading(false);
+        });
+        parsedData.map(async (d) => {
+          const data = Object.values(d);
+
+          const docref = doc(db, "user", data[0]);
+
+          await remove(data[2], docref);
+        });
+      };
+      reader.readAsText(file);
+    }
   }
 
   return (
@@ -137,48 +166,52 @@ export default function AddUserAdmin() {
         <div className="flex space-x-5 self-center text-2xl max-md:text-lg text-slate-200">
           <button
             onClick={() => {
-              setadd(!add);
+              setadd("add");
             }}
-            className={`px-6 py-4 ${add ? "border-b" : ""} border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "add" ? "border-b" : ""
+            } border-slate-200`}
           >
             Add Users
           </button>
           <button
             onClick={() => {
-              setadd(!add);
+              setadd("remove");
             }}
-            className={`px-6 py-4 ${!add ? "border-b" : ""}  border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "remove" ? "border-b" : ""
+            }  border-slate-200`}
           >
             {" "}
             Remove Users
           </button>
         </div>
         <div>
-          {add && (
-            <div className="mt-10">
-              <div className="flex space-x-10 text-xl max-md:text-base">
-                <div>To add users upload the an CSV file in given template</div>
-                <div>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                      background: "#15803d",
-                      color: "white",
+          <div className="mt-10">
+            <div className="flex md:space-x-10 gap-y-2 max-sm:flex-col max-sm:items-center max-sm:text-sm text-xl max-md:text-base">
+              <div>To {add} users upload the an CSV file in given template</div>
+              <div className="self-center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    background: "#15803d",
+                    color: "white",
+                    background: "#100d1e",
+                    borderColor: "#199245",
+                    "&:hover": {
                       background: "#100d1e",
-                      borderColor: "#199245",
-                      "&:hover": {
-                        background: "#100d1e",
-                        borderColor: "#0a0813",
-                        color: "white",
-                      },
-                    }}
-                  >
-                    Download Template
-                  </Button>
-                </div>
+                      borderColor: "#0a0813",
+                      color: "white",
+                    },
+                  }}
+                >
+                  Download Template
+                </Button>
               </div>
-              <div className="my-5 flex space-x-5 gap-x-2 items-center">
+            </div>
+            <div className="my-5 gap-y-5 flex max-md:flex-col gap-x-2 items-center">
+              <div className="flex items-center">
                 Add CSV file
                 <Button
                   className="mx-5"
@@ -202,6 +235,8 @@ export default function AddUserAdmin() {
                 >
                   Select file
                 </Button>
+              </div>
+              <div className="flex items-center">
                 <div>{filename}</div>
                 <input
                   ref={inputaddref}
@@ -231,7 +266,7 @@ export default function AddUserAdmin() {
                 </Button>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <div className=" md:ml-[22vw] flex flex-col space-y-5 w-[78%]  text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
