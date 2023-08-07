@@ -20,12 +20,25 @@ import Rank3 from "../Images/rank3.png";
 import Rank20p from "../Images/rank20p.png";
 import Rank2 from "../Images/rank2.png";
 import { Leaderboard } from "@mui/icons-material";
-import {Button} from "@mui/material"
+import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import minion from "../Images/Minions.jpg"
-import Tanjiro from "../Images/Tanjiro.jpg"
+import minion from "../Images/Minions.jpg";
+import Tanjiro from "../Images/Tanjiro.jpg";
+
+import { collection } from "@firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { db } from "../../firebase";
 
 function ClubProfile(props) {
+
+  const query = collection(db,"user");
+  const[docs,loading,error] = useCollectionData(query);
+  console.log(docs);
+
+  const query2 = collection(db, "user/41521005/clubs");
+  const [docs2, loading2, error2] = useCollectionData(query2);
+  console.log(docs2);
+
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
   const [ClubImage, setclubimage] = useState(props.clubimage);
@@ -43,10 +56,9 @@ function ClubProfile(props) {
   const [cropCover, setCropCover] = useState({ aspect: 3.8, height: 500 });
   const [completedCropCover, setCompletedCropCover] = useState(null);
   const [completedCrop, setCompletedCrop] = useState(null);
-  const [clubs,setclubs] = useState(false);
+  const [clubs, setclubs] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
-
 
   const image =
     props.clubpoint < props.tbronze
@@ -54,7 +66,6 @@ function ClubProfile(props) {
       : props.clubpoint <= props.tsilver
       ? Silverbadge
       : Goldbadge;
-
 
   function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
@@ -245,10 +256,12 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
+            {docs?.map((doc) => (
+              <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
               {" "}
-              {props.name}{" "}
+              {doc.username}{" "}
             </div>
+            ))}
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
@@ -256,16 +269,22 @@ function ClubProfile(props) {
           </div>
 
           <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1 max-[375px]:m-0  max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
-            <button onClick={()=>{setclubs(true)}}
+            <button
+              onClick={() => {
+                setclubs(true);
+              }}
               className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
-              &nbsp; <div>3 Clubs Joined</div>
+              &nbsp; <div>3 Clubs Joineds</div>
             </button>
           </div>
 
           <div className="row-start-6 max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
-            <Link to="/leaderboard" className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
+            <Link
+              to="/leaderboard"
+              className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center"
+            >
               <Leaderboard className="scale-[80%]"></Leaderboard>{" "}
               <div>&nbsp;3 Rank</div>
             </Link>
@@ -478,7 +497,6 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
-
         </div>
       </div>
 
@@ -541,7 +559,12 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { borderColor:'#0a0813', color:'white' } }}
+            sx={{
+              color: "white",
+              borderColor: "#100d1e",
+              borderRadius: "15px",
+              "&:hover": { borderColor: "#0a0813", color: "white" },
+            }}
             onClick={handleClose}
           >
             Cancel{" "}
@@ -553,15 +576,23 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
+            sx={{
+              background: "#130f22",
+              color: "white",
+              borderColor: "#100d1e",
+              borderRadius: "15px",
+              "&:hover": {
+                background: "#100d1e",
+                borderColor: "#0a0813",
+                color: "white",
+              },
+            }}
             onClick={() => SaveChanges(previewCanvasRef.current, completedCrop)}
           >
             save changes{" "}
           </Button>
-
         </DialogActions>
       </Dialog>
-
 
       <Dialog
         open={openCover}
@@ -621,7 +652,12 @@ function ClubProfile(props) {
           <Button
             variant="outlined"
             color="primary"
-            sx={{ color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { borderColor:'#0a0813', color:'white' } }}
+            sx={{
+              color: "white",
+              borderColor: "#100d1e",
+              borderRadius: "15px",
+              "&:hover": { borderColor: "#0a0813", color: "white" },
+            }}
             onClick={handleCloseCover}
           >
             Cancel{" "}
@@ -633,15 +669,28 @@ function ClubProfile(props) {
           <Button
             variant="contained"
             color="primary"
-            sx={{ background: "#130f22",color:'white', borderColor:'#100d1e',borderRadius: '15px', "&:hover": { background: "#100d1e", borderColor:'#0a0813', color:'white' } }}
-            onClick={() => SaveChangesCover(previewCanvasRefCover.current, completedCropCover)}
+            sx={{
+              background: "#130f22",
+              color: "white",
+              borderColor: "#100d1e",
+              borderRadius: "15px",
+              "&:hover": {
+                background: "#100d1e",
+                borderColor: "#0a0813",
+                color: "white",
+              },
+            }}
+            onClick={() =>
+              SaveChangesCover(
+                previewCanvasRefCover.current,
+                completedCropCover
+              )
+            }
           >
             save changes{" "}
           </Button>
-
         </DialogActions>
       </Dialog>
-
 
       <Dialog
         open={clubs}
@@ -654,8 +703,8 @@ function ClubProfile(props) {
           sx: {
             background: "#1e1936",
             color: "#fff",
-            width: { xs: '100%', md: '75%', lg: '100%' },
-            height: { xs: '50%', md: '50%', lg: '50%' },
+            width: { xs: "100%", md: "75%", lg: "100%" },
+            height: { xs: "50%", md: "50%", lg: "50%" },
             borderRadius: 15,
             padding: "15px",
           },
@@ -683,25 +732,27 @@ function ClubProfile(props) {
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-              <img
-                  src={minion}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
+            {docs2?.map((doc) => (
+              <div className=" flex justify-between">
+                <div className="flex items-center space-x-2 ">
+                  <img
+                    src={minion}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                  />
 
-                <div className="font-semibold">Club Of Programmers</div>
+                  <div className="font-semibold">{doc.name}</div>
+                </div>
+                <div className="grid grid-rows-1 items-center grid-cols-1">
+                  <img
+                    src={minion}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
+                  />
+                </div>
               </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={minion}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className=" flex justify-between">
+            ))}
+            {/* <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
               <img
                   src={Tanjiro}
@@ -718,8 +769,8 @@ function ClubProfile(props) {
                   className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
                 />
               </div>
-            </div>
-            <div className=" flex justify-between">
+            </div> */}
+            {/* <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
               <img
                   src={CoverImage}
@@ -736,9 +787,7 @@ function ClubProfile(props) {
                   className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
                 />
               </div>
-            </div>
-            
-
+            </div> */}
           </div>
         </DialogContent>
       </Dialog>
