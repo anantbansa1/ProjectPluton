@@ -28,27 +28,54 @@ import Tanjiro from "../Images/Tanjiro.jpg";
 import { collection , where , query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
-import { useAuth } from "../../firebase";
+import { useAuth,upload } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 
 function ClubProfile(props) {
 
-  const user = useAuth();
-  if(user){
-    const q = query(collection(db,"user"),where("email","==",user?.email));
-    console.log(getDocs(q));
-    const querySnapshot =  getDocs(q);
-    if(querySnapshot){
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-  
-      });
+
+  const currentUser = useAuth();
+  const [photo, setPhoto] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
+
+  function handleChange(e) {
+    if (e.target.files[0]) {
+      setPhoto(e.target.files[0])
     }
   }
+
+  // function handleClick() {
+  //   upload(photo, currentUser, setLoading);
+  // }
+
+  useEffect(() => {
+    if (currentUser?.photoURL) {
+      setPhotoURL(currentUser.photoURL);
+    }
+  }, [currentUser])
+
+  const user = useAuth();
+  async function up(){
+      const q = query(collection(db,"user"),where("email","==",user?.email));
+      console.log(getDocs(q));
+      const querySnapshot =await getDocs(q);
+      if(querySnapshot){
+        querySnapshot.forEach((doc) => {
+          // console.log(doc.id, " => ", doc.data());
+          setname(doc.data()['name']);
+          setUpImg(doc.data()['profileimage'])
+        });
+    }
+  }
+  useEffect(()=>{
+    if(user){
+      up()
+    }
+    console.log(1);
+  },[user])
   
-
-
-
+  const [name,setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
   const [ClubImage, setclubimage] = useState(props.clubimage);
@@ -77,7 +104,7 @@ function ClubProfile(props) {
       ? Silverbadge
       : Goldbadge;
 
-  function SaveChanges(canvas, crop) {
+  async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
       return;
     }
@@ -89,6 +116,10 @@ function ClubProfile(props) {
         setclubimage(Imageuse);
       }, "image/png");
     }
+    console.log(upImg);
+    console.log(user);
+    console.log(setLoading);
+    await upload(upImg, user, setLoading);
   }
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
@@ -255,7 +286,7 @@ function ClubProfile(props) {
                   />
                 ) : (
                   <img
-                    src={ClubImage}
+                    src={upImg}
                     alt=""
                     className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
                   />
@@ -268,7 +299,7 @@ function ClubProfile(props) {
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
             <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
               {" "}
-              {props.name}{" "}
+              {name}{" "}
             </div>
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
