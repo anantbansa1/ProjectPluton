@@ -11,7 +11,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Button } from "@mui/material";
 
-export default function AddUserAdmin(props) {
+export default function AddUserAdmin() {
   const allowedExtensions = ["csv"];
   const [file, setFile] = useState([]);
   const [loading, setloading] = useState(false);
