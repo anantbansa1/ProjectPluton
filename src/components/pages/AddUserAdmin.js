@@ -183,7 +183,7 @@ export default function AddUserAdmin() {
             }  border-slate-200`}
           >
             {" "}
-            Remove Users
+            Remove User
           </button>
         </div>
         <div>
