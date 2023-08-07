@@ -276,7 +276,7 @@ function ClubProfile(props) {
               className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
-              &nbsp; <div>3 Clubs Joined</div>
+              &nbsp; <div>3 Clubs Joineds</div>
             </button>
           </div>
 
