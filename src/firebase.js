@@ -5,7 +5,7 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
+  signOut,getIdToken
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { getFirestore } from "firebase/firestore";
@@ -45,3 +45,18 @@ export function signUp(email, password) {
 export function logOut() {
   return signOut(auth);
 }
+
+export function useToken() {
+  const [token, setToken] = useState('')
+  useEffect(() => {
+    return auth().onAuthStateChanged(user => {
+      if (user) {
+        user.getIdToken(true)
+        .then(latestToken => setToken(latestToken))
+        .catch(err => console.log(err))
+      }
+    })
+  }, [])
+ return token;
+}
+

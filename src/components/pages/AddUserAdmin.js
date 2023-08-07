@@ -10,6 +10,10 @@ import { db } from "../../firebase";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Button } from "@mui/material";
+import { useToken } from "../../firebase";
+// import admin from "../../index"
+
+
 
 export default function AddUserAdmin(props) {
   const allowedExtensions = ["csv"];
@@ -33,7 +37,6 @@ export default function AddUserAdmin(props) {
   //   console.log(values);
   // }, [values])
 
-
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -43,6 +46,7 @@ export default function AddUserAdmin(props) {
 
   async function signup(email, docref, payload) {
     await setDoc(docref, payload);
+    
     createUserWithEmailAndPassword(auth, email, "chhotahathi")
       .then((userCredential) => {
         setOpen(true);
@@ -53,10 +57,9 @@ export default function AddUserAdmin(props) {
         setOpen(true);
         const errorMessage = error.message;
         setetype("error");
-
         switch (errorCode) {
           case "auth/email-already-in-use":
-            setmessage("Email already in use!");
+            setmessage(`email already in use!`);
             break;
           case "auth/invalid-email":
             setmessage("Invalid email!");
@@ -73,6 +76,7 @@ export default function AddUserAdmin(props) {
 
   const onSelectFile = (e) => {
     setisfile(e.target.files.length);
+    console.log(useToken);
     if (e.target.files.length) {
       const inputFile = e.target.files[0];
       const fileExtension = inputFile?.type.split("/")[1];
@@ -89,15 +93,15 @@ export default function AddUserAdmin(props) {
           const valuearray = [];
 
           result.data.map((d) => {
-            columnarray.push(Object.keys(d))
-            valuearray.push(Object.values(d))
-          })
-          setcolumnarray(columnarray)
-          setvaluearray(valuearray)
-        }
-      })
+            columnarray.push(Object.keys(d));
+            valuearray.push(Object.values(d));
+          });
+          setcolumnarray(columnarray);
+          setvaluearray(valuearray);
+        },
+      });
     }
-  }
+  };
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -142,25 +146,47 @@ export default function AddUserAdmin(props) {
     <>
       <Navbar selected="manageusers"></Navbar>
 
-      <div className=" md:ml-[22vw] flex flex-col space-y-5 max-md:w-[85%] text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
+      <div className=" md:ml-[22vw] flex flex-col space-y-5 max-md:w-[78%] text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="text-3xl max-md:text-xl">Manage Users</div>
         <div className="flex space-x-5 self-center text-2xl max-md:text-lg text-slate-200">
-          <button onClick={() => { setadd(!add) }} className={`px-6 py-4 ${add ? 'border-b' : ''} border-slate-200`} >Add Users</button>
-          <button onClick={() => { setadd(!add) }} className={`px-6 py-4 ${!add ? 'border-b' : ''}  border-slate-200`} > Remove Users</button>
+          <button
+            onClick={() => {
+              setadd(!add);
+            }}
+            className={`px-6 py-4 ${add ? "border-b" : ""} border-slate-200`}
+          >
+            Add Users
+          </button>
+          <button
+            onClick={() => {
+              setadd(!add);
+            }}
+            className={`px-6 py-4 ${!add ? "border-b" : ""}  border-slate-200`}
+          >
+            {" "}
+            Remove Users
+          </button>
         </div>
         <div>
           {add && (
             <div className="mt-10">
               <div className="flex space-x-10 text-xl max-md:text-base">
-                <div>
-                  To add users upload the an CSV file in given template</div>
+                <div>To add users upload the an CSV file in given template</div>
                 <div>
                   <Button
-
                     variant="contained"
                     color="primary"
-                    sx={{ background: "#15803d", color: 'white', background: "#100d1e", borderColor: '#199245', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
-
+                    sx={{
+                      background: "#15803d",
+                      color: "white",
+                      background: "#100d1e",
+                      borderColor: "#199245",
+                      "&:hover": {
+                        background: "#100d1e",
+                        borderColor: "#0a0813",
+                        color: "white",
+                      },
+                    }}
                   >
                     Download Template
                   </Button>
@@ -171,10 +197,22 @@ export default function AddUserAdmin(props) {
                 <Button
                   className="mx-5"
                   variant="contained"
-                  onClick={() => { inputaddref.current.click(); console.log("hello") }}
+                  onClick={() => {
+                    inputaddref.current.click();
+                    console.log("hello");
+                  }}
                   color="primary"
-                  sx={{ background: "#15803d", color: 'white', background: "#100d1e", borderColor: '#199245', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
-
+                  sx={{
+                    background: "#15803d",
+                    color: "white",
+                    background: "#100d1e",
+                    borderColor: "#199245",
+                    "&:hover": {
+                      background: "#100d1e",
+                      borderColor: "#0a0813",
+                      color: "white",
+                    },
+                  }}
                 >
                   Select file
                 </Button>
@@ -191,8 +229,17 @@ export default function AddUserAdmin(props) {
                   variant="contained"
                   color="primary"
                   onClick={handleParse}
-                  sx={{ background: "#15803d", color: 'white', background: "#100d1e", borderColor: '#199245', "&:hover": { background: "#100d1e", borderColor: '#0a0813', color: 'white' } }}
-
+                  sx={{
+                    background: "#15803d",
+                    color: "white",
+                    background: "#100d1e",
+                    borderColor: "#199245",
+                    "&:hover": {
+                      background: "#100d1e",
+                      borderColor: "#0a0813",
+                      color: "white",
+                    },
+                  }}
                 >
                   upload
                 </Button>
@@ -201,22 +248,54 @@ export default function AddUserAdmin(props) {
           )}
         </div>
       </div>
-      <div className=" md:ml-[22vw] flex flex-col space-y-5 text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
-        <div className="grid gap-y-2 text-slate-200  max-md:grid-cols-[repeat(4,minmax(auto,20vw))] text-ellipsis w-[100%] grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-sm max-lg:text-base">
-          <div className="row-start-1 col-start-1 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">S.No</div>
-          <div className="row-start-1 col-start-2 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">Roll No</div>
-          <div className="row-start-1 col-start-3 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">Name</div>
-          <div className="row-start-1 col-start-4 font-semibold text-xl  max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">Email ID</div>
+      <div className=" md:ml-[22vw] flex flex-col space-y-5  text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
+        <div className="grid gap-y-2  text-slate-200 grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-xs max-lg:text-base">
+          <div className="row-start-1 col-start-1 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2  text-center">
+            S.No
+          </div>
+          <div className="row-start-1 col-start-2 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 text-center">
+            Roll No
+          </div>
+          <div className="row-start-1 col-start-3 overflow-hidden text-ellipsis font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2  text-center">
+            Name
+          </div>
+          <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-4 font-semibold text-xl  max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 text-center">
+            Email ID
+          </div>
 
           {valueArray.map((value, index) => {
             return (
               <>
-                <div className={`row-start-${index + 2} col-start-1 p-2 rounded-lg text-center`}>{index + 1}</div>
-                <div className={`row-start-${index + 2} col-start-2 p-2 rounded-lg text-center`}>{value[0]}</div>
-                <div className={`row-start-${index + 2} col-start-3 p-2 rounded-lg text-center`}>{value[1]}</div>
-                <div className={`row-start-${index + 2} col-start-4 p-2 rounded-lg text-center`}>{value[2]}</div>
+                <div
+                  className={`row-start-${
+                    index + 2
+                  } col-start-1 p-2overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  text-center`}
+                >
+                  {index + 1}
+                </div>
+                <div
+                  className={`row-start-${
+                    index + 2
+                  } col-start-2 p-2   overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  text-center`}
+                >
+                  {value[0]}
+                </div>
+                <div
+                  className={`row-start-${
+                    index + 2
+                  } col-start-3 p-2  overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  text-center`}
+                >
+                  {value[1]}
+                </div>
+                <div
+                  className={`row-start-${
+                    index + 2
+                  } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  text-center`}
+                >
+                  {value[2]}
+                </div>
               </>
-            )
+            );
           })}
         </div>
       </div>
