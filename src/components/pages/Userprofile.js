@@ -25,7 +25,18 @@ import { Link } from "react-router-dom";
 import minion from "../Images/Minions.jpg"
 import Tanjiro from "../Images/Tanjiro.jpg"
 
+
+import { collection } from "@firebase/firestore";
+import { useCollectionData} from "react-firebase-hooks/firestore";
+import { db } from "../../firebase";
+
 function ClubProfile(props) {
+
+  const query = collection(db,"user/41521005/clubs");
+  const [docs , loading , error] = useCollectionData(query);
+  console.log(docs);
+
+
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
   const [ClubImage, setclubimage] = useState(props.clubimage);
