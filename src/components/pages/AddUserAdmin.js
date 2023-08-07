@@ -150,7 +150,7 @@ export default function AddUserAdmin() {
             className={`px-6 py-4 ${!add ? "border-b" : ""}  border-slate-200`}
           >
             {" "}
-            Remove Users
+            Remove User
           </button>
         </div>
         <div>
