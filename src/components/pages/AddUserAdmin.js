@@ -18,7 +18,6 @@ export default function AddUserAdmin(props) {
   const [open, setOpen] = useState(false);
   const [valueArray, setvaluearray] = useState([]);
   const [filename, setfilename] = useState("No file selected");
-  const [columnArray, setcolumnarray] = useState([]);
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
   const [isfile, setisfile] = useState(0);
@@ -28,10 +27,6 @@ export default function AddUserAdmin(props) {
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-
-  // useEffect(() => {
-  //   console.log(values);
-  // }, [values])
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -83,14 +78,11 @@ export default function AddUserAdmin(props) {
         header: true,
         skipEmptyLines: true,
         complete: function (result) {
-          const columnarray = [];
           const valuearray = [];
 
           result.data.map((d) => {
-            columnarray.push(Object.keys(d));
             valuearray.push(Object.values(d));
           });
-          setcolumnarray(columnarray);
           setvaluearray(valuearray);
         },
       });
@@ -243,14 +235,14 @@ export default function AddUserAdmin(props) {
         </div>
       </div>
       <div className=" md:ml-[22vw] flex flex-col space-y-5 w-[78%]  text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
-        <div className="grid gap-y-2 text-slate-200 max-md:grid-cols-[repeat(4,minmax(auto,45px))] grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-sm max-lg:text-base">
-          <div className="row-start-1 col-start-1 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
+        <div className="grid gap-y-2 text-slate-200 max-md:grid-cols-[repeat(4,minmax(auto,21vw))] grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-sm max-lg:text-base">
+          <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-1 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
             S.No
           </div>
-          <div className="row-start-1 col-start-2 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
+          <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-2 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
             Roll No
           </div>
-          <div className="row-start-1 col-start-3 overflow-hidden text-ellipsis font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
+          <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-3  font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
             Name
           </div>
           <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-4 font-semibold text-xl  max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
@@ -263,28 +255,28 @@ export default function AddUserAdmin(props) {
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-1 p-2 rounded-lg text-center`}
+                  } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {index + 1}
                 </div>
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-2 p-2 rounded-lg text-center`}
+                  } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[0]}
                 </div>
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-3 p-2 rounded-lg text-center`}
+                  } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[1]}
                 </div>
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-4 p-2 rounded-lg text-center`}
+                  } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
                 >
                   {value[2]}
                 </div>
