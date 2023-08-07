@@ -99,7 +99,7 @@ function ClubProfile(props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-[35%_55%_10%] max-sm:grid-cols-[35%_35%_30%] gap-y-4 striped bg-[#130f22]  items-stretch max-sm:px-0 p-4 rounded-lg max-sm:text-base text-lg my-10">
+                <div className="grid grid-cols-[35%_55%_10%] max-sm:grid-cols-[35%_35%_30%] gap-y-4  bg-[#130f22]  items-stretch max-sm:px-0 p-4 rounded-lg max-sm:text-base text-lg my-10">
                     <div className="row-start-1 bg-[#090811] p-4 col-start-1">Name</div>
                     <div className="row-start-1 bg-[#090811] p-4 col-start-2">Assign Points</div>
                     <div className="row-start-1 bg-[#090811] p-4 col-start-3 text-[#130f22b6]"><button className="cursor-default"><MoreVert /></button></div>

@@ -10,8 +10,15 @@ import { db } from "../../firebase";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Button } from "@mui/material";
+import axios from "axios";
+import { useAuth } from "../../firebase";
+
+
+
+const deleteusers = require('./delete_user')
 
 export default function AddUserAdmin() {
+  const user = useAuth();
   const allowedExtensions = ["csv"];
   const [file, setFile] = useState([]);
   const [loading, setloading] = useState(false);
@@ -23,6 +30,28 @@ export default function AddUserAdmin() {
   const [isfile, setisfile] = useState(0);
   const [add, setadd] = useState("add");
   const inputaddref = useRef();
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+
+    // console.log("hello",user);
+    if (user) {
+      user.getIdToken().then((idtoken) => {
+        console.log(idtoken)
+        setToken(idtoken);
+      });
+    }
+  }, [user]);
+
+  const fetchData = async () => {
+    if (token) {
+      axios.get("http://localhost:5000/api/pluton", {
+        headers: {
+          Authorization: token,
+        },
+      })
+    }
+  }
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -35,7 +64,9 @@ export default function AddUserAdmin() {
     setOpen(false);
   };
 
-  async function remove(email, docref) {}
+  async function remove(email, docref) {
+
+  }
 
   async function signup(email, docref, payload) {
     await setDoc(docref, payload);
@@ -130,30 +161,34 @@ export default function AddUserAdmin() {
       };
       reader.readAsText(file);
     } else {
-      if (!isfile) {
-        setOpen(true);
-        setetype("error");
-        setmessage("Please upload a file");
-        return;
-      }
-      const valuesArray = [];
-      const reader = new FileReader();
-      reader.onload = async ({ target }) => {
-        const csv = Papa.parse(target.result, { header: true });
-        const parsedData = csv?.data;
-        setloading(true);
-        sleep(2000).then(() => {
-          setloading(false);
-        });
-        parsedData.map(async (d) => {
-          const data = Object.values(d);
+      fetchData();
+      // if (!isfile) {
+      //   setOpen(true);
+      //   setetype("error");
+      //   setmessage("Please upload a file");
+      //   return;
+      // }
+      // const valuesArray = [];
+      // const reader = new FileReader();
+      // reader.onload = async ({ target }) => {
+      //   const csv = Papa.parse(target.result, { header: true });
+      //   const parsedData = csv?.data;
+      //   setloading(true);
+      //   sleep(2000).then(() => {
+      //     setloading(false);
+      //   });
+      //   parsedData.map(async (d) => {
+      //     const data = Object.values(d);
 
-          const docref = doc(db, "user", data[0]);
+      //     const docref = doc(db, "user", data[0]);
 
-          await remove(data[2], docref);
-        });
-      };
-      reader.readAsText(file);
+      //     await remove(data[2], docref);
+      //   });
+      // };
+      // reader.readAsText(file);
+      // deleteusers();
+      // deleteusers.listAllUsers()
+
     }
   }
 
@@ -168,9 +203,8 @@ export default function AddUserAdmin() {
             onClick={() => {
               setadd("add");
             }}
-            className={`px-6 py-4 ${
-              add === "add" ? "border-b" : ""
-            } border-slate-200`}
+            className={`px-6 py-4 ${add === "add" ? "border-b" : ""
+              } border-slate-200`}
           >
             Add Users
           </button>
@@ -178,9 +212,8 @@ export default function AddUserAdmin() {
             onClick={() => {
               setadd("remove");
             }}
-            className={`px-6 py-4 ${
-              add === "remove" ? "border-b" : ""
-            }  border-slate-200`}
+            className={`px-6 py-4 ${add === "remove" ? "border-b" : ""
+              }  border-slate-200`}
           >
             {" "}
             Remove User
@@ -288,30 +321,26 @@ export default function AddUserAdmin() {
             return (
               <>
                 <div
-                  className={`row-start-${
-                    index + 2
-                  } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${index + 2
+                    } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {index + 1}
                 </div>
                 <div
-                  className={`row-start-${
-                    index + 2
-                  } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${index + 2
+                    } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[0]}
                 </div>
                 <div
-                  className={`row-start-${
-                    index + 2
-                  } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${index + 2
+                    } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[1]}
                 </div>
                 <div
-                  className={`row-start-${
-                    index + 2
-                  } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
+                  className={`row-start-${index + 2
+                    } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
                 >
                   {value[2]}
                 </div>
