@@ -14,7 +14,8 @@ npm install @mui/icons-material\
 npm install firebase\
 npm install react-router-dom\
 npm install tailwind-scrollbar-hide\
-npm install --save @fontsource/press-start-2p
+npm install --save @fontsource/press-start-2p\
+npm install papaparse
 
 ## Available Scripts
 

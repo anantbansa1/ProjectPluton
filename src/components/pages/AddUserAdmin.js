@@ -11,27 +11,22 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Button } from "@mui/material";
 
-export default function AddUserAdmin(props) {
+export default function AddUserAdmin() {
   const allowedExtensions = ["csv"];
   const [file, setFile] = useState([]);
   const [loading, setloading] = useState(false);
   const [open, setOpen] = useState(false);
   const [valueArray, setvaluearray] = useState([]);
   const [filename, setfilename] = useState("No file selected");
-  const [columnArray, setcolumnarray] = useState([]);
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
   const [isfile, setisfile] = useState(0);
-  const [add, setadd] = useState(true);
+  const [add, setadd] = useState("add");
   const inputaddref = useRef();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
-
-  // useEffect(() => {
-  //   console.log(values);
-  // }, [values])
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -39,6 +34,8 @@ export default function AddUserAdmin(props) {
     }
     setOpen(false);
   };
+
+  async function remove(email, docref) {}
 
   async function signup(email, docref, payload) {
     await setDoc(docref, payload);
@@ -63,7 +60,7 @@ export default function AddUserAdmin(props) {
             setmessage("Operation not allowed");
             break;
           default:
-            setmessage("Something went wrong! Please try again later.");
+            setmessage("Something went wrong! Pslease try again later.");
             break;
         }
       });
@@ -83,14 +80,11 @@ export default function AddUserAdmin(props) {
         header: true,
         skipEmptyLines: true,
         complete: function (result) {
-          const columnarray = [];
           const valuearray = [];
 
           result.data.map((d) => {
-            columnarray.push(Object.keys(d));
             valuearray.push(Object.values(d));
           });
-          setcolumnarray(columnarray);
           setvaluearray(valuearray);
         },
       });
@@ -102,38 +96,65 @@ export default function AddUserAdmin(props) {
   }
 
   async function handleParse() {
-    if (!isfile) {
-      setOpen(true);
-      setetype("error");
-      setmessage("Please upload a file");
-      return;
-    }
-    const valuesArray = [];
-    const reader = new FileReader();
-    reader.onload = async ({ target }) => {
-      const csv = Papa.parse(target.result, { header: true });
-      const parsedData = csv?.data;
-      setloading(true);
-      sleep(2000).then(() => {
-        setloading(false);
-      });
-      parsedData.map(async (d) => {
-        const data = Object.values(d);
+    if (add === "add") {
+      if (!isfile) {
+        setOpen(true);
+        setetype("error");
+        setmessage("Please upload a file");
+        return;
+      }
+      const valuesArray = [];
+      const reader = new FileReader();
+      reader.onload = async ({ target }) => {
+        const csv = Papa.parse(target.result, { header: true });
+        const parsedData = csv?.data;
+        setloading(true);
+        sleep(2000).then(() => {
+          setloading(false);
+        });
+        parsedData.map(async (d) => {
+          const data = Object.values(d);
 
-        const docref = doc(db, "user", data[0]);
-        const payload = {
-          name: data[1],
-          email: data[2],
-          isadmin: false,
-          coverimage:
-            "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
-          profileimage:
-            "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
-        };
-        await signup(data[2], docref, payload);
-      });
-    };
-    reader.readAsText(file);
+          const docref = doc(db, "user", data[0]);
+          const payload = {
+            name: data[1],
+            email: data[2],
+            isadmin: false,
+            coverimage:
+              "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
+            profileimage:
+              "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
+          };
+          await signup(data[2], docref, payload);
+        });
+      };
+      reader.readAsText(file);
+    } else {
+      if (!isfile) {
+        setOpen(true);
+        setetype("error");
+        setmessage("Please upload a file");
+        return;
+      }
+      const valuesArray = [];
+      const reader = new FileReader();
+      reader.onload = async ({ target }) => {
+        const csv = Papa.parse(target.result, { header: true });
+        const parsedData = csv?.data;
+        setloading(true);
+        sleep(2000).then(() => {
+          setloading(false);
+        });
+        parsedData.map(async (d) => {
+          const data = Object.values(d);
+
+          const docref = doc(db, "user", data[0]);
+
+          await remove(data[2], docref);
+        });
+      };
+      reader.readAsText(file);
+    }
   }
 
   return (
@@ -145,48 +166,52 @@ export default function AddUserAdmin(props) {
         <div className="flex space-x-5 self-center text-2xl max-md:text-lg text-slate-200">
           <button
             onClick={() => {
-              setadd(!add);
+              setadd("add");
             }}
-            className={`px-6 py-4 ${add ? "border-b" : ""} border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "add" ? "border-b" : ""
+            } border-slate-200`}
           >
             Add Users
           </button>
           <button
             onClick={() => {
-              setadd(!add);
+              setadd("remove");
             }}
-            className={`px-6 py-4 ${!add ? "border-b" : ""}  border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "remove" ? "border-b" : ""
+            }  border-slate-200`}
           >
             {" "}
             Remove Users
           </button>
         </div>
         <div>
-          {add && (
-            <div className="mt-10">
-              <div className="flex space-x-10 text-xl max-md:text-base">
-                <div>To add users upload the an CSV file in given template</div>
-                <div>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                      background: "#15803d",
-                      color: "white",
+          <div className="mt-10">
+            <div className="flex md:space-x-10 gap-y-2 max-sm:flex-col max-sm:items-center max-sm:text-sm text-xl max-md:text-base">
+              <div>To {add} users upload the an CSV file in given template</div>
+              <div className="self-center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    background: "#15803d",
+                    color: "white",
+                    background: "#100d1e",
+                    borderColor: "#199245",
+                    "&:hover": {
                       background: "#100d1e",
-                      borderColor: "#199245",
-                      "&:hover": {
-                        background: "#100d1e",
-                        borderColor: "#0a0813",
-                        color: "white",
-                      },
-                    }}
-                  >
-                    Download Template
-                  </Button>
-                </div>
+                      borderColor: "#0a0813",
+                      color: "white",
+                    },
+                  }}
+                >
+                  Download Template
+                </Button>
               </div>
-              <div className="my-5 flex space-x-5 gap-x-2 items-center">
+            </div>
+            <div className="my-5 gap-y-5 flex max-md:flex-col gap-x-2 items-center">
+              <div className="flex items-center">
                 Add CSV file
                 <Button
                   className="mx-5"
@@ -210,6 +235,8 @@ export default function AddUserAdmin(props) {
                 >
                   Select file
                 </Button>
+              </div>
+              <div className="flex items-center">
                 <div>{filename}</div>
                 <input
                   ref={inputaddref}
@@ -239,18 +266,18 @@ export default function AddUserAdmin(props) {
                 </Button>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <div className=" md:ml-[22vw] flex flex-col space-y-5 w-[78%]  text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
-        <div className="grid gap-y-2 text-slate-200 max-md:grid-cols-[repeat(4,minmax(auto,45px))] grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-sm max-lg:text-base">
-          <div className="row-start-1 col-start-1 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
+        <div className="grid gap-y-2 text-slate-200 max-md:grid-cols-[repeat(4,minmax(auto,21vw))] grid-cols-[1fr_1fr_2.5fr_3fr] striped text-lg max-md:text-sm max-lg:text-base">
+          <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-1 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
             S.No
           </div>
-          <div className="row-start-1 col-start-2 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
+          <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-2 font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
             Roll No
           </div>
-          <div className="row-start-1 col-start-3 overflow-hidden text-ellipsis font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
+          <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-3  font-semibold text-xl max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
             Name
           </div>
           <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-4 font-semibold text-xl  max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
@@ -263,28 +290,28 @@ export default function AddUserAdmin(props) {
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-1 p-2 rounded-lg text-center`}
+                  } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {index + 1}
                 </div>
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-2 p-2 rounded-lg text-center`}
+                  } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[0]}
                 </div>
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-3 p-2 rounded-lg text-center`}
+                  } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[1]}
                 </div>
                 <div
                   className={`row-start-${
                     index + 2
-                  } col-start-4 p-2 rounded-lg text-center`}
+                  } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
                 >
                   {value[2]}
                 </div>
