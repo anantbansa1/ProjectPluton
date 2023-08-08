@@ -198,18 +198,9 @@ function ClubProfile(props) {
   const [docs, loadin, error] = useCollectionData(s);
   useEffect(()=>{
     if(docs){
-      // console.log(docs);
-      // console.log(docs[0]);
-      // console.log(docs[1]);
-      // docs?.map((e)=>{
-      //   console.log(2);
-      // })
+      console.log(docs)
     }
-  },[docs])
-  console.log(docs[0]);
-  
-  // const query = collection (db, "user",id,"medals");
-  // const [docs, loadin, error] = useCollectionData(query);
+  },[docs]);
       
 
   useEffect(()=>{
