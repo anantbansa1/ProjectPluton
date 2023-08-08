@@ -4,8 +4,6 @@ import Navbar from "../Navbar";
 import { doc, setDoc } from "firebase/firestore";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-import { auth } from "../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db } from "../../firebase";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -17,9 +15,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { deleteDoc } from "firebase/firestore";
-
-
-
 
 export default function AddUserAdmin() {
   const user = useAuth();
@@ -35,46 +30,48 @@ export default function AddUserAdmin() {
   const [add, setadd] = useState("Add");
   const inputaddref = useRef();
   const [opendialog, setdialog] = useState(false);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-
     if (user) {
       user.getIdToken().then((idtoken) => {
-        console.log(idtoken)
+        console.log(idtoken);
         setToken(idtoken);
       });
     }
   }, [user]);
 
-  const manageusers = async (parsedData,operation) => {
-
-    if (token) {
-      const parsedDataString = encodeURIComponent(JSON.stringify(parsedData));
-      console.log(parsedDataString)
-      const url = `http://localhost:5000/api/pluton?parsedData=${parsedDataString}`;
-      setloading(true);
-      await axios.get(url, {
-        headers: {
-          Authorization: token,
-          type: operation,       
-        },
-      }).then((response)=> {
-        setOpen(true);
-        setmessage(response.data.message);
-        setetype(response.data.type);
-        setloading(false);
-
-        console.log("response: ",response.data.message, " ", response.data.type)
-      })
-
-
-    }
-  }
-
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
+
+  const manageusers = async (parsedData, operation) => {
+    if (token) {
+      const parsedDataString = encodeURIComponent(JSON.stringify(parsedData));
+      console.log(parsedDataString);
+      const url = `http://localhost:5000/api/pluton?parsedData=${parsedDataString}`;
+      setloading(true);
+      await axios
+        .get(url, {
+          headers: {
+            Authorization: token,
+            type: operation,
+          },
+        })
+        .then((response) => {
+          setOpen(true);
+          setmessage(response.data.message);
+          setetype(response.data.type);
+          setloading(false);
+          console.log(
+            "response: ",
+            response.data.message,
+            " ",
+            response.data.type
+          );
+        });
+    }
+  };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -82,14 +79,6 @@ export default function AddUserAdmin() {
     }
     setOpen(false);
   };
-
-
-  async function signup(parsedData) {
-
-  }
-  async function handleyes(parsedData) {
-    await manageusers(parsedData,"remove");;
-  }
 
   const onSelectFile = (e) => {
     setisfile(e.target.files.length);
@@ -116,99 +105,53 @@ export default function AddUserAdmin() {
     }
   };
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async function handleParse() {
-    // if (add === "add") {
-      setdialog(false);
-      if (!isfile) {
-        setOpen(true);
-        setetype("error");
-        setmessage("Please upload a file");
-        return;
+    setdialog(false);
+    if (!isfile) {
+      setOpen(true);
+      setetype("error");
+      setmessage("Please upload a file");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = async ({ target }) => {
+      const csv = Papa.parse(target.result, { header: true });
+      const parsedData = csv?.data;
+      if (add == "Add") {
+        parsedData.map(async (d) => {
+          const data = Object.values(d);
+          if (data[0]) {
+            const docref = doc(db, "user", data[0]);
+            const payload = {
+              name: data[1],
+              email: data[2],
+              isadmin: false,
+              coverimage:
+                "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
+              profileimage:
+                "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
+            };
+            await setDoc(docref, payload);
+          }
+        });
+        manageusers(parsedData, "add");
+      } else {
+        manageusers(parsedData, "remove");
+        parsedData.map(async (d) => {
+          const data = Object.values(d);
+          if (data[0]) {
+            const docref = doc(db, "user", data[0]);
+            await deleteDoc(docref);
+          }
+        });
       }
-      const valuesArray = [];
-      const reader = new FileReader();
-      reader.onload = async ({ target }) => {
-        const csv = Papa.parse(target.result, { header: true });
-        const parsedData = csv?.data;
-        if (add=="Add") {
-          
-          // setloading(true);
-          // sleep(2000).then(() => {
-          //   setloading(false);
-          // });
-          parsedData.map(async (d) => {
-            const data = Object.values(d);
-            if (data[0]) {
-              const docref = doc(db, "user", data[0]);
-              const payload = {
-                name: data[1],
-                email: data[2],
-                isadmin: false,
-                coverimage:
-                  "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg",
-                profileimage:
-                  "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
-              };
-              await setDoc(docref, payload);
-          
-            }
-  
-          });
-          manageusers(parsedData,"add");
-        } else {
-          manageusers(parsedData,"remove");
-          parsedData.map(async (d) => {
-            const data = Object.values(d);
-            if (data[0]) {
-              const docref = doc(db, "user", data[0]);
-              await deleteDoc(docref);    
-          
-            }
-  
-          });
-        }
-      };
-      reader.readAsText(file);
-    // } else {
-      // fetchData();
-      // if (!isfile) {
-      //   setOpen(true);
-      //   setetype("error");
-      //   setmessage("Please upload a file");
-      //   return;
-      // }
-      // const valuesArray = [];
-      // const reader = new FileReader();
-      // reader.onload = async ({ target }) => {
-      //   const csv = Papa.parse(target.result, { header: true });
-      //   const parsedData = csv?.data;
-      //   setloading(true);
-      //   sleep(2000).then(() => {
-      //     setloading(false);
-      //   });
-      //   parsedData.map(async (d) => {
-      //     const data = Object.values(d);
-
-      //     const docref = doc(db, "user", data[0]);
-
-      //     await remove(data[2], docref);
-      //   });
-      // };
-      // reader.readAsText(file);
-      // deleteusers();
-      // deleteusers.listAllUsers()
-
-    // }
+    };
+    reader.readAsText(file);
   }
 
   return (
     <>
       <Navbar selected="manageusers"></Navbar>
-
       <div className=" md:ml-[22vw] flex flex-col space-y-5 max-md:w-[78%] text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="text-3xl max-md:text-xl">Manage Users</div>
         <div className="flex space-x-5 self-center text-2xl max-md:text-lg text-slate-200">
@@ -216,8 +159,9 @@ export default function AddUserAdmin() {
             onClick={() => {
               setadd("Add");
             }}
-            className={`px-6 py-4 ${add === "Add" ? "border-b" : ""
-              } border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "Add" ? "border-b" : ""
+            } border-slate-200`}
           >
             Add Users
           </button>
@@ -225,8 +169,9 @@ export default function AddUserAdmin() {
             onClick={() => {
               setadd("Remove");
             }}
-            className={`px-6 py-4 ${add === "Remove" ? "border-b" : ""
-              }  border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "Remove" ? "border-b" : ""
+            }  border-slate-200`}
           >
             {" "}
             Remove User
@@ -295,7 +240,9 @@ export default function AddUserAdmin() {
                   className="mx-5"
                   variant="contained"
                   color="primary"
-                  onClick={()=>{setdialog(true)}}
+                  onClick={() => {
+                    setdialog(true);
+                  }}
                   sx={{
                     background: "#15803d",
                     color: "white",
@@ -329,31 +276,34 @@ export default function AddUserAdmin() {
           <div className="row-start-1 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis col-start-4 font-semibold text-xl  max-md:text-sm max-lg:text-base bg-[#100d1e] p-2 rounded-lg text-center">
             Email ID
           </div>
-
           {valueArray.map((value, index) => {
             return (
               <>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {index + 1}
                 </div>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[0]}
                 </div>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[1]}
                 </div>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
                 >
                   {value[2]}
                 </div>
@@ -362,7 +312,6 @@ export default function AddUserAdmin() {
           })}
         </div>
       </div>
-
 
       <Backdrop
         sx={{
@@ -374,8 +323,8 @@ export default function AddUserAdmin() {
         close={loading}
       >
         <div className="flex flex-col space-y-2 items-center">
-        <CircularProgress color="inherit" />
-        <div>This may take some time...</div>
+          <CircularProgress color="inherit" />
+          <div>This may take some time...</div>
         </div>
       </Backdrop>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
@@ -398,11 +347,12 @@ export default function AddUserAdmin() {
             backdropFilter: "blur(20px)",
           },
         }}
-        // TransitionComponent={Transition}
         fullWidth
         maxWidth="sm"
         keepMounted
-        onClose={()=>{setdialog(false)}}
+        onClose={() => {
+          setdialog(false);
+        }}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
@@ -414,7 +364,13 @@ export default function AddUserAdmin() {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={()=>{setdialog(false)}} sx={{ borderRadius: "15px" }}>
+          <Button
+            variant=""
+            onClick={() => {
+              setdialog(false);
+            }}
+            sx={{ borderRadius: "15px" }}
+          >
             No
           </Button>
           <Button
@@ -426,7 +382,6 @@ export default function AddUserAdmin() {
             Yes
           </Button>
         </DialogActions>
-         
       </Dialog>
     </>
   );
