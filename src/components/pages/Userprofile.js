@@ -49,8 +49,30 @@ import { useAuth,upload } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 
 function ClubProfile(props) {
-  
+  // const currentUser = useAuth();
+  // const [photo, setPhoto] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
 
+  // // function handleChange(e) {
+  // //   if (e.target.files[0]) {
+  // //     setPhoto(e.target.files[0])
+  // //   }
+  // // }
+
+  // function handleClick() {
+  //   upload(photo, currentUser, setLoading);
+  // }
+
+  // useEffect(() => {
+  //   if (currentUser?.photoURL) {
+  //     setPhotoURL(currentUser.photoURL);
+  //   }
+  // }, [currentUser])
+
+  // // const q2 = collection(db, path);
+  // // const [doc2, error] = useCollectionData(query);
+  // // {doc2.map((doc) )}
   const medal_data = [
     {
       rank : 1,
@@ -133,92 +155,62 @@ function ClubProfile(props) {
       medalimg : {Rank20p}
     },
   ];
-
-
-
-
-
-
-  const currentUser = useAuth();
-  const [photo, setPhoto] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
-
-  function handleChange(e) {
-    if (e.target.files[0]) {
-      setPhoto(e.target.files[0])
-    }
-  }
-
-  // function handleClick() {
-  //   upload(photo, currentUser, setLoading);
-  // }
-
-  useEffect(() => {
-    if (currentUser?.photoURL) {
-      setPhotoURL(currentUser.photoURL);
-    }
-  }, [currentUser])
-
-  // const q2 = collection(db, path);
-  // const [doc2, error] = useCollectionData(query);
-  // {doc2.map((doc) )}
-
   const user = useAuth();
-  const [id,setid] = useState();
+  // const [id,setid] = useState();
   async function up(){
       const q = query(collection(db,"user"),where("email","==",user?.email));
       const querySnapshot =await getDocs(q);
       if(querySnapshot){
         querySnapshot.forEach(async (doc) => {
           const docdata=doc.data();
-          // console.log(doc.id, " => ", doc.data());
+  //         // console.log(doc.id, " => ", doc.data());
           setname(docdata['name']);
-          // console.log(doc.data()['profileimage'])
+  //         // console.log(doc.data()['profileimage'])
           console.log(doc.id);
-          // const formsRef = collection(db,"user",doc.id,"medals");
-          // db.collection("user",doc.id,"medals")
-          setid(doc.id);
+  //         // const formsRef = collection(db,"user",doc.id,"medals");
+  //         // db.collection("user",doc.id,"medals")
+  //         setid(doc.id);
              
-          // const formsSnapshot=await getDocs(formsRef);
-          // if(formsSnapshot){
-          //   // console.log(formsSnapshot.data());
-          //   formsSnapshot.forEach((d)=>{
-          //     console.log(15);
-          //   })
-          // }
+  //         // const formsSnapshot=await getDocs(formsRef);
+  //         // if(formsSnapshot){
+  //         //   // console.log(formsSnapshot.data());
+  //         //   formsSnapshot.forEach((d)=>{
+  //         //     console.log(15);
+  //         //   })
+  //         // }
 
         });
       }
   }
 
-  // const query = collection (db, "user",doc.id,"medals");
-  // const [docs, loading, error] = useCollectionData(query) ;
-  const s = collection (db, `user/${id}/medals`);
-  const [docs, loadin, error] = useCollectionData(s);
-  useEffect(()=>{
-    if(docs){
-      // console.log(docs);
-      // console.log(docs[0]);
-      // console.log(docs[1]);
-      // docs?.map((e)=>{
-      //   console.log(2);
-      // })
-    }
-  },[docs])
-  console.log(docs[0]);
+  // // const query = collection (db, "user",doc.id,"medals");
+  // // const [docs, loading, error] = useCollectionData(query) ;
+  // const s = collection (db, `user/${id}/medals`);
+  // const [docs, loadin, error] = useCollectionData(s);
+  // useEffect(()=>{
+  //   if(docs){
+  //     // console.log(docs);
+  //     // console.log(docs[0]);
+  //     // console.log(docs[1]);
+  //     // docs?.map((e)=>{
+  //     //   console.log(2);
+  //     // })
+  //   }
+  // },[docs])
   
-  // const query = collection (db, "user",id,"medals");
-  // const [docs, loadin, error] = useCollectionData(query);
+  // medal_data.map(({ rank, medalimg }) => {
+  //   console.log(docs);
+  // })
+  
       
 
-  useEffect(()=>{
-    if(user){
-      up()
+  // useEffect(()=>{
+  //   if(user){
+  //     up()
       
-    }
-    console.log(1);
-  },[user])
+  //   }
+  //   console.log(1);
+  // },[user])
   
 
 
@@ -265,10 +257,10 @@ function ClubProfile(props) {
         setclubimage(Imageuse);
       }, "image/png");
     }
-    console.log(upImg);
-    console.log(user);
-    console.log(setLoading);
-    await upload(upImg, user, setLoading);
+    // console.log(upImg);
+    // console.log(user);
+    // console.log(setLoading);
+    // await upload(upImg, user, setLoading);
   }
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
