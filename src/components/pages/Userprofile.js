@@ -25,13 +25,18 @@ import { Link } from "react-router-dom";
 import minion from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
 
-import { collection , where , query } from "@firebase/firestore";
+import { collection,collectionGroup , where , query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { useAuth,upload } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 
 function ClubProfile(props) {
+  
+
+
+
+
 
 
   const currentUser = useAuth();
@@ -56,25 +61,74 @@ function ClubProfile(props) {
   }, [currentUser])
 
   const user = useAuth();
+  const [id,setid] = useState();
   async function up(){
       const q = query(collection(db,"user"),where("email","==",user?.email));
       console.log(getDocs(q));
       const querySnapshot =await getDocs(q);
       if(querySnapshot){
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach(async (doc) => {
+          const docdata=doc.data();
           // console.log(doc.id, " => ", doc.data());
-          setname(doc.data()['name']);
-          console.log(doc.data()['profileimage'])
+          setname(docdata['name']);
+          // console.log(doc.data()['profileimage'])
+          console.log(doc.id);
+          // const formsRef = collection(db,"user",doc.id,"medals");
+          // db.collection("user",doc.id,"medals")
+          setid(doc.id);
+             
+          // const formsSnapshot=await getDocs(formsRef);
+          // if(formsSnapshot){
+          //   // console.log(formsSnapshot.data());
+          //   formsSnapshot.forEach((d)=>{
+          //     console.log(15);
+          //   })
+          // }
+
         });
     }
   }
+
+  // const query = collection (db, "user",doc.id,"medals");
+  // const [docs, loading, error] = useCollectionData(query) ;
+  const s = collection (db, `user/${id}/medals`);
+  const [docs, loadin, error] = useCollectionData(s);
+  useEffect(()=>{
+    if(docs){
+      console.log(docs);
+      // docs?.map((e)=>{
+      //   console.log(2);
+      // })
+    }
+  },[docs])
+  // const query = collection (db, "user",id,"medals");
+  // const [docs, loadin, error] = useCollectionData(query);
+      
+
   useEffect(()=>{
     if(user){
       up()
+      
     }
     console.log(1);
   },[user])
   
+
+
+  const medal_data = [
+    {
+    rank : 1,
+    medalimg : {Rank1}
+    },
+    {
+      rank : 1,
+    medalimg : {Rank1}
+    },
+    {
+      
+    }
+  ];
+
   const [name,setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -339,6 +393,7 @@ function ClubProfile(props) {
             <span className="text-green-500 font-semibold"> 8 </span>
           </div>
           <div className="flex  justify-start flex-wrap">
+            
             <img src={Rank1} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
