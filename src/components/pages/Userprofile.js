@@ -55,18 +55,22 @@ function ClubProfile(props) {
     }
   }, [currentUser])
 
+  // const q2 = collection(db, path);
+  // const [doc2, error] = useCollectionData(query);
+  // {doc2.map((doc) )}
+
   const user = useAuth();
   async function up(){
       const q = query(collection(db,"user"),where("email","==",user?.email));
-      console.log(getDocs(q));
       const querySnapshot =await getDocs(q);
+      console.log(q)
       if(querySnapshot){
         querySnapshot.forEach((doc) => {
-          // console.log(doc.id, " => ", doc.data());
           setname(doc.data()['name']);
-          console.log(doc.data()['profileimage'])
+          console.log(doc.data());
+
         });
-    }
+      }
   }
   useEffect(()=>{
     if(user){
