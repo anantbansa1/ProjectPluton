@@ -64,7 +64,7 @@ function ClubProfile(props) {
         querySnapshot.forEach((doc) => {
           // console.log(doc.id, " => ", doc.data());
           setname(doc.data()['name']);
-          setUpImg(doc.data()['profileimage'])
+          console.log(doc.data()['profileimage'])
         });
     }
   }
