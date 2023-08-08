@@ -12,10 +12,14 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../../firebase";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { deleteDoc } from "firebase/firestore";
 
 
 
-const deleteusers = require('./delete_user')
 
 export default function AddUserAdmin() {
   const user = useAuth();
@@ -28,13 +32,13 @@ export default function AddUserAdmin() {
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
   const [isfile, setisfile] = useState(0);
-  const [add, setadd] = useState("add");
+  const [add, setadd] = useState("Add");
   const inputaddref = useRef();
+  const [opendialog, setdialog] = useState(false);
   const [token, setToken] = useState('');
 
   useEffect(() => {
 
-    // console.log("hello",user);
     if (user) {
       user.getIdToken().then((idtoken) => {
         console.log(idtoken)
@@ -43,7 +47,7 @@ export default function AddUserAdmin() {
     }
   }, [user]);
 
-  const deleteusers = async (parsedData) => {
+  const manageusers = async (parsedData,operation) => {
 
     if (token) {
       const parsedDataString = encodeURIComponent(JSON.stringify(parsedData));
@@ -52,14 +56,16 @@ export default function AddUserAdmin() {
       setloading(true);
       await axios.get(url, {
         headers: {
-          Authorization: token,       
+          Authorization: token,
+          type: operation,       
         },
       }).then((response)=> {
         setOpen(true);
         setmessage(response.data.message);
         setetype(response.data.type);
         setloading(false);
-        console.log("respone: ",response.data.message, " ", response.data.type)
+
+        console.log("response: ",response.data.message, " ", response.data.type)
       })
 
 
@@ -77,39 +83,12 @@ export default function AddUserAdmin() {
     setOpen(false);
   };
 
-  async function remove(email, docref) {
+
+  async function signup(parsedData) {
 
   }
-
-  async function signup(email, docref, payload) {
-    await setDoc(docref, payload);
-    createUserWithEmailAndPassword(auth, email, "chhotahathi")
-      .then((userCredential) => {
-        setOpen(true);
-        setetype('success')
-        setmessage("Successfully added!")
-        const user = userCredential.user;
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        setOpen(true);
-        const errorMessage = error.message;
-        setetype("error");
-        switch (errorCode) {
-          case "auth/email-already-in-use":
-            setmessage("Email already in use!");
-            break;
-          case "auth/invalid-email":
-            setmessage("Invalid email!");
-            break;
-          case "auth/operation-not-allowed":
-            setmessage("Operation not allowed");
-            break;
-          default:
-            setmessage("Something went wrong! Pslease try again later.");
-            break;
-        }
-      });
+  async function handleyes(parsedData) {
+    await manageusers(parsedData,"remove");;
   }
 
   const onSelectFile = (e) => {
@@ -143,6 +122,7 @@ export default function AddUserAdmin() {
 
   async function handleParse() {
     // if (add === "add") {
+      setdialog(false);
       if (!isfile) {
         setOpen(true);
         setetype("error");
@@ -154,11 +134,12 @@ export default function AddUserAdmin() {
       reader.onload = async ({ target }) => {
         const csv = Papa.parse(target.result, { header: true });
         const parsedData = csv?.data;
-        if (add=="add") {
-          setloading(true);
-          sleep(2000).then(() => {
-            setloading(false);
-          });
+        if (add=="Add") {
+          
+          // setloading(true);
+          // sleep(2000).then(() => {
+          //   setloading(false);
+          // });
           parsedData.map(async (d) => {
             const data = Object.values(d);
             if (data[0]) {
@@ -172,13 +153,23 @@ export default function AddUserAdmin() {
                 profileimage:
                   "https://i.pinimg.com/474x/81/8a/1b/818a1b89a57c2ee0fb7619b95e11aebd.jpg",
               };
-              await signup(data[2], docref, payload);
+              await setDoc(docref, payload);
+          
             }
   
           });
+          manageusers(parsedData,"add");
         } else {
-         await deleteusers(parsedData);
-          // console.log(parsedData);
+          manageusers(parsedData,"remove");
+          parsedData.map(async (d) => {
+            const data = Object.values(d);
+            if (data[0]) {
+              const docref = doc(db, "user", data[0]);
+              await deleteDoc(docref);    
+          
+            }
+  
+          });
         }
       };
       reader.readAsText(file);
@@ -223,18 +214,18 @@ export default function AddUserAdmin() {
         <div className="flex space-x-5 self-center text-2xl max-md:text-lg text-slate-200">
           <button
             onClick={() => {
-              setadd("add");
+              setadd("Add");
             }}
-            className={`px-6 py-4 ${add === "add" ? "border-b" : ""
+            className={`px-6 py-4 ${add === "Add" ? "border-b" : ""
               } border-slate-200`}
           >
             Add Users
           </button>
           <button
             onClick={() => {
-              setadd("remove");
+              setadd("Remove");
             }}
-            className={`px-6 py-4 ${add === "remove" ? "border-b" : ""
+            className={`px-6 py-4 ${add === "Remove" ? "border-b" : ""
               }  border-slate-200`}
           >
             {" "}
@@ -304,7 +295,7 @@ export default function AddUserAdmin() {
                   className="mx-5"
                   variant="contained"
                   color="primary"
-                  onClick={handleParse}
+                  onClick={()=>{setdialog(true)}}
                   sx={{
                     background: "#15803d",
                     color: "white",
@@ -372,6 +363,7 @@ export default function AddUserAdmin() {
         </div>
       </div>
 
+
       <Backdrop
         sx={{
           color: "#fff",
@@ -381,13 +373,61 @@ export default function AddUserAdmin() {
         open={loading}
         close={loading}
       >
+        <div className="flex flex-col space-y-2 items-center">
         <CircularProgress color="inherit" />
+        <div>This may take some time...</div>
+        </div>
       </Backdrop>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={etype} sx={{ width: "100%" }}>
           {message}
         </Alert>
       </Snackbar>
+      <Dialog
+        open={opendialog}
+        PaperProps={{
+          style: {
+            background: "#1e1936",
+            color: "#fff",
+            borderRadius: 25,
+            padding: "10px",
+          },
+        }}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
+        // TransitionComponent={Transition}
+        fullWidth
+        maxWidth="sm"
+        keepMounted
+        onClose={()=>{setdialog(false)}}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <div className="">{add} users</div>
+        </DialogTitle>
+        <DialogContent>
+          <div className="text-[#e4e2e2] text-lg">
+            Are you sure you want to {add} users?
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="" onClick={()=>{setdialog(false)}} sx={{ borderRadius: "15px" }}>
+            No
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: "15px" }}
+            onClick={handleParse}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+         
+      </Dialog>
     </>
   );
 }

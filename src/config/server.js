@@ -8,6 +8,7 @@ const port = 5000;
 app.use(cors())
 app.use(middleware.decodeToken)
 
+
 app.get('/api/pluton', (req,res) => {
     // return res.send('hello world')
     return res.send("server is working...")
