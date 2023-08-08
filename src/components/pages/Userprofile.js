@@ -34,6 +34,7 @@ import Rank16 from "../Images/rank16.png";
 import Rank17 from "../Images/rank17.png";
 import Rank18 from "../Images/rank18.png";
 import Rank19 from "../Images/rank19.png";
+import Rank20 from "../Images/rank20.png";
 import Rank20p from "../Images/rank20p.png";
 
 import { Leaderboard } from "@mui/icons-material";
@@ -51,90 +52,112 @@ import { getDocs } from "firebase/firestore";
 function ClubProfile(props) {
   
 
+  // const medal_data = [
+  //   {
+  //     rank : 1,
+  //     medalimg : {Rank1}
+  //   },
+  //   {
+  //     rank :,
+  //     medalimg : }
+  //   },
+  //   {
+  //     rank : 3,
+  //     medalimg : {Rank3}
+  //   },
+  //   {
+  //     rank : 4,
+  //     medalimg : {Rank4}
+  //   },
+  //   {
+  //     rank : 5,
+  //     medalimg : {Rank5}
+  //   },
+  //   {
+  //     rank : 6,
+  //     medalimg : {Rank6}
+  //   },
+  //   {
+  //     rank : 7,
+  //     medalimg : {Rank7}
+  //   },
+  //   {
+  //     rank : 8,
+  //     medalimg : {Rank8}
+  //   },
+  //   {
+  //     rank : 9,
+  //     medalimg : {Rank9}
+  //   },
+  //   {
+  //     rank : 10,
+  //     medalimg : {Rank10}
+  //   },
+  //   {
+  //     rank : 11,
+  //     medalimg : {Rank11}
+  //   },
+  //   {
+  //     rank : 12,
+  //     medalimg : {Rank12}
+  //   },
+  //   {
+  //     rank : 13,
+  //     medalimg : {Rank13}
+  //   },
+  //   {
+  //     rank : 14,
+  //     medalimg : {Rank14}
+  //   },
+  //   {
+  //     rank : 15,
+  //     medalimg : {Rank15}
+  //   },
+  //   {
+  //     rank : 16,
+  //     medalimg : {Rank16}
+  //   },
+  //   {
+  //     rank : 17,
+  //     medalimg : {Rank17}
+  //   },
+  //   {
+  //     rank : 18,
+  //     medalimg : {Rank18}
+  //   },
+  //   {
+  //     rank : 19,
+  //     medalimg : {Rank19}
+  //   },
+  //   {
+  //     rank : 20,
+  //     medalimg : {Rank20p}
+  //   },
+  // ];
+
   const medal_data = [
-    {
-      rank : 1,
-      medalimg : {Rank1}
-    },
-    {
-      rank : 2,
-      medalimg : {Rank2}
-    },
-    {
-      rank : 3,
-      medalimg : {Rank3}
-    },
-    {
-      rank : 4,
-      medalimg : {Rank4}
-    },
-    {
-      rank : 5,
-      medalimg : {Rank5}
-    },
-    {
-      rank : 6,
-      medalimg : {Rank6}
-    },
-    {
-      rank : 7,
-      medalimg : {Rank7}
-    },
-    {
-      rank : 8,
-      medalimg : {Rank8}
-    },
-    {
-      rank : 9,
-      medalimg : {Rank9}
-    },
-    {
-      rank : 10,
-      medalimg : {Rank10}
-    },
-    {
-      rank : 11,
-      medalimg : {Rank11}
-    },
-    {
-      rank : 12,
-      medalimg : {Rank12}
-    },
-    {
-      rank : 13,
-      medalimg : {Rank13}
-    },
-    {
-      rank : 14,
-      medalimg : {Rank14}
-    },
-    {
-      rank : 15,
-      medalimg : {Rank15}
-    },
-    {
-      rank : 16,
-      medalimg : {Rank16}
-    },
-    {
-      rank : 17,
-      medalimg : {Rank17}
-    },
-    {
-      rank : 18,
-      medalimg : {Rank18}
-    },
-    {
-      rank : 19,
-      medalimg : {Rank19}
-    },
-    {
-      rank : 20,
-      medalimg : {Rank20p}
-    },
-  ];
-
-
+    Rank1,
+    Rank2,
+    Rank3,
+    Rank4,
+    Rank5,
+    Rank6,
+    Rank7,
+    Rank8,
+    Rank9,
+    Rank10,
+    Rank11,
+    Rank12,
+    Rank13,
+    Rank14,
+    Rank15,
+    Rank16,
+    Rank17,
+    Rank18,
+    Rank19,
+    Rank20,
+    Rank20p
+  ]
 
 
 
@@ -198,10 +221,22 @@ function ClubProfile(props) {
   const [docs, loadin, error] = useCollectionData(s);
   useEffect(()=>{
     if(docs){
-      console.log(docs)
+      docs.map((d) => {
+        console.log(d.rank);
+      })
     }
   },[docs]);
-      
+  // medal_data.map((d) => {
+    // if(medal_data[0] == d){
+    //   console.log("hello");
+    // }
+  // })
+  if(docs){
+    console.log("hell0")
+    docs.map((d) =>{
+      console.log(medal_data[d-1]);
+    })
+  }
 
   useEffect(()=>{
     if(user){
@@ -256,10 +291,10 @@ function ClubProfile(props) {
         setclubimage(Imageuse);
       }, "image/png");
     }
-    console.log(upImg);
-    console.log(user);
-    console.log(setLoading);
-    await upload(upImg, user, setLoading);
+    // console.log(upImg);
+    // console.log(user);
+    // console.log(setLoading);
+    // await upload(upImg, user, setLoading);
   }
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
@@ -476,18 +511,23 @@ function ClubProfile(props) {
         <div className="flex flex-col space-y-8 w-[50vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
           <div className="p-4 max-lg:text-lg text-2xl">
             Medals &nbsp;
-            <span className="text-green-500 font-semibold"> 8 </span>
+            <span className="text-green-500 font-semibold"> {docs?.length} </span>
           </div>
           <div className="flex  justify-start flex-wrap">
-            
-            <img src={Rank1} alt="" className="p-4 w-[150px]" />
+            {docs?(
+              docs.map((d) => {
+                return(<img src={(medal_data[Math.min(20,d.rank-1)])} alt={Rank20p} className="p-4 w-[150px]" />);
+                // console.log("hello")
+              })
+            ):("")}
+            {/* <img src={Rank1} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
+            <img src={Rank2} alt="" className="p-4 w-[150px]" /> */}
           </div>
         </div>
         <div className="flex max-lg:hidden flex-col w-[20vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
