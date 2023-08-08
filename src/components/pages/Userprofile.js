@@ -156,7 +156,7 @@ function ClubProfile(props) {
     },
   ];
   const user = useAuth();
-  // const [id,setid] = useState();
+  const [id,setid] = useState();
   async function up(){
       const q = query(collection(db,"user"),where("email","==",user?.email));
       const querySnapshot =await getDocs(q);
@@ -183,34 +183,24 @@ function ClubProfile(props) {
       }
   }
 
-  // // const query = collection (db, "user",doc.id,"medals");
-  // // const [docs, loading, error] = useCollectionData(query) ;
-  // const s = collection (db, `user/${id}/medals`);
-  // const [docs, loadin, error] = useCollectionData(s);
-  // useEffect(()=>{
-  //   if(docs){
-  //     // console.log(docs);
-  //     // console.log(docs[0]);
-  //     // console.log(docs[1]);
-  //     // docs?.map((e)=>{
-  //     //   console.log(2);
-  //     // })
-  //   }
-  // },[docs])
-  
-  // medal_data.map(({ rank, medalimg }) => {
-  //   console.log(docs);
-  // })
-  
+  // const query = collection (db, "user",doc.id,"medals");
+  // const [docs, loading, error] = useCollectionData(query) ;
+  const s = collection (db, `user/${id}/medals`);
+  const [docs, loadin, error] = useCollectionData(s);
+  useEffect(()=>{
+    if(docs){
+      console.log(docs)
+    }
+  },[docs]);
       
 
-  // useEffect(()=>{
-  //   if(user){
-  //     up()
+  useEffect(()=>{
+    if(user){
+      up()
       
-  //   }
-  //   console.log(1);
-  // },[user])
+    }
+    console.log(1);
+  },[user])
   
 
 
