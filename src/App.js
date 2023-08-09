@@ -38,7 +38,7 @@ function App() {
           }
         />
         <Route
-          path={`/club/:clubID`}
+          path={'/club/:clubID'}
           element={
             <ClubProfile
               name="Club of Programmers"

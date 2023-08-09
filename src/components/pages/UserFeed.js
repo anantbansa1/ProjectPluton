@@ -397,7 +397,7 @@ export default function UserFeed() {
         <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
           {allclubs.map((club) => {
             return (
-              <Link to="/clubprofile" state={club}  className="">
+              <Link to={`/club/${club['name']}`} params={club['name']} state={club}  className="">
                 <Tooltip title={club['name']}>
                   {" "}
                   <img

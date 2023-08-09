@@ -35,14 +35,17 @@ import { Cancel, CheckCircle, ManageAccounts, Settings } from "@mui/icons-materi
 import { useAuth } from "../../firebase";
 import { useLocation, useParams } from "react-router-dom";
 import { db } from "../../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, getDoc,doc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import EditIcon from '@mui/icons-material/Edit';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 
 function ClubProfile(props) {
+  //{clubID: clubname}
   const clubName = useParams().clubID;
   const navigate = useNavigate();
   const [profile, setprofile] = useState(true);
@@ -66,6 +69,11 @@ function ClubProfile(props) {
   const [pending, setpending] = useState(false);
   const [currentClub, setCurrentClub] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState();
+  const [userRollNo, setUserRollNo] = useState();
+  const [role, setRole] = useState();
+  const [points, setPoints] = useState(0);
+
 
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
@@ -90,7 +98,7 @@ function ClubProfile(props) {
     // }
     setLoading(true);
     const clubs = await getDocs(collection(db, 'clubs'));
-    setLoading(false);
+    // setLoading(false);
     if (clubs) {
       let clubnames = [];
       let flag = 0;
@@ -99,9 +107,9 @@ function ClubProfile(props) {
         const a = element.data()['name'];
         clubnames.push(a)
         // console.log(`${clubName} ===== ${a}`)
-        if (a === clubName) { setCurrentClub(element.data());flag=1 }
+        if (a === clubName) { setCurrentClub(element.data()); flag = 1 }
       })
-    if (flag===0) navigate("/pagenotfound")
+      if (flag === 0) navigate("/pagenotfound")
       // console.log(clubnames)
     }
   }
@@ -109,15 +117,39 @@ function ClubProfile(props) {
   useEffect(() => {
     console.log(clubName);
     fetchClub();
-
-    // const q = query(collection(db,'clubs',where('name','==',club)));
   }, [clubName])
 
-  // useEffect(() => {
-  //   console.log(currentClub.logo);
-  //   // fetchClub();
-  //   // const q = query(collection(db,'clubs',where('name','==',club)));
-  // }, [currentClub])
+  async function getUserDetails() {
+    const q = query(collection(db, 'user'), where('email', '==', user.email))
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async(docp) => {
+      // console.log(docp.id, '=>', docp.data());
+      setUserData(docp.data());
+      setUserRollNo(docp.id);
+      console.log(docp.id)
+      const docref = doc(db,'user',docp.id,'clubs',clubName);
+      // console.log(clubName)
+      console.log("docref ", docref)
+      const docSnap = await getDoc(docref);
+      setLoading(false);
+      console.log("docsnap ", docSnap)
+      if (docSnap.exists()) {
+        console.log(docSnap.data());
+        setRole(docSnap.data().role)
+        setPoints(docSnap.data().points)
+      } else {
+        setRole('visitor');
+      }
+
+
+    });
+  }
+
+  useEffect(() => {
+    if (user) {
+      getUserDetails();
+    }
+  }, [user])
 
   const handleClickfilter = (event) => {
     setAnchorEl(event.currentTarget);
@@ -127,30 +159,30 @@ function ClubProfile(props) {
   };
 
   const image =
-    props.clubpoint < props.tbronze
+    points < currentClub.bronze
       ? Bronzebadge
-      : props.clubpoint <= props.tsilver
+      : points <= currentClub.silver
         ? Silverbadge
         : Goldbadge;
 
   const badge =
-    props.clubpoint < props.tbronze
+    points < currentClub.bronze
       ? "bronze"
-      : props.clubpoint <= props.tsilver
+      : points <= currentClub.silver
         ? "silver"
         : "gold";
 
   const pointleft =
-    props.clubpoint < props.tbronze
-      ? props.tbronze - props.clubpoint
-      : props.clubpoint <= props.tsilver
-        ? props.tsilver - props.clubpoint
-        : props.tgold - props.clubpoint;
+    points < currentClub.bronze
+      ? currentClub.bronze - points
+      : points <= currentClub.silver
+        ? currentClub.silver - points
+        : currentClub.gold - points;
 
   const color =
-    props.clubpoint < props.tbronze
+    points < currentClub.bronze
       ? "text-[#824a02]"
-      : props.clubpoint <= props.tsilver
+      : points <= currentClub.silver
         ? "text-[#d7d7d7]"
         : "text-[#fee101]";
 
@@ -349,19 +381,19 @@ function ClubProfile(props) {
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
-            {props.desc}
+            {currentClub.desc}
           </div>
-          {props.Role === "user" && (
+          {role === "visitor" && (
             <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-self-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 className={`px-4 py-2 max-sm:mt-2  max-sm:w-[25vw] lg:text-lg text-xs text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
-                Apply Now
+                Apply 
               </button>
             </div>
           )}
-          {props.Role !== "user" && (
+          {role === "pending" && (
             <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button onClick={() => { setpending(true) }}
                 className={`px-4 py-2 max-sm:pr-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
@@ -369,6 +401,28 @@ function ClubProfile(props) {
                 {" "}
                 <GroupIcon className="scale-[80%]" />
                 &nbsp; <div>Pending</div> &nbsp;
+              </button>
+            </div>
+          )}
+          {role === "member" && (
+            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+              <button onClick={() => { setpending(true) }}
+                className={`px-4 py-2 max-sm:pr-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                <LogoutIcon className="scale-[80%] max-sm:scale-[65%]" />
+                &nbsp; <div>Leave </div> &nbsp;
+              </button>
+            </div>
+          )}
+          {role === "admin" && (
+            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+              <button onClick={() => { setpending(true) }}
+                className={`px-4 py-2  max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                <EditIcon className="scale-[80%]" />
+                &nbsp; <div>Edit</div> &nbsp;
               </button>
             </div>
           )}
@@ -387,67 +441,67 @@ function ClubProfile(props) {
         <div className="flex max-sm:mt-5  items-center ">
           <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
             <div
-              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${props.clubpoint >= props.tgold ? "hidden" : ""
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
                 } ${color}`}
             >
               {pointleft} points to {badge}
             </div>
             <div
-              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${props.clubpoint >= props.tgold ? "" : "hidden"
+              className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
                 } ${color}`}
             >
-              {props.clubpoint} points
+              {points} points
             </div>
             <div
-              className={`row-start-1 ${props.clubpoint < props.tbronze ? "" : "hidden"
+              className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
                 } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
               style={{
                 width:
-                  ((props.clubpoint / props.tbronze) * 100).toString() + "%",
+                  ((points / currentClub.bronze) * 100).toString() + "%",
               }}
             />
             <div
-              className={`row-start-1 ${props.clubpoint < props.tbronze ? "" : "hidden"
+              className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
                 } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
             />
             <div
-              className={`row-start-1 ${props.clubpoint < props.tsilver &&
-                props.clubpoint >= props.tbronze
+              className={`row-start-1 ${points < currentClub.silver &&
+                points >= currentClub.bronze
                 ? ""
                 : "hidden"
                 } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
               style={{
                 width:
                   (
-                    ((props.clubpoint - props.tbronze) /
-                      (props.tsilver - props.tbronze)) *
+                    ((points - currentClub.bronze) /
+                      (currentClub.silver - currentClub.bronze)) *
                     100
                   ).toString() + "%",
               }}
             />
             <div
-              className={`row-start-1 ${props.clubpoint < props.tsilver &&
-                props.clubpoint >= props.tbronze
+              className={`row-start-1 ${points < currentClub.silver &&
+                points >= currentClub.bronze
                 ? ""
                 : "hidden"
                 } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
             />
             <div
-              className={`row-start-1  ${props.clubpoint >= props.tsilver ? "" : "hidden"
+              className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
                 }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
               style={{
                 width:
-                  props.clubpoint > props.tgold
+                  points > currentClub.gold
                     ? "100%"
                     : (
-                      ((props.clubpoint - props.tsilver) /
-                        (props.tgold - props.tsilver)) *
+                      ((points - currentClub.silver) /
+                        (currentClub.gold - currentClub.silver)) *
                       100
                     ).toString() + "%",
               }}
             />
             <div
-              className={`row-start-1 ${props.clubpoint >= props.tsilver ? "" : "hidden"
+              className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
                 }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
             />
           </div>
