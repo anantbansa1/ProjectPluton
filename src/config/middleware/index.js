@@ -9,9 +9,11 @@ class Middleware {
         try {
           const decodeValue = await admin.auth().verifyIdToken(token);
           req.user = decodeValue;
+          //   console.log(decodeValue);
           if (decodeValue) {
             const parsedDataString = req.query.parsedData;
             const parsedData = JSON.parse(decodeURIComponent(parsedDataString));
+            console.log(parsedData);
             const del = [];
             const uids = [];
             for (const element of parsedData) {

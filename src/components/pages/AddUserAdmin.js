@@ -49,7 +49,7 @@ export default function AddUserAdmin() {
     if (token) {
       const parsedDataString = encodeURIComponent(JSON.stringify(parsedData));
       console.log(parsedDataString);
-      const url = `http://localhost:5000/api/pluton?parsedData=${parsedDataString}`;
+      const url = `http://localhost:3001/api/pluton?parsedData=${parsedDataString}`;
       setloading(true);
       await axios
         .get(url, {

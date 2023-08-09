@@ -15,7 +15,10 @@ npm install firebase\
 npm install react-router-dom\
 npm install tailwind-scrollbar-hide\
 npm install --save @fontsource/press-start-2p\
-npm install papaparse
+npm install papaparse\
+npm install express\
+npm install firebase-admin\
+npm install -g nodemon
 
 ## Available Scripts
 
