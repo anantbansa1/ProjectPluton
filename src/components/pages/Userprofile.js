@@ -51,102 +51,6 @@ import { getDocs } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 function ClubProfile(props) {
-  // const medal_data = [
-  //   {
-  //     rank : 1,
-  //     medalimg : {Rank1}
-  //   },
-  //   {
-  //     rank :,
-  //     medalimg : }
-  //   },
-  //   {
-  //     rank : 3,
-  //     medalimg : {Rank3}
-  //   },
-  //   {
-  //     rank : 4,
-  //     medalimg : {Rank4}
-  //   },
-  //   {
-  //     rank : 5,
-  //     medalimg : {Rank5}
-  //   },
-  //   {
-  //     rank : 6,
-  //     medalimg : {Rank6}
-  //   },
-  //   {
-  //     rank : 7,
-  //     medalimg : {Rank7}
-  //   },
-  //   {
-  //     rank : 8,
-  //     medalimg : {Rank8}
-  //   },
-  //   {
-  //     rank : 9,
-  //     medalimg : {Rank9}
-  //   },
-  //   {
-  //     rank : 10,
-  //     medalimg : {Rank10}
-  //   },
-  //   {
-  //     rank : 11,
-  //     medalimg : {Rank11}
-  //   },
-  //   {
-  //     rank : 12,
-  //     medalimg : {Rank12}
-  //   },
-  //   {
-  //     rank : 13,
-  //     medalimg : {Rank13}
-  //   },
-  //   {
-  //     rank : 14,
-  //     medalimg : {Rank14}
-  //   },
-  //   {
-  //     rank : 15,
-  //     medalimg : {Rank15}
-  //   },
-  //   {
-  //     rank : 16,
-  //     medalimg : {Rank16}
-  //   },
-  //   {
-  //     rank : 17,
-  //     medalimg : {Rank17}
-  //   },
-  //   {
-  //     rank : 18,
-  //     medalimg : {Rank18}
-  //   },
-  //   {
-  //     rank : 19,
-  //     medalimg : {Rank19}
-  //   },
-  //   {
-  //     rank : 20,
-  //     medalimg : {Rank20p}
-  //   },
-  // ];
-
-  // function handleClick() {
-  //   upload(photo, currentUser, setLoading);
-  // }
-
-  // useEffect(() => {
-  //   if (currentUser?.photoURL) {
-  //     setPhotoURL(currentUser.photoURL);
-  //   }
-  // }, [currentUser])
-
-  // // const q2 = collection(db, path);
-  // // const [doc2, error] = useCollectionData(query);
-  // // {doc2.map((doc) )}
   const medal_data = [
     Rank1,
     Rank2,
@@ -312,6 +216,7 @@ function ClubProfile(props) {
         getDownloadURL(storageRef)
           .then((u) => {
             setUrl(u);
+            console.log(u);
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");
@@ -323,7 +228,7 @@ function ClubProfile(props) {
       });
     }, 'image/png');
   };
-
+  
   //Edit Cover Image Backend
   const handleSubmit1 = (img) => {
     const storage = getStorage();
@@ -362,6 +267,7 @@ function ClubProfile(props) {
         setclubimage(Imageuse);
       }, "image/png");
     }
+    console.log(url);
     // console.log(upImg);
     // console.log(user);
     // console.log(setLoading);
@@ -942,7 +848,6 @@ function ClubProfile(props) {
                 }}
                 onChange={() => handleChange()}
                 onClick={() => Coverinput.current.click()}
-                onChange={handleChange}
               >
                 Upload File{" "}
               </Button>
