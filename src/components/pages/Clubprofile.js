@@ -93,43 +93,45 @@ function ClubProfile(props) {
   const user = useAuth();
   const [members, setmember] = useState([]);
   const [memberscount, setmemberscount] = useState();
-  let renderarray = [];
+  const [memberdetails, setmemberdetails] = useState();
 
-  const badgetype = [
-    { gold: "fee101" },
-    { silver: "d7d7d7" },
-    { bronze: "a77044" },
-    { core: "00ffff" },
-    { none: "-" },
-  ];
+
+
+  const badgetype = {
+    gold: "#fee101",
+    silver: "#d7d7d7",
+    bronze: "#a77044",
+    core: "#00ffff",
+    none: "-",
+  }
 
   const image =
     points < currentClub.bronze
       ? Bronzebadge
       : points <= currentClub.silver
-      ? Silverbadge
-      : Goldbadge;
+        ? Silverbadge
+        : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points <= currentClub.silver
-      ? "silver"
-      : "gold";
+        ? "silver"
+        : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points <= currentClub.silver
-      ? currentClub.silver - points
-      : currentClub.gold - points;
+        ? currentClub.silver - points
+        : currentClub.gold - points;
 
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
       : points <= currentClub.silver
-      ? "text-[#d7d7d7]"
-      : "text-[#fee101]";
+        ? "text-[#d7d7d7]"
+        : "text-[#fee101]";
 
   useEffect(() => {
     console.log(clubName);
@@ -143,12 +145,50 @@ function ClubProfile(props) {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user) {
+      getmembersdetails();
+    }
+  }, [members]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  async function getmembersdetails() {
+    let details = [];
+    console.log("inside member details")
+    members?.forEach(async (mem) => {
+      const docref = doc(db, "user", mem);
+      const docref2 = doc(db, "user", mem, "badges", clubName);
+
+      const snapshot = await getDoc(docref);
+      const snapshot2 = await getDoc(docref2);
+
+      // console.log(11, mem);
+      let memimage, memname, membadge;
+      if (snapshot.data()) {
+        memimage = snapshot.data().profileimage;
+        memname = snapshot.data().name;
+
+      }
+      if (snapshot2) {
+        if (snapshot2.data()) {
+          membadge = snapshot2.data().type;
+        } else {
+          membadge = "none";
+        }
+      }
+      details.push({ memname: memname, memimage: memimage, membadge: membadge });
+
+    })
+    console.log("15", details);
+    setmemberdetails(details);
+  }
+
   async function fetchmembers() {
     const q = query(collection(db, "clubs"), where("name", "==", clubName));
     const snapshot = await getDocs(q);
@@ -167,6 +207,7 @@ function ClubProfile(props) {
         setmember(memberarray);
         setmemberscount(memberarray.length);
       });
+
     }
   }
   async function getUserDetails() {
@@ -399,9 +440,8 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${changeCover ? "" : "hidden"
+              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
@@ -509,38 +549,33 @@ function ClubProfile(props) {
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "hidden" : ""
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
+                  } ${color}`}
               >
                 {pointleft} points to {badge}
               </div>
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "" : "hidden"
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
+                  } ${color}`}
               >
                 {points} points
               </div>
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
                 style={{
                   width: ((points / currentClub.bronze) * 100).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
                 style={{
                   width:
                     (
@@ -551,31 +586,28 @@ function ClubProfile(props) {
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
               />
               <div
-                className={`row-start-1  ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+                className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
                 style={{
                   width:
                     points > currentClub.gold
                       ? "100%"
                       : (
-                          ((points - currentClub.silver) /
-                            (currentClub.gold - currentClub.silver)) *
-                          100
-                        ).toString() + "%",
+                        ((points - currentClub.silver) /
+                          (currentClub.gold - currentClub.silver)) *
+                        100
+                      ).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+                className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
             <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -603,9 +635,8 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${
-                underline === "post" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "post" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -613,9 +644,8 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${
-                underline === "poll" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "poll" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -1066,171 +1096,38 @@ function ClubProfile(props) {
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
 
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            {members?.forEach(async (mem) => {
-              const docref = doc(db, "user", mem);
-              const docref2 = doc(db, "user", mem, "badges", clubName);
-
-              const snapshot = await getDoc(docref);
-              const snapshot2 = await getDoc(docref2);
-              // console.log(11, mem);
-              let memimage, memname, membadge;
-              if (snapshot.data()) {
-                memimage = snapshot.data().profileimage;
-                memname = snapshot.data().name;
-              }
-              if (snapshot2) {
-                if (snapshot2.data()) {
-                  membadge = snapshot2.data().type;
-                } else {
-                  membadge = "none";
-                }
-                // console.log(1, members);
-                // console.log(1, snapshot2.data());
-              }
-              renderarray.push(
+            {console.log("member detailas: ", memberdetails)}
+            {memberdetails?.map((element) => {
+              return (
                 <>
-                  hello
                   <div className=" flex justify-between">
                     <div className="flex items-center space-x-2 ">
                       <img
-                        src={memimage}
+                        src={element.memimage}
                         className="w-[40px] h-[40px] border-2 border-white rounded-full"
                         alt=""
                       />
 
-                      <div className="text-[#a77044] font-semibold">
-                        {memname}
+                      <div className={`text-[${badgetype[element.membadge]}] font-semibold`}>
+                        {element.memname}
                       </div>
                     </div>
-                    <div className="grid grid-rows-1 items-center grid-cols-1">
-                      <img
-                        src={ClubImage}
-                        alt=""
-                        className={`row-start-1 col-start-1 mx-auto border-4 border-[${badgetype[membadge]}] h-[50px] w-[50px] rounded-full  object-cover `}
-                      />
-                    </div>
+                    {element.membadge !== "none" && (
+                      <div className="grid grid-rows-1 items-center grid-cols-1">
+                        <img
+                          src={ClubImage}
+                          alt=""
+                          className={`row-start-1 col-start-1 mx-auto border-4 border-[${badgetype[element.membadge]}] h-[50px] w-[50px] rounded-full  object-cover `}
+                        />
+                      </div>
+
+                    )}
                   </div>
                 </>
-              );
+              )
             })}
-            {renderarray?.map((t) => {
-              console.log(1, t);
-              return t;
-            })}
-            {renderarray}
+
             {/* <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#a77044] font-semibold">Anant Bansal</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={minion}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#a77044] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#fee101] font-semibold">Duke Dhal</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={minion}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#fee101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={tanjiro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#00ffff] font-semibold">
-                  Ricky Chandra Paul Minj
-                </div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#00ffff] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className=" flex justify-between">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className=" font-semibold">Samrath Ahluwalia</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={minion}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#00ffff] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#fee101] font-semibold">Madhav Nakra</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#fee101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className=" flex justify-between">
               <div className="flex items-center space-x-2">
                 <img
                   src={Zoro}
@@ -1249,7 +1146,7 @@ function ClubProfile(props) {
                   className="row-start-1 col-start-1 mx-auto border-4 border-[#00ffff] h-[50px] w-[50px] rounded-full  object-cover "
                 />
               </div>
-              </div>*/}
+              </div> */}
           </div>
         </DialogContent>
       </Dialog>

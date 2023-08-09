@@ -24,11 +24,11 @@ import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import minion from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
-
-
+import { storage } from "../../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { collection } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { db,useAuth, upload } from "../../firebase";
+import { db, useAuth, upload } from "../../firebase";
 
 function ClubProfile(props) {
   const currentUser = useAuth();
@@ -80,13 +80,14 @@ function ClubProfile(props) {
   const [clubs, setclubs] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
+  const [uploadimage, setuploadimage] = useState();
 
   const image =
     props.clubpoint < props.tbronze
       ? Bronzebadge
       : props.clubpoint <= props.tsilver
-      ? Silverbadge
-      : Goldbadge;
+        ? Silverbadge
+        : Goldbadge;
 
   function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
@@ -100,6 +101,7 @@ function ClubProfile(props) {
         setclubimage(Imageuse);
       }, "image/png");
     }
+    handleSubmit();
   }
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
@@ -125,11 +127,23 @@ function ClubProfile(props) {
       crop.height * scaleY
     );
   }
-
+  const handleSubmit = (img) => {
+    const canvas = previewCanvasRef.current;
+    canvas.toBlob((blob) => {
+      const file = new File([blob], 'myImage.png', {type: 'image/png'});
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file).then((snapshot) => {
+        console.log("Uploaded a blob or file!");
+      });
+    }, 'image/png');
+  };
+  
   const onSelectFile = (e) => {
     
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
+      // console.log("HELLO ",typeof(e.target.files[0]))
+      // handleSubmit(e.target.files[0]);
       reader.addEventListener("load", () => setUpImg(reader.result));
       reader.readAsDataURL(e.target.files[0]);
       console.log("idarbeta");
@@ -246,16 +260,15 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${changeCover ? "" : "hidden"
+              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
           <div className="max-sm:mx-auto max-sm:col-start-4 items-center row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
             <div className=" ">
               <button
-                
+
                 onClick={handleClickOpen}
                 onMouseOut={(e) => {
                   setprofile(true);
@@ -284,12 +297,12 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-          {docs2?.map((doc) => (
-            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
-              {" "}
-              {doc.username}{" "}
-            </div>
-          ))}
+            {docs2?.map((doc) => (
+              <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
+                {" "}
+                {doc.username}{" "}
+              </div>
+            ))}
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
