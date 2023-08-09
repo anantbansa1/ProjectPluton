@@ -253,23 +253,33 @@ function ClubProfile(props) {
     }
   }
 
-  const handleSubmit = () => {
-    const storage = getStorage();
-    const imageRef = ref(storage, "image.jpg");
-    uploadBytes(imageRef, img)
-      .then(() => {
-        getDownloadURL(imageRef)
-          .then((url) => {
-            setUrl(url);
-          })
-          .catch((error) => {
-            console.log(error.message, "error getting the image url");
-          });
-        setimg(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
+  // const handleSubmit = () => {
+  //   const storage = getStorage();
+  //   const imageRef = ref(storage, "image.jpg");
+  //   uploadBytes(imageRef, img)
+  //     .then(() => {
+  //       getDownloadURL(imageRef)
+  //         .then((url) => {
+  //           setUrl(url);
+  //         })
+  //         .catch((error) => {
+  //           console.log(error.message, "error getting the image url");
+  //         });
+  //       setimg(null);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.message);
+  //     });
+  // };
+  const handleSubmit = (img) => {
+    const canvas = previewCanvasRef.current;
+    canvas.toBlob((blob) => {
+      const file = new File([blob], {Rank1}, {type: 'image/png'});
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file).then((snapshot) => {
+        console.log("Uploaded a blob or file!");
       });
+    }, 'image/png');
   };
 
   async function SaveChanges(canvas, crop) {
