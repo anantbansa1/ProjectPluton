@@ -47,7 +47,7 @@ import { collection, collectionGroup, where, query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { useAuth, upload } from "../../firebase";
-import { getDocs } from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDocs } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 function ClubProfile(props) {
@@ -256,9 +256,9 @@ function ClubProfile(props) {
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
   const [img, setimg] = useState(null);
-  const [url, setUrl] = useState(null);
+  const [url, setUrl] = useState("");
   const [img1, setimg1] = useState(null);
-  const [url1, setUrl1] = useState(null);
+  const [url1, setUrl1] = useState("");
 
   const image =
     props.clubpoint < props.tbronze
@@ -320,6 +320,7 @@ function ClubProfile(props) {
     }, 'image/png');
   };
 
+
   //Edit Cover Image Backend
   const handleSubmit1 = (img) => {
     const storage = getStorage();
@@ -344,8 +345,8 @@ function ClubProfile(props) {
     }, 'image/png');
   };
 
-  // console.log(url);
-
+  const docref = doc(db, `user/${user?.id}`)
+  
   async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
       return;
@@ -481,7 +482,7 @@ function ClubProfile(props) {
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
           <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
             <img
-              src={cov}
+              src={url1}
               alt=""
               className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
               onClick={handleClickOpenCover}
@@ -528,7 +529,7 @@ function ClubProfile(props) {
                   />
                 ) : (
                   <img
-                    src={prof}
+                    src={url}
                     alt=""
                     className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
                   />
@@ -889,6 +890,7 @@ function ClubProfile(props) {
             onClick={() => {
               SaveChanges(previewCanvasRef.current, completedCrop);
               handleSubmit(url);
+              setDoc(docref, {profileimage : url})
             }}
           >
             save changes{" "}
@@ -989,6 +991,7 @@ function ClubProfile(props) {
                 completedCropCover
               );
               handleSubmit1(url1);
+              
             }}
           >
             save changes{" "}
