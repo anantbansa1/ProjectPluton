@@ -49,6 +49,7 @@ import {
   doc,
   setDoc,
   deleteDoc,
+  onSnapshot,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
@@ -94,7 +95,8 @@ function ClubProfile(props) {
   const [members, setmember] = useState([]);
   const [memberscount, setmemberscount] = useState();
   const [memberdetails, setmemberdetails] = useState();
-
+  const [clubId, setClubId] = useState();
+  const [application, setapplication] = useState();
 
 
   const badgetype = {
@@ -137,6 +139,7 @@ function ClubProfile(props) {
     console.log(clubName);
     fetchClub();
     fetchmembers();
+
   }, [clubName]);
 
   useEffect(() => {
@@ -147,9 +150,12 @@ function ClubProfile(props) {
 
   useEffect(() => {
     if (user) {
+      // fetchapplications();
       getmembersdetails();
     }
   }, [members]);
+
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -189,6 +195,59 @@ function ClubProfile(props) {
     setmemberdetails(details);
   }
 
+  useEffect(() => {
+    if (clubId) {
+      let applications = [];
+      const colRef = collection(db, 'clubs', clubId, 'Application');
+  
+      // Listen for real-time updates
+      const unsub = onSnapshot(colRef, async (snapshot) => {
+        const changes = snapshot.docChanges();
+        for (const change of changes) {
+          if (change.type === 'added') {
+            const usera = await getDoc(doc(db, 'user', change.doc.id));
+            const d = usera.data();
+            applications.push({ name: d.name, rollno: change.doc.id, profileimage: d.profileimage });
+          } else if (change.type === 'removed') {
+            applications = applications.filter((application) => application.rollno !== change.doc.id);
+          }
+        }
+        setapplication(applications, ()=>{
+          setpending(false)
+          setpending(true)
+        });
+      });
+  
+      return () => {
+        unsub();
+      };
+    }
+  }, [clubId]);
+  
+  
+
+  // async function fetchapplications() {
+  //   let applications = []
+
+  //     const colref = collection(db, 'clubs', clubId, 'Application')
+  //     const snapshot = await getDocs(colref);
+
+  //     snapshot.forEach((element) => {
+  //         // console.log('hello in loop', clubId)
+  //         getDoc(doc(db, 'user', element.id)).then((usera) => {
+  //           console.log('here')
+
+  //           const d = usera.data();
+  //           applications.push({ name: d.name, rollno: element.id, profileimage: d.profileimage })
+  //           console.log('here application now ', applications)
+
+  //         });
+  //       });
+
+  //     console.log("applications ", applications)
+  //     setapplication(applications)
+  // }
+
   async function fetchmembers() {
     const q = query(collection(db, "clubs"), where("name", "==", clubName));
     const snapshot = await getDocs(q);
@@ -196,6 +255,8 @@ function ClubProfile(props) {
       snapshot.forEach(async (club) => {
         const clubid = club.id;
         let memberarray = [];
+        console.log("club id: ", club.id);
+        setClubId(clubid);
         const colref = collection(db, "clubs", clubid, "Members");
         const memshot = await getDocs(colref);
         if (memshot) {
@@ -207,7 +268,6 @@ function ClubProfile(props) {
         setmember(memberarray);
         setmemberscount(memberarray.length);
       });
-
     }
   }
   async function getUserDetails() {
@@ -528,7 +588,7 @@ function ClubProfile(props) {
                 className={`px-4 py-2  max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
-                <GroupIcon className="scale-[80%]" />
+                {/* <GroupIcon className="scale-[80%]" /> */}
                 &nbsp; <div>Pending</div> &nbsp;
               </button>
             </div>
@@ -1096,7 +1156,7 @@ function ClubProfile(props) {
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
 
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            {console.log("member detailas: ", memberdetails)}
+            {/* {console.log("member detailas: ", memberdetails)} */}
             {memberdetails?.map((element) => {
               return (
                 <>
@@ -1187,7 +1247,38 @@ function ClubProfile(props) {
           }}
         >
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            <div className="flex justify-between items-center">
+
+            {application?.map((element) => {
+              return (
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={element.profileimage}
+                      className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                      alt=""
+                    />
+
+                    <div className="text-[#d7d7d7] font-semibold">
+                      {element.name}
+                    </div>
+                  </div>
+                  <div className="flex space-x-5">
+                    <CheckCircle onClick={(e) => {
+
+                    }} className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
+                    <Cancel onClick={async (e) => {
+                      console.log('delete')
+                      deleteDoc(doc(db, 'clubs', clubId, 'Application', element.rollno)).then(()=>console.log('application deleted'))
+                      // fetchapplications();
+                      // console.log('user deleted');
+                    }} className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+                  </div>
+                </div>
+              )
+            })}
+
+            {application.length===0 && (<div className="text-slate-400">Hmmm... nothing to show here.</div>)}
+            {/*  <div className="flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img
                   src={Zoro}
@@ -1288,24 +1379,7 @@ function ClubProfile(props) {
                 <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
                 <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
               </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
-              </div>
-              <div className="flex space-x-5">
-                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
-              </div>
-            </div>
+            </div> */}
           </div>
         </DialogContent>
       </Dialog>
