@@ -34,6 +34,7 @@ import Rank16 from "../Images/rank16.png";
 import Rank17 from "../Images/rank17.png";
 import Rank18 from "../Images/rank18.png";
 import Rank19 from "../Images/rank19.png";
+import Rank20 from "../Images/rank20.png";
 import Rank20p from "../Images/rank20p.png";
 
 import { Leaderboard } from "@mui/icons-material";
@@ -49,16 +50,90 @@ import { useAuth,upload } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 
 function ClubProfile(props) {
-  // const currentUser = useAuth();
-  // const [photo, setPhoto] = useState(null);
-  // const [loading, setLoading] = useState(false);
-  // const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
+  
 
-  // // function handleChange(e) {
-  // //   if (e.target.files[0]) {
-  // //     setPhoto(e.target.files[0])
-  // //   }
-  // // }
+  // const medal_data = [
+  //   {
+  //     rank : 1,
+  //     medalimg : {Rank1}
+  //   },
+  //   {
+  //     rank :,
+  //     medalimg : }
+  //   },
+  //   {
+  //     rank : 3,
+  //     medalimg : {Rank3}
+  //   },
+  //   {
+  //     rank : 4,
+  //     medalimg : {Rank4}
+  //   },
+  //   {
+  //     rank : 5,
+  //     medalimg : {Rank5}
+  //   },
+  //   {
+  //     rank : 6,
+  //     medalimg : {Rank6}
+  //   },
+  //   {
+  //     rank : 7,
+  //     medalimg : {Rank7}
+  //   },
+  //   {
+  //     rank : 8,
+  //     medalimg : {Rank8}
+  //   },
+  //   {
+  //     rank : 9,
+  //     medalimg : {Rank9}
+  //   },
+  //   {
+  //     rank : 10,
+  //     medalimg : {Rank10}
+  //   },
+  //   {
+  //     rank : 11,
+  //     medalimg : {Rank11}
+  //   },
+  //   {
+  //     rank : 12,
+  //     medalimg : {Rank12}
+  //   },
+  //   {
+  //     rank : 13,
+  //     medalimg : {Rank13}
+  //   },
+  //   {
+  //     rank : 14,
+  //     medalimg : {Rank14}
+  //   },
+  //   {
+  //     rank : 15,
+  //     medalimg : {Rank15}
+  //   },
+  //   {
+  //     rank : 16,
+  //     medalimg : {Rank16}
+  //   },
+  //   {
+  //     rank : 17,
+  //     medalimg : {Rank17}
+  //   },
+  //   {
+  //     rank : 18,
+  //     medalimg : {Rank18}
+  //   },
+  //   {
+  //     rank : 19,
+  //     medalimg : {Rank19}
+  //   },
+  //   {
+  //     rank : 20,
+  //     medalimg : {Rank20p}
+  //   },
+  // ];
 
   // function handleClick() {
   //   upload(photo, currentUser, setLoading);
@@ -74,87 +149,57 @@ function ClubProfile(props) {
   // // const [doc2, error] = useCollectionData(query);
   // // {doc2.map((doc) )}
   const medal_data = [
-    {
-      rank : 1,
-      medalimg : {Rank1}
-    },
-    {
-      rank : 2,
-      medalimg : {Rank2}
-    },
-    {
-      rank : 3,
-      medalimg : {Rank3}
-    },
-    {
-      rank : 4,
-      medalimg : {Rank4}
-    },
-    {
-      rank : 5,
-      medalimg : {Rank5}
-    },
-    {
-      rank : 6,
-      medalimg : {Rank6}
-    },
-    {
-      rank : 7,
-      medalimg : {Rank7}
-    },
-    {
-      rank : 8,
-      medalimg : {Rank8}
-    },
-    {
-      rank : 9,
-      medalimg : {Rank9}
-    },
-    {
-      rank : 10,
-      medalimg : {Rank10}
-    },
-    {
-      rank : 11,
-      medalimg : {Rank11}
-    },
-    {
-      rank : 12,
-      medalimg : {Rank12}
-    },
-    {
-      rank : 13,
-      medalimg : {Rank13}
-    },
-    {
-      rank : 14,
-      medalimg : {Rank14}
-    },
-    {
-      rank : 15,
-      medalimg : {Rank15}
-    },
-    {
-      rank : 16,
-      medalimg : {Rank16}
-    },
-    {
-      rank : 17,
-      medalimg : {Rank17}
-    },
-    {
-      rank : 18,
-      medalimg : {Rank18}
-    },
-    {
-      rank : 19,
-      medalimg : {Rank19}
-    },
-    {
-      rank : 20,
-      medalimg : {Rank20p}
-    },
-  ];
+    Rank1,
+    Rank2,
+    Rank3,
+    Rank4,
+    Rank5,
+    Rank6,
+    Rank7,
+    Rank8,
+    Rank9,
+    Rank10,
+    Rank11,
+    Rank12,
+    Rank13,
+    Rank14,
+    Rank15,
+    Rank16,
+    Rank17,
+    Rank18,
+    Rank19,
+    Rank20,
+    Rank20p
+  ]
+
+
+
+
+  const currentUser = useAuth();
+  const [photo, setPhoto] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
+
+  function handleChange(e) {
+    if (e.target.files[0]) {
+      setPhoto(e.target.files[0])
+    }
+  }
+
+  // function handleClick() {
+  //   upload(photo, currentUser, setLoading);
+  // }
+
+  useEffect(() => {
+    if (currentUser?.photoURL) {
+      setPhotoURL(currentUser.photoURL);
+    }
+  }, [currentUser])
+
+  // const q2 = collection(db, path);
+  // const [doc2, error] = useCollectionData(query);
+  // {doc2.map((doc) )}
+
   const user = useAuth();
   const [id,setid] = useState();
   async function up(){
@@ -189,10 +234,22 @@ function ClubProfile(props) {
   const [docs, loadin, error] = useCollectionData(s);
   useEffect(()=>{
     if(docs){
-      console.log(docs)
+      docs.map((d) => {
+        console.log(d.rank);
+      })
     }
   },[docs]);
-      
+  // medal_data.map((d) => {
+    // if(medal_data[0] == d){
+    //   console.log("hello");
+    // }
+  // })
+  if(docs){
+    console.log("hell0")
+    docs.map((d) =>{
+      console.log(medal_data[d-1]);
+    })
+  }
 
   useEffect(()=>{
     if(user){
@@ -202,10 +259,30 @@ function ClubProfile(props) {
     console.log(1);
   },[user])
   
-
-
+  const c = collection (db, `user/${id}/clubs`);
+  const [docs1, loadin1, error1] = useCollectionData(c);
+  useEffect(()=>{
+    if(docs1){
+      console.log(docs1)
+      docs1.map((d) => {
+        console.log(d.name);
+      })
+    }
+  },[docs1]);
   
 
+  // useEffect(()=>{    
+  //   console.log(allclubs)
+  // },[allclubs])
+
+  // useEffect(() => {
+  //   return () => {
+  //     fetchClubs();
+  //   };
+  // }, [user]);
+
+
+  const [allclubs, setallclubs] = useState([]);
   const [name,setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -467,18 +544,23 @@ function ClubProfile(props) {
         <div className="flex flex-col space-y-8 w-[50vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
           <div className="p-4 max-lg:text-lg text-2xl">
             Medals &nbsp;
-            <span className="text-green-500 font-semibold"> 8 </span>
+            <span className="text-green-500 font-semibold"> {docs?.length} </span>
           </div>
           <div className="flex  justify-start flex-wrap">
-            
-            <img src={Rank1} alt="" className="p-4 w-[150px]" />
+            {docs?(
+              docs.map((d) => {
+                return(<img src={(medal_data[Math.min(20,d.rank-1)])} alt={Rank20p} className="p-4 w-[150px]" />);
+                // console.log("hello")
+              })
+            ):("")}
+            {/* <img src={Rank1} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
+            <img src={Rank2} alt="" className="p-4 w-[150px]" /> */}
           </div>
         </div>
         <div className="flex max-lg:hidden flex-col w-[20vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
@@ -888,78 +970,84 @@ function ClubProfile(props) {
           setclubs(false);
         }}
         aria-describedby="alert-dialog-slide-description"
-      >
+       >
         <DialogTitle>
           <div className="">{"Clubs Joined"}</div>
         </DialogTitle>
-        <DialogContent
-          sx={{
-            overflow: "auto",
-            scrollbarWidth: "none", // Hide the scrollbar for Firefox
-            "&::-webkit-scrollbar": {
-              display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
-            },
-          }}
-        >
-          {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
-          <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-          <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-              <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
+        
+          <DialogContent
+            sx={{
+              overflow: "auto",
+              scrollbarWidth: "none", // Hide the scrollbar for Firefox
+              "&::-webkit-scrollbar": {
+                display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+              },
+            }}
+          >
+            {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
+            {docs1?(
+              docs1.map((d) => {
+            <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
+              <div className=" flex justify-between">
+                <div className="flex items-center space-x-2 ">
+                  <img
+                      src={Tanjiro}
+                      alt=""
+                      className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                    />
 
-                <div className="font-semibold">Music Club</div>
+                  <div className="font-semibold">{d.name}</div>
+                </div>
+                <div className="grid grid-rows-1 items-center grid-cols-1">
+                  <img
+                    src={Tanjiro}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
+                  />
+                </div>
               </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
+              {/* <div className=" flex justify-between">
+                <div className="flex items-center space-x-2 ">
                 <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-              <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
+                    src={Tanjiro}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                  />
 
-                <div className="font-semibold">Music Club</div>
+                  <div className="font-semibold">{club['name']}</div>
+                </div>
+                <div className="grid grid-rows-1 items-center grid-cols-1">
+                  <img
+                    src={Tanjiro}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
+                  />
+                </div>
               </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
+              <div className=" flex justify-between">
+                <div className="flex items-center space-x-2 ">
                 <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-              <img
-                  src={CoverImage}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
+                    src={club['logo']}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                  />
 
-                <div className="font-semibold">Sports Club</div>
+                  <div className="font-semibold">{club['name']}</div>
+                </div>
+                <div className="grid grid-rows-1 items-center grid-cols-1">
+                  <img
+                    src={CoverImage}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
+                  />
+                </div>
+              </div> */}
               </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={CoverImage}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-          </div>
-        </DialogContent>
+            })
+          ):("")}
+          </DialogContent> 
       </Dialog>
+        
     </div>
   );
 }
