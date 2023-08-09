@@ -43,15 +43,14 @@ import { Link } from "react-router-dom";
 import minion from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
 
-import { collection,collectionGroup , where , query } from "@firebase/firestore";
+import { collection, collectionGroup, where, query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
-import { useAuth,upload } from "../../firebase";
+import { useAuth, upload } from "../../firebase";
 import { getDocs } from "firebase/firestore";
+import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 function ClubProfile(props) {
-  
-
   // const medal_data = [
   //   {
   //     rank : 1,
@@ -156,22 +155,15 @@ function ClubProfile(props) {
     Rank18,
     Rank19,
     Rank20,
-    Rank20p
-  ]
-
-
-
+    Rank20p,
+  ];
 
   const currentUser = useAuth();
-  const [photo, setPhoto] = useState(null);
+  // const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [photoURL, setPhotoURL] = useState("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png");
-
-  function handleChange(e) {
-    if (e.target.files[0]) {
-      setPhoto(e.target.files[0])
-    }
-  }
+  const [photoURL, setPhotoURL] = useState(
+    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+  );
 
   // function handleClick() {
   //   upload(photo, currentUser, setLoading);
@@ -181,76 +173,50 @@ function ClubProfile(props) {
     if (currentUser?.photoURL) {
       setPhotoURL(currentUser.photoURL);
     }
-  }, [currentUser])
+  }, [currentUser]);
 
   // const q2 = collection(db, path);
   // const [doc2, error] = useCollectionData(query);
   // {doc2.map((doc) )}
 
   const user = useAuth();
-  const [id,setid] = useState();
-  async function up(){
-      const q = query(collection(db,"user"),where("email","==",user?.email));
-      const querySnapshot =await getDocs(q);
-      if(querySnapshot){
-        querySnapshot.forEach(async (doc) => {
-          const docdata=doc.data();
-          // console.log(doc.id, " => ", doc.data());
-          setname(docdata['name']);
-          // console.log(doc.data()['profileimage'])
-          console.log(doc.id);
-          // const formsRef = collection(db,"user",doc.id,"medals");
-          // db.collection("user",doc.id,"medals")
-          setid(doc.id);
-             
-          // const formsSnapshot=await getDocs(formsRef);
-          // if(formsSnapshot){
-          //   // console.log(formsSnapshot.data());
-          //   formsSnapshot.forEach((d)=>{
-          //     console.log(15);
-          //   })
-          // }
-
-        });
-      }
+  const [id, setid] = useState();
+  async function up() {
+    const q = query(collection(db, "user"), where("email", "==", user?.email));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot) {
+      querySnapshot.forEach(async (doc) => {
+        const docdata = doc.data();
+        // console.log(doc.id, " => ", doc.data());
+        setname(docdata["name"]);
+        // console.log(doc.data()['profileimage'])
+        console.log(doc.id);
+        setid(doc.id);
+      });
+    }
   }
 
   // const query = collection (db, "user",doc.id,"medals");
   // const [docs, loading, error] = useCollectionData(query) ;
-  const s = collection (db, `user/${id}/medals`);
+  const s = collection(db, `user/${id}/medals`);
   const [docs, loadin, error] = useCollectionData(s);
-  useEffect(()=>{
-    if(docs){
+  useEffect(() => {
+    if (docs) {
       docs.map((d) => {
-        console.log(d.rank);
-      })
+        // console.log(d.rank);
+      });
     }
-  },[docs]);
-  // medal_data.map((d) => {
-    // if(medal_data[0] == d){
-    //   console.log("hello");
-    // }
-  // })
-  if(docs){
-    console.log("hell0")
-    docs.map((d) =>{
-      console.log(medal_data[d-1]);
-    })
-  }
+  }, [docs]);
 
-  useEffect(()=>{
-    if(user){
-      up()
-      
+  useEffect(() => {
+    if (user) {
+      up();
     }
-    console.log(1);
-  },[user])
-  
+  }, [user]);
 
+  const t = collection(db, `user/${id}/medals`);
 
-  
-
-  const [name,setname] = useState("");
+  const [name, setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
   const [ClubImage, setclubimage] = useState(props.clubimage);
@@ -271,6 +237,8 @@ function ClubProfile(props) {
   const [clubs, setclubs] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
+  const [img, setimg] = useState(null);
+  const [url, setUrl] = useState(null);
 
   const image =
     props.clubpoint < props.tbronze
@@ -278,6 +246,31 @@ function ClubProfile(props) {
       : props.clubpoint <= props.tsilver
       ? Silverbadge
       : Goldbadge;
+
+  function handleChange(e) {
+    if (e.target.files[0]) {
+      setimg(e.target.files[0]);
+    }
+  }
+
+  const handleSubmit = () => {
+    const storage = getStorage();
+    const imageRef = ref(storage, "image.jpg");
+    uploadBytes(imageRef, img)
+      .then(() => {
+        getDownloadURL(imageRef)
+          .then((url) => {
+            setUrl(url);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setimg(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
   async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
@@ -511,15 +504,24 @@ function ClubProfile(props) {
         <div className="flex flex-col space-y-8 w-[50vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
           <div className="p-4 max-lg:text-lg text-2xl">
             Medals &nbsp;
-            <span className="text-green-500 font-semibold"> {docs?.length} </span>
+            <span className="text-green-500 font-semibold">
+              {" "}
+              {docs?.length}{" "}
+            </span>
           </div>
           <div className="flex  justify-start flex-wrap">
-            {docs?(
-              docs.map((d) => {
-                return(<img src={(medal_data[Math.min(20,d.rank-1)])} alt={Rank20p} className="p-4 w-[150px]" />);
-                // console.log("hello")
-              })
-            ):("")}
+            {docs
+              ? docs.map((d) => {
+                  return (
+                    <img
+                      src={medal_data[Math.min(20, d.rank - 1)]}
+                      alt={Rank20p}
+                      className="p-4 w-[150px]"
+                    />
+                  );
+                  // console.log("hello")
+                })
+              : ""}
             {/* <img src={Rank1} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
@@ -761,6 +763,7 @@ function ClubProfile(props) {
                   background: "#130f22",
                   "&:hover": { background: "#100d1e" },
                 }}
+                // onChange={() => handleChange()}
                 onClick={() => profileinput.current.click()}
               >
                 Upload File{" "}
@@ -807,7 +810,10 @@ function ClubProfile(props) {
                 color: "white",
               },
             }}
-            onClick={() => SaveChanges(previewCanvasRef.current, completedCrop)}
+            onClick={() => {
+              SaveChanges(previewCanvasRef.current, completedCrop);
+              handleSubmit();
+            }}
           >
             save changes{" "}
           </Button>
@@ -952,9 +958,9 @@ function ClubProfile(props) {
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-          <div className=" flex justify-between">
+            <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
-              <img
+                <img
                   src={Tanjiro}
                   alt=""
                   className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
@@ -972,7 +978,7 @@ function ClubProfile(props) {
             </div>
             <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
-              <img
+                <img
                   src={Tanjiro}
                   alt=""
                   className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
@@ -990,7 +996,7 @@ function ClubProfile(props) {
             </div>
             <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
-              <img
+                <img
                   src={CoverImage}
                   alt=""
                   className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
