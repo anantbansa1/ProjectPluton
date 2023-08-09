@@ -170,7 +170,8 @@ function ClubProfile(props) {
     Rank20,
     Rank20p,
   ];
-
+  const [prof, setprof] = useState({minion})
+  const [cov, setcov] = useState({Zoro})
   const currentUser = useAuth();
   // const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -202,6 +203,9 @@ function ClubProfile(props) {
         const docdata = doc.data();
         // console.log(doc.id, " => ", doc.data());
         setname(docdata["name"]);
+        setcov(docdata["coverimage"])
+        setprof(docdata["profileimage"])
+
         // console.log(doc.data()['profileimage'])
         console.log(doc.id);
         setid(doc.id);
@@ -225,10 +229,11 @@ function ClubProfile(props) {
     if (user) {
       up();
     }
-  }, [user]);
+  }, [user,cov,prof]);
 
   const t = collection(db, `user/${id}/medals`);
 
+  
   const [name, setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -252,6 +257,8 @@ function ClubProfile(props) {
   const Coverinput = React.useRef();
   const [img, setimg] = useState(null);
   const [url, setUrl] = useState(null);
+  const [img1, setimg1] = useState(null);
+  const [url1, setUrl1] = useState(null);
 
   const image =
     props.clubpoint < props.tbronze
@@ -294,7 +301,7 @@ function ClubProfile(props) {
     const storage = getStorage();
     const canvas = previewCanvasRef.current;
     canvas.toBlob((blob) => {
-      const file = new File([blob], `${user.id}.png`, {type: 'image/png'});
+      const file = new File([blob], `${user?.email}.png`, {type: 'image/png'});
       const storageRef = ref(storage, `images/${file.name}`);
       uploadBytes(storageRef, file).then((snapshot) => {
         // console.log("Uploaded a blob or file!");
@@ -306,6 +313,30 @@ function ClubProfile(props) {
             console.log(error.message, "error getting the image url");
           });
         setimg(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+    }, 'image/png');
+  };
+
+  //Edit Cover Image Backend
+  const handleSubmit1 = (img) => {
+    const storage = getStorage();
+    const canvas = previewCanvasRefCover.current;
+    canvas?.toBlob((blob) => {
+      const file = new File([blob], `${user?.email}_1.png`, {type: 'image/png'});
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file).then((snapshot) => {
+        // console.log("Uploaded a blob or file!");
+        getDownloadURL(storageRef)
+          .then((u) => {
+            setUrl1(u);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setimg1(null);
       })
       .catch((error) => {
         console.log(error.message);
@@ -450,7 +481,7 @@ function ClubProfile(props) {
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
           <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
             <img
-              src={CoverImage}
+              src={cov}
               alt=""
               className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
               onClick={handleClickOpenCover}
@@ -497,7 +528,7 @@ function ClubProfile(props) {
                   />
                 ) : (
                   <img
-                    src={ClubImage}
+                    src={prof}
                     alt=""
                     className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
                   />
@@ -905,6 +936,7 @@ function ClubProfile(props) {
                   background: "#130f22",
                   "&:hover": { background: "#100d1e" },
                 }}
+                onChange={() => handleChange()}
                 onClick={() => Coverinput.current.click()}
               >
                 Upload File{" "}
@@ -951,12 +983,13 @@ function ClubProfile(props) {
                 color: "white",
               },
             }}
-            onClick={() =>
+            onClick={() => {
               SaveChangesCover(
                 previewCanvasRefCover.current,
                 completedCropCover
-              )
-            }
+              );
+              handleSubmit1(url1);
+            }}
           >
             save changes{" "}
           </Button>
