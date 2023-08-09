@@ -134,6 +134,19 @@ function ClubProfile(props) {
   //   },
   // ];
 
+  // function handleClick() {
+  //   upload(photo, currentUser, setLoading);
+  // }
+
+  // useEffect(() => {
+  //   if (currentUser?.photoURL) {
+  //     setPhotoURL(currentUser.photoURL);
+  //   }
+  // }, [currentUser])
+
+  // // const q2 = collection(db, path);
+  // // const [doc2, error] = useCollectionData(query);
+  // // {doc2.map((doc) )}
   const medal_data = [
     Rank1,
     Rank2,
@@ -239,6 +252,8 @@ function ClubProfile(props) {
   const Coverinput = React.useRef();
   const [img, setimg] = useState(null);
   const [url, setUrl] = useState(null);
+  const [url2, seturl2] = useState(null);
+  const [img2, setimg2] = useState(null);
 
   const image =
     props.clubpoint < props.tbronze
@@ -255,32 +270,79 @@ function ClubProfile(props) {
 
   // const handleSubmit = () => {
   //   const storage = getStorage();
-  //   const imageRef = ref(storage, "image.jpg");
-  //   uploadBytes(imageRef, img)
+  //   const imageRef = ref(storage, "images/image.jpg");
+    
+  //   const metadata = {
+  //     contentType: 'image/jpeg',
+  //   };
+  //   console.log(typeof(img))
+  //   // imageRef.putData(Rank1);
+  //   uploadBytesResumable(imageRef, img, metadata)
   //     .then(() => {
-  //       getDownloadURL(imageRef)
-  //         .then((url) => {
-  //           setUrl(url);
-  //         })
-  //         .catch((error) => {
-  //           console.log(error.message, "error getting the image url");
-  //         });
-  //       setimg(null);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.message);
-  //     });
+      //   getDownloadURL(imageRef)
+      //     .then((u) => {
+      //       setUrl(u);
+      //     })
+      //     .catch((error) => {
+      //       console.log(error.message, "error getting the image url");
+      //     });
+      //   setimg(null);
+      // })
+      // .catch((error) => {
+      //   console.log(error.message);
+      // });
   // };
+
+  // console.log(user?.id);
+  // console.log(user?.email)
+
   const handleSubmit = (img) => {
+    const storage = getStorage();
     const canvas = previewCanvasRef.current;
     canvas.toBlob((blob) => {
-      const file = new File([blob], {Rank1}, {type: 'image/png'});
+      const file = new File([blob], `${user?.email}.png`, {type: 'image/png'});
       const storageRef = ref(storage, `images/${file.name}`);
       uploadBytes(storageRef, file).then((snapshot) => {
-        console.log("Uploaded a blob or file!");
+        // console.log("Uploaded a blob or file!");
+        getDownloadURL(storageRef)
+          .then((u) => {
+            setUrl(u);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setimg(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
       });
     }, 'image/png');
   };
+
+  const handleSubmit2 = (img2) => {
+    const storage = getStorage();
+    const canvas = previewCanvasRef.current;
+    canvas?.toBlob((blob) => {
+      const file = new File([blob], `hemlo.png`, {type: 'image/png'});
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file).then((snapshot) => {
+        // console.log("Uploaded a blob or file!");
+        getDownloadURL(storageRef)
+          .then((u) => {
+            seturl2(u);
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+        setimg2(null);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+    }, 'image/png');
+  };
+
+  // console.log(url);
 
   async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
@@ -773,8 +835,10 @@ function ClubProfile(props) {
                   background: "#130f22",
                   "&:hover": { background: "#100d1e" },
                 }}
-                // onChange={() => handleChange()}
-                onClick={() => profileinput.current.click()}
+                onChange={() => handleChange()}
+                onClick={() => 
+                  profileinput.current.click()
+                }
               >
                 Upload File{" "}
               </Button>
@@ -822,7 +886,7 @@ function ClubProfile(props) {
             }}
             onClick={() => {
               SaveChanges(previewCanvasRef.current, completedCrop);
-              handleSubmit();
+              handleSubmit(url);
             }}
           >
             save changes{" "}
@@ -871,6 +935,7 @@ function ClubProfile(props) {
                   "&:hover": { background: "#100d1e" },
                 }}
                 onClick={() => Coverinput.current.click()}
+                onChange={handleChange}
               >
                 Upload File{" "}
               </Button>
@@ -895,6 +960,7 @@ function ClubProfile(props) {
               "&:hover": { borderColor: "#0a0813", color: "white" },
             }}
             onClick={handleCloseCover}
+
           >
             Cancel{" "}
           </Button>
@@ -916,12 +982,10 @@ function ClubProfile(props) {
                 color: "white",
               },
             }}
-            onClick={() =>
-              SaveChangesCover(
-                previewCanvasRefCover.current,
-                completedCropCover
-              )
-            }
+            onClick={() =>{
+              SaveChangesCover(previewCanvasRefCover.current,completedCropCover);
+              handleSubmit2(url2);
+            }}
           >
             save changes{" "}
           </Button>
@@ -953,7 +1017,7 @@ function ClubProfile(props) {
           setclubs(false);
         }}
         aria-describedby="alert-dialog-slide-description"
-      >
+       >
         <DialogTitle>
           <div className="">{"Clubs Joined"}</div>
         </DialogTitle>
@@ -1012,19 +1076,21 @@ function ClubProfile(props) {
                   className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
                 />
 
-                <div className="font-semibold">Sports Club</div>
+                  <div className="font-semibold">Sports Club</div>
+                </div>
+                <div className="grid grid-rows-1 items-center grid-cols-1">
+                  <img
+                    src={CoverImage}
+                    alt=""
+                    className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
+                  />
+                </div>
+              </div> */
               </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={CoverImage}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-          </div>
-        </DialogContent>
+            
+          </DialogContent> 
       </Dialog>
+        
     </div>
   );
 }
