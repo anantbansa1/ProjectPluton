@@ -461,7 +461,7 @@ function ClubProfile(props) {
                   />
                 ) : (
                   <img
-                    src={upImg}
+                    src={ClubImage}
                     alt=""
                     className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
                   />
