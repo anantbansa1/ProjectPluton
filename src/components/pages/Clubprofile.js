@@ -32,9 +32,19 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import DoneIcon from '@mui/icons-material/Done';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { Cancel, CheckCircle, ManageAccounts, Settings } from "@mui/icons-material";
+import { useAuth } from "../../firebase";
+import { useLocation, useParams } from "react-router-dom";
+import { db } from "../../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 
 function ClubProfile(props) {
+  const clubName = useParams().clubID;
+  const navigate = useNavigate();
   const [profile, setprofile] = useState(true);
   const [ClubImage, setclubimage] = useState(props.clubimage);
   const [CoverImage, setcoverimage] = useState(props.coverimage);
@@ -54,13 +64,61 @@ function ClubProfile(props) {
   const [completedCrop, setCompletedCrop] = useState(null);
   const [member, setmember] = useState(false);
   const [pending, setpending] = useState(false);
-  
+  const [currentClub, setCurrentClub] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
 
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openfilter = Boolean(anchorEl);
+
+  const user = useAuth();
+
+  async function fetchClub() {
+    // const q = query(collection(db, "clubs"), where("name", "==", club));
+    // const querySnapshot = await getDocs(q);
+    // console.log(querySnapshot)
+    // if (querySnapshot) {
+    //   console.log("No matching documents.");
+    // } else {
+    //   console.log('here')
+    //   querySnapshot.forEach((doc) => {
+    //     console.log(doc.id, " => ", doc.data());
+    //   });
+    // }
+    setLoading(true);
+    const clubs = await getDocs(collection(db, 'clubs'));
+    setLoading(false);
+    if (clubs) {
+      let clubnames = [];
+      let flag = 0;
+      clubs.forEach((element) => {
+        // console.log(element.data());
+        const a = element.data()['name'];
+        clubnames.push(a)
+        // console.log(`${clubName} ===== ${a}`)
+        if (a === clubName) { setCurrentClub(element.data());flag=1 }
+      })
+    if (flag===0) navigate("/pagenotfound")
+      // console.log(clubnames)
+    }
+  }
+  // const clubname = 
+  useEffect(() => {
+    console.log(clubName);
+    fetchClub();
+
+    // const q = query(collection(db,'clubs',where('name','==',club)));
+  }, [clubName])
+
+  // useEffect(() => {
+  //   console.log(currentClub.logo);
+  //   // fetchClub();
+  //   // const q = query(collection(db,'clubs',where('name','==',club)));
+  // }, [currentClub])
+
   const handleClickfilter = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -284,9 +342,9 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-lg text-white font-semibold mix-blend-difference">
+            <div className="text-[2.25rem]  max-lg:text-2xl max-md:text-center max-sm:text-lg text-white font-semibold mix-blend-difference">
               {" "}
-              {props.name}{" "}
+              {currentClub.name}{" "}
             </div>
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
@@ -1109,6 +1167,13 @@ function ClubProfile(props) {
           </div>
         </DialogContent>
       </Dialog>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1, backdropFilter: "blur(20px)", }}
+        open={loading}
+        close={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

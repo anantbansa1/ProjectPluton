@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import Minions from "../Images/Minions.jpg";
 import Tanjiro from "../Images/Tanjiro.jpg";
@@ -15,18 +15,52 @@ import MenuItem from "@mui/material/MenuItem";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CampaignIcon from "@mui/icons-material/Campaign";
+import { useAuth } from "../../firebase";
+import { db } from "../../firebase";
+import { doc, getDocs, collection } from "firebase/firestore";
+import { useLocation } from "react-router-dom";
+
+
+
 
 export default function UserFeed() {
   const [post, underline] = useState("post");
   const [club, setclub] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [allclubs, setallclubs] = useState([]);
   const open = Boolean(anchorEl);
+  const location = useLocation();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const user = useAuth();
+
+
+  async function fetchClubs() {
+    const clubs = await getDocs(collection(db, 'clubs'));
+    if (clubs) {
+      let clubnames = [];
+      clubs.forEach((element) => {
+        // console.log(element.data());
+        clubnames.push(element.data())
+      })
+      setallclubs(clubnames);
+    }
+  }
+
+  useEffect(()=>{    
+    console.log(allclubs)
+  },[allclubs])
+
+  useEffect(() => {
+    return () => {
+      fetchClubs();
+    };
+  }, [user]);
 
   return (
     <div>
@@ -38,9 +72,8 @@ export default function UserFeed() {
             <div className=""> </div>
             <div className="flex space-x-[5vw] max-md:space-x-4  ">
               <button
-                className={`${
-                  post === "post" ? "border-b" : ""
-                } border-white py-4  px-8`}
+                className={`${post === "post" ? "border-b" : ""
+                  } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("post");
                 }}
@@ -48,9 +81,8 @@ export default function UserFeed() {
                 Post
               </button>
               <button
-                className={`${
-                  post === "poll" ? "border-b" : ""
-                } border-white py-4  px-8`}
+                className={`${post === "poll" ? "border-b" : ""
+                  } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("poll");
                 }}
@@ -233,7 +265,22 @@ export default function UserFeed() {
       )}
 
       <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  shadow-2xl shadow-black space-y-10 bg-white bg-opacity-5 backdrop-blur-2xl ">
-        <Link
+
+        {allclubs.map((club) => {
+          return (
+            <Link to={`/club/${club['name']}`} params={club['name']} state={club} className="h-[7vw] w-[7vw] border-white rounded-full">
+              <Tooltip title={club['name']}>
+                {" "}
+                <img
+                  src={club['logo']}
+                  className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
+                  alt=""
+                />
+              </Tooltip>
+            </Link>
+          )
+        })}
+        {/* <Link
           to="/clubprofile"
           className="h-[7vw] w-[7vw] border-white rounded-full"
         >
@@ -325,59 +372,9 @@ export default function UserFeed() {
               alt=""
             />
           </Tooltip>
-        </div>
-      </div>
+        </div> */}
 
-      {/* <div className="bg-white bg-opacity-10 p-10 h-full backdrop-filter logos absolute right-[4vw] top-[3vw] flex-col max-[769px]:hidden">
-        <button className="">
-          <img
-            src={Minions}
-            alt=""
-            className="bg-white max-[750px]:h-[10vw] max-[750px]:w-[10vw] h-[6vw] w-[6vw] rounded-[50%] mb-[2vh]"
-          />
-        </button>
-        <br />
-        <button className="">
-          <img
-            src={Zoro}
-            alt=""
-            className="bg-white max-[750px]:h-[10vw] max-[750px]:w-[10vw] h-[6vw] w-[6vw] rounded-[50%] mb-[2vh]"
-          />
-        </button>
-        <br />
-        <button className="">
-          <img
-            src={Minions}
-            alt=""
-            className="bg-white max-[750px]:h-[10vw] max-[750px]:w-[10vw] h-[6vw] w-[6vw] rounded-[50%] mb-[2vh]"
-          />
-        </button>
-        <br />
-        <button className="">
-          <img
-            src={Zoro}
-            alt=""
-            className="bg-white max-[750px]:h-[10vw] max-[750px]:w-[10vw] h-[6vw] w-[6vw] rounded-[50%] mb-[2vh]"
-          />
-        </button>
-        <br />
-        <button className="">
-          <img
-            src={Minions}
-            alt=""
-            className="bg-white max-[750px]:h-[10vw] max-[750px]:w-[10vw] h-[6vw] w-[6vw] rounded-[50%] mb-[2vh]"
-          />
-        </button>
-        <br />
-        <button className="">
-          <img
-            src={Zoro}
-            alt=""
-            className="bg-white max-[750px]:h-[10vw] max-[750px]:w-[10vw] h-[6vw] w-[6vw] rounded-[50%] mb-[2vh]"
-          />
-        </button>
-        <br />
-      </div> */}
+      </div>
 
       <button
         onClick={(e) => {
@@ -385,25 +382,7 @@ export default function UserFeed() {
         }}
         className="min-[769px]:hidden flex items-center  space-x-1 text-white fixed top-3 right-2"
       >
-        {/* <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-chevron-double-down"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-            />
-          </svg>
-        </div> */}
+
         <div>
           <GroupsIcon></GroupsIcon> Clubs
         </div>
@@ -415,9 +394,22 @@ export default function UserFeed() {
           className="h-[20vw] w-[15vw] fixed top-10 right-1 hidden"
         />
       ) : (
-        // <img src={Zoro} alt="" className="h-[20vw] w-[15vw] fixed top-10 right-1"/>
         <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
-          <Link to="/clubprofile" className="">
+          {allclubs.map((club) => {
+            return (
+              <Link to="/clubprofile" state={club}  className="">
+                <Tooltip title={club['name']}>
+                  {" "}
+                  <img
+                    src={club['logo']}
+                    className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto "
+                    alt=""
+                  />
+                </Tooltip>
+              </Link>
+            )
+          })}
+          {/* <Link to="/clubprofile" className="">
             <img
               src={Minions}
               alt=""
@@ -458,7 +450,7 @@ export default function UserFeed() {
               alt=""
               className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
             />
-          </Link>
+          </Link> */}
         </div>
       )}
     </div>
