@@ -5,10 +5,13 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,getIdToken
+  signOut,
+  updateProfile
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { getFirestore } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAGNB7Q_ZQXC1OQxIwiG8o8CYh5UatsHkA",
@@ -24,6 +27,9 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 export const auth = getAuth();
+const storage = getStorage();
+
+
 
 export function useAuth() {
   const [user, setUser] = useState();
@@ -45,18 +51,3 @@ export function signUp(email, password) {
 export function logOut() {
   return signOut(auth);
 }
-
-export function useToken() {
-  const [token, setToken] = useState('')
-  useEffect(() => {
-    return auth().onAuthStateChanged(user => {
-      if (user) {
-        user.getIdToken(true)
-        .then(latestToken => setToken(latestToken))
-        .catch(err => console.log(err))
-      }
-    })
-  }, [])
- return token;
-}
-
