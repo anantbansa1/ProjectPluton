@@ -19,8 +19,7 @@ import { useAuth } from "../../firebase";
 import { db } from "../../firebase";
 import { doc, getDocs, collection } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
-
-
+import AddIcon from '@mui/icons-material/Add';
 
 
 export default function UserFeed() {
@@ -41,20 +40,25 @@ export default function UserFeed() {
 
 
   async function fetchClubs() {
-    const clubs = await getDocs(collection(db, 'clubs'));
-    if (clubs) {
-      let clubnames = [];
-      clubs.forEach((element) => {
-        // console.log(element.data());
-        clubnames.push(element.data())
-      })
-      setallclubs(clubnames);
+    try {
+      const clubs = await getDocs(collection(db, 'clubs'));
+      if (clubs) {
+        let clubnames = [];
+        clubs.forEach((element) => {
+          // console.log(element.data());
+          clubnames.push(element.data())
+        })
+        setallclubs(clubnames);
+      }
+
+    } catch (error) {
+      console.log('firebase error')
     }
   }
 
-  useEffect(()=>{    
+  useEffect(() => {
     console.log(allclubs)
-  },[allclubs])
+  }, [allclubs])
 
   useEffect(() => {
     return () => {
@@ -280,100 +284,15 @@ export default function UserFeed() {
             </Link>
           )
         })}
-        {/* <Link
-          to="/clubprofile"
-          className="h-[7vw] w-[7vw] border-white rounded-full"
-        >
-          <Tooltip title="clubname">
+        <Link to="/addclub" className="h-[7vw] w-[7vw] border-white rounded-full">
+          <Tooltip title="Add New Club">
             {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
+            <div
+              className="flex items-center justify-center h-[7vw] w-[7vw] cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-full  "
               alt=""
-            />
+            > <AddIcon className="text-slate-400 scale-[150%]" /> </div>
           </Tooltip>
         </Link>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div>
-        <div className="h-[7vw] w-[7vw] border-white rounded-full">
-          <Tooltip title="clubname">
-            {" "}
-            <img
-              src={Minions}
-              className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
-              alt=""
-            />
-          </Tooltip>
-        </div> */}
-
       </div>
 
       <button
@@ -397,7 +316,7 @@ export default function UserFeed() {
         <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
           {allclubs.map((club) => {
             return (
-              <Link to={`/club/${club['name']}`} params={club['name']} state={club}  className="">
+              <Link to={`/club/${club['name']}`} params={club['name']} state={club} className="">
                 <Tooltip title={club['name']}>
                   {" "}
                   <img
@@ -409,6 +328,16 @@ export default function UserFeed() {
               </Link>
             )
           })}
+          <Link to="/addclub" className="">
+            <Tooltip title="Add New Club">
+              {" "}
+              <div
+                className="flex items-center justify-center h-[22vw] w-[22vw] mx-auto cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-[50%]  "
+                alt=""
+              > <AddIcon className="text-slate-400 scale-[150%]" /> </div>
+            </Tooltip>
+          </Link>
+
           {/* <Link to="/clubprofile" className="">
             <img
               src={Minions}

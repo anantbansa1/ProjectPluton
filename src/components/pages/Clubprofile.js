@@ -112,34 +112,34 @@ function ClubProfile(props) {
     points < currentClub.bronze
       ? Bronzebadge
       : points <= currentClub.silver
-      ? Silverbadge
-      : Goldbadge;
+        ? Silverbadge
+        : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points <= currentClub.silver
-      ? "silver"
-      : "gold";
+        ? "silver"
+        : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points <= currentClub.silver
-      ? currentClub.silver - points
-      : currentClub.gold - points;
+        ? currentClub.silver - points
+        : currentClub.gold - points;
 
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
       : points <= currentClub.silver
-      ? "text-[#d7d7d7]"
-      : "text-[#fee101]";
+        ? "text-[#d7d7d7]"
+        : "text-[#fee101]";
 
   useEffect(() => {
     console.log(clubName);
     fetchClub();
-    // fetchmembers();
+    fetchmembers();
   }, [clubName]);
 
   useEffect(() => {
@@ -150,7 +150,7 @@ function ClubProfile(props) {
 
   useEffect(() => {
     if (user) {
-      // fetchapplications();
+      fetchapplications();
       getmembersdetails();
     }
   }, [members]);
@@ -166,69 +166,100 @@ function ClubProfile(props) {
     let details = [];
     console.log("inside member details");
     members?.forEach(async (mem) => {
-      const docref = doc(db, "user", mem);
-      const docref2 = doc(db, "user", mem, "badges", clubName);
+      try {
 
-      const snapshot = await getDoc(docref);
-      const snapshot2 = await getDoc(docref2);
+        const docref = doc(db, "user", mem);
+        const docref2 = doc(db, "user", mem, "badges", clubName);
 
-      // console.log(11, mem);
-      let memimage, memname, membadge;
-      if (snapshot.data()) {
-        memimage = snapshot.data().profileimage;
-        memname = snapshot.data().name;
-      }
-      if (snapshot2) {
-        if (snapshot2.data()) {
-          membadge = snapshot2.data().type;
-        } else {
-          membadge = "none";
+        const snapshot = await getDoc(docref);
+        const snapshot2 = await getDoc(docref2);
+
+        // console.log(11, mem);
+        let memimage, memname, membadge;
+        if (snapshot.data()) {
+          memimage = snapshot.data().profileimage;
+          memname = snapshot.data().name;
         }
+        if (snapshot2) {
+          if (snapshot2.data()) {
+            membadge = snapshot2.data().type;
+          } else {
+            membadge = "none";
+          }
+        }
+        details.push({
+          memname: memname,
+          memimage: memimage,
+          membadge: membadge,
+        });
+      } catch (error) {
+        console.log("Firebase error!")
       }
-      details.push({
-        memname: memname,
-        memimage: memimage,
-        membadge: membadge,
-      });
     });
     console.log("15", details);
     setmemberdetails(details);
   }
 
-  useEffect(() => {
+  async function fetchapplications() {
+    let applications = []
     if (clubId) {
-      let applications = [];
-      const colRef = collection(db, "clubs", clubId, "Applications");
+      const colref = collection(db, 'clubs', clubId, 'Applications')
+      try {
 
-      // Listen for real-time updates
-      const unsub = onSnapshot(colRef, async (snapshot) => {
-        const changes = snapshot.docChanges();
-        for (const change of changes) {
-          if (change.type === "added") {
-            const usera = await getDoc(doc(db, "user", change.doc.id));
+        const snapshot = await getDocs(colref);
+        snapshot.forEach((element) => {
+          getDoc(doc(db, 'user', element.id)).then((usera) => {
+            console.log('here')
+
             const d = usera.data();
-            applications.push({
-              name: d.name,
-              rollno: change.doc.id,
-              profileimage: d.profileimage,
-            });
-          } else if (change.type === "removed") {
-            applications = applications.filter(
-              (application) => application.rollno !== change.doc.id
-            );
-          }
-        }
-        setapplication(applications, () => {
-          setpending(false);
-          setpending(true);
-        });
-      });
+            applications.push({ name: d.name, rollno: element.id, profileimage: d.profileimage })
+            console.log('here application now ', applications)
 
-      return () => {
-        unsub();
-      };
+          });
+        });
+      } catch (error) {
+        console.log('firebase error!')
+      }
+
+      console.log("applications ", applications)
+      setapplication(applications)
     }
-  }, [clubId]);
+  }
+
+  // useEffect(() => {
+  //   if (clubId) {
+  //     let applications = [];
+  //     const colRef = collection(db, "clubs", clubId, "Applications");
+
+  //     // Listen for real-time updates
+  //     const unsub = onSnapshot(colRef, async (snapshot) => {
+  //       const changes = snapshot.docChanges();
+  //       for (const change of changes) {
+  //         if (change.type === "added") {
+  //           const usera = await getDoc(doc(db, "user", change.doc.id));
+  //           const d = usera.data();
+  //           applications.push({
+  //             name: d.name,
+  //             rollno: change.doc.id,
+  //             profileimage: d.profileimage,
+  //           });
+  //         } else if (change.type === "removed") {
+  //           applications = applications.filter(
+  //             (application) => application.rollno !== change.doc.id
+  //           );
+  //         }
+  //       }
+  //       setapplication(applications, () => {
+  //         setpending(false);
+  //         setpending(true);
+  //       });
+  //     });
+
+  //     return () => {
+  //       unsub();
+  //     };
+  //   }
+  // }, [clubId]);
 
   // async function fetchapplications() {
   //   let applications = []
@@ -252,102 +283,116 @@ function ClubProfile(props) {
   //     setapplication(applications)
   // }
 
-  // async function fetchmembers() {
-  //   const q = query(collection(db, "clubs"), where("name", "==", clubName));
-  //   const snapshot = await getDocs(q);
-  //   if (snapshot) {
-  //     snapshot.forEach(async (club) => {
-  //       const clubid = club.id;
-  //       let memberarray = [];
-  //       console.log("club id: ", club.id);
-  //       setClubId(clubid);
-  //       const colref = collection(db, "clubs", clubid, "Members");
-  //       const memshot = await getDocs(colref);
-  //       if (memshot) {
-  //         memshot.forEach(async (temp) => {
-  //           memberarray.push(temp.id);
-  //           // console.log("temp :", temp.id);
-  //         });
-  //       }
-  //       setmember(memberarray);
-  //       setmemberscount(memberarray.length);
-  //     });
-  //   }
-  // }
+  async function fetchmembers() {
+    const q = query(collection(db, "clubs"), where("name", "==", clubName));
+    try {
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      const q = query(collection(db, 'clubs'), where('name', '==', clubName));
       const snapshot = await getDocs(q);
       if (snapshot) {
         snapshot.forEach(async (club) => {
           const clubid = club.id;
           let memberarray = [];
+          console.log("club id: ", club.id);
           setClubId(clubid);
-          const colRef = collection(db, 'clubs', clubid, 'Members');
-  
-          // Listen for real-time updates
-          const unsub = onSnapshot(colRef, (snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-              if (change.type === 'added') {
-                memberarray.push(change.doc.id);
-              } else if (change.type === 'removed') {
-                memberarray = memberarray.filter((member) => member !== change.doc.id);
-              }
+          const colref = collection(db, "clubs", clubid, "Members");
+          const memshot = await getDocs(colref);
+          if (memshot) {
+            memshot.forEach(async (temp) => {
+              memberarray.push(temp.id);
+              // console.log("temp :", temp.id);
             });
-            setmember(memberarray);
-            setmemberscount(memberarray.length);
-          });
-  
-          return () => {
-            unsub();
-          };
+          }
+          setmember(memberarray);
+          setmemberscount(memberarray.length);
         });
       }
-    };
-  
-    fetchMembers();
-  }, [clubName]);
-  
+    } catch (error) {
+      console.log('firebase error')
+    }
+  }
+
+  // useEffect(() => {
+  //   const fetchMembers = async () => {
+  //     const q = query(collection(db, 'clubs'), where('name', '==', clubName));
+  //     const snapshot = await getDocs(q);
+  //     if (snapshot) {
+  //       snapshot.forEach(async (club) => {
+  //         const clubid = club.id;
+  //         let memberarray = [];
+  //         setClubId(clubid);
+  //         const colRef = collection(db, 'clubs', clubid, 'Members');
+
+  //         // Listen for real-time updates
+  //         const unsub = onSnapshot(colRef, (snapshot) => {
+  //           snapshot.docChanges().forEach((change) => {
+  //             if (change.type === 'added') {
+  //               memberarray.push(change.doc.id);
+  //             } else if (change.type === 'removed') {
+  //               memberarray = memberarray.filter((member) => member !== change.doc.id);
+  //             }
+  //           });
+  //           setmember(memberarray);
+  //           setmemberscount(memberarray.length);
+  //         });
+
+  //         return () => {
+  //           unsub();
+  //         };
+  //       });
+  //     }
+  //   };
+
+  //   fetchMembers();
+  // }, [clubName]);
+
   async function getUserDetails() {
     const q = query(collection(db, "user"), where("email", "==", user.email));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (docp) => {
-      // console.log(docp.id, '=>', docp.data());
-      setUserData(docp.data());
-      setUserRollNo(docp.id);
-      console.log(docp.id);
-      const docref = doc(db, "user", docp.id, "clubs", clubName);
-      // console.log(clubName)
-      console.log("docref ", docref);
-      const docSnap = await getDoc(docref);
-      setLoading(false);
-      console.log("docsnap ", docSnap);
-      if (docSnap.exists()) {
-        console.log(docSnap.data());
-        setRole(docSnap.data().role);
-        setPoints(docSnap.data().points);
-      } else {
-        setRole("visitor");
-      }
-    });
+    try {
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (docp) => {
+        // console.log(docp.id, '=>', docp.data());
+        setUserData(docp.data());
+        setUserRollNo(docp.id);
+        console.log(docp.id);
+        const docref = doc(db, "user", docp.id, "clubs", clubName);
+        // console.log(clubName)
+        console.log("docref ", docref);
+        const docSnap = await getDoc(docref);
+        setLoading(false);
+        console.log("docsnap ", docSnap);
+        if (docSnap.exists()) {
+          console.log(docSnap.data());
+          setRole(docSnap.data().role);
+          setPoints(docSnap.data().points);
+        } else {
+          setRole("visitor");
+        }
+      });
+    } catch (error) {
+      console.log('firebase error!')
+    }
   }
 
   async function fetchClub() {
     setLoading(true);
-    const clubs = await getDocs(collection(db, "clubs"));
-    if (clubs) {
-      let clubnames = [];
-      let flag = 0;
-      clubs.forEach((element) => {
-        const a = element.data()["name"];
-        clubnames.push(a);
-        if (a === clubName) {
-          setCurrentClub(element.data());
-          flag = 1;
-        }
-      });
-      if (flag === 0) navigate("/pagenotfound");
+    try {
+
+      const clubs = await getDocs(collection(db, "clubs"));
+      if (clubs) {
+        let clubnames = [];
+        let flag = 0;
+        clubs.forEach((element) => {
+          const a = element.data()["name"];
+          clubnames.push(a);
+          if (a === clubName) {
+            setCurrentClub(element.data());
+            flag = 1;
+          }
+        });
+        if (flag === 0) navigate("/pagenotfound");
+      }
+    } catch (error) {
+      console.log('firebase error')
     }
   }
   //////////////////////////////////////////images start////////////////////////////////////////////////////////
@@ -474,17 +519,22 @@ function ClubProfile(props) {
   async function handleapply() {
     const docref = doc(db, "user", userRollNo, "clubs", clubName);
     const payload = { role: "pending", points: 0 };
-    await setDoc(docref, payload);
-    const q = query(collection(db, "clubs"), where("name", "==", clubName));
-    const docs = await getDocs(q);
-    if (docs) {
-      docs.forEach(async (ele) => {
-        const docrefa = doc(db, "clubs", ele.id, "Applications", userRollNo);
-        const payloada = {};
-        await setDoc(docrefa, payloada);
-      });
+    try {
+
+      await setDoc(docref, payload);
+      const q = query(collection(db, "clubs"), where("name", "==", clubName));
+      const docs = await getDocs(q);
+      if (docs) {
+        docs.forEach(async (ele) => {
+          const docrefa = doc(db, "clubs", ele.id, "Applications", userRollNo);
+          const payloada = {};
+          await setDoc(docrefa, payloada);
+        });
+      }
+      setRole("pending");
+    } catch (error) {
+      console.log('firebase error')
     }
-    setRole("pending");
   }
   async function handleleave() {
     setleavedialog(true);
@@ -499,16 +549,21 @@ function ClubProfile(props) {
 
   const Leavebox = async () => {
     const docref = doc(db, "user", userRollNo, "clubs", clubName);
-    await deleteDoc(docref);
-    const q = query(collection(db, "clubs"), where("name", "==", clubName));
-    const docs = await getDocs(q);
-    if (docs) {
-      docs.forEach(async (ele) => {
-        const docrefa = doc(db, "clubs", ele.id, "Members", userRollNo);
-        await deleteDoc(docrefa);
-      });
+    try {
+
+      await deleteDoc(docref);
+      const q = query(collection(db, "clubs"), where("name", "==", clubName));
+      const docs = await getDocs(q);
+      if (docs) {
+        docs.forEach(async (ele) => {
+          const docrefa = doc(db, "clubs", ele.id, "Members", userRollNo);
+          await deleteDoc(docrefa);
+        });
+      }
+      setleavedialog(false);
+    } catch(error) {
+      console.log('firebase error')
     }
-    setleavedialog(false);
   };
 
   return (
@@ -538,9 +593,8 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${changeCover ? "" : "hidden"
+              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
@@ -648,38 +702,33 @@ function ClubProfile(props) {
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "hidden" : ""
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
+                  } ${color}`}
               >
                 {pointleft} points to {badge}
               </div>
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "" : "hidden"
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
+                  } ${color}`}
               >
                 {points} points
               </div>
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
                 style={{
                   width: ((points / currentClub.bronze) * 100).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
                 style={{
                   width:
                     (
@@ -690,31 +739,28 @@ function ClubProfile(props) {
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
               />
               <div
-                className={`row-start-1  ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+                className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
                 style={{
                   width:
                     points > currentClub.gold
                       ? "100%"
                       : (
-                          ((points - currentClub.silver) /
-                            (currentClub.gold - currentClub.silver)) *
-                          100
-                        ).toString() + "%",
+                        ((points - currentClub.silver) /
+                          (currentClub.gold - currentClub.silver)) *
+                        100
+                      ).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+                className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
             <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -742,9 +788,8 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${
-                underline === "post" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "post" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -752,9 +797,8 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${
-                underline === "poll" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "poll" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -1218,9 +1262,8 @@ function ClubProfile(props) {
                       />
 
                       <div
-                        className={`text-[${
-                          badgetype[element.membadge]
-                        }] font-semibold`}
+                        className={`text-[${badgetype[element.membadge]
+                          }] font-semibold`}
                       >
                         {element.memname}
                       </div>
@@ -1230,9 +1273,8 @@ function ClubProfile(props) {
                         <img
                           src={ClubImage}
                           alt=""
-                          className={`row-start-1 col-start-1 mx-auto border-4 border-[${
-                            badgetype[element.membadge]
-                          }] h-[50px] w-[50px] rounded-full  object-cover `}
+                          className={`row-start-1 col-start-1 mx-auto border-4 border-[${badgetype[element.membadge]
+                            }] h-[50px] w-[50px] rounded-full  object-cover `}
                         />
                       </div>
                     )}
