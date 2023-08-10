@@ -210,13 +210,13 @@ function ClubProfile(props) {
     const canvas = previewCanvasRef.current;
     canvas.toBlob((blob) => {
       const file = new File([blob], `${user?.email}.png`, {type: 'image/png'});
-      const storageRef = ref(storage, `images/${file.name}`);
+      const storageRef = ref(storage, `images/${user.email}.png`);
       uploadBytes(storageRef, file).then((snapshot) => {
         // console.log("Uploaded a blob or file!");
         getDownloadURL(storageRef)
           .then((u) => {
             setUrl(u);
-            console.log(u);
+            console.log(url);
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");
@@ -235,7 +235,7 @@ function ClubProfile(props) {
     const canvas = previewCanvasRefCover.current;
     canvas?.toBlob((blob) => {
       const file = new File([blob], `${user?.email}_1.png`, {type: 'image/png'});
-      const storageRef = ref(storage, `images/${file.name}`);
+      const storageRef = ref(storage, `images/${user.email}.png`);
       uploadBytes(storageRef, file).then((snapshot) => {
         // console.log("Uploaded a blob or file!");
         getDownloadURL(storageRef)
