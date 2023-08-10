@@ -50,6 +50,8 @@ import {
   setDoc,
   deleteDoc,
   onSnapshot,
+  updateDoc,
+  addDoc,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
@@ -98,48 +100,46 @@ function ClubProfile(props) {
   const [clubId, setClubId] = useState();
   const [application, setapplication] = useState();
 
-
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
     bronze: "#a77044",
     core: "#00ffff",
     none: "-",
-  }
+  };
 
   const image =
     points < currentClub.bronze
       ? Bronzebadge
       : points <= currentClub.silver
-        ? Silverbadge
-        : Goldbadge;
+      ? Silverbadge
+      : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points <= currentClub.silver
-        ? "silver"
-        : "gold";
+      ? "silver"
+      : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points <= currentClub.silver
-        ? currentClub.silver - points
-        : currentClub.gold - points;
+      ? currentClub.silver - points
+      : currentClub.gold - points;
 
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
       : points <= currentClub.silver
-        ? "text-[#d7d7d7]"
-        : "text-[#fee101]";
+      ? "text-[#d7d7d7]"
+      : "text-[#fee101]";
 
   useEffect(() => {
     console.log(clubName);
     fetchClub();
     fetchmembers();
-
   }, [clubName]);
 
   useEffect(() => {
@@ -155,8 +155,6 @@ function ClubProfile(props) {
     }
   }, [members]);
 
-
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -166,7 +164,7 @@ function ClubProfile(props) {
 
   async function getmembersdetails() {
     let details = [];
-    console.log("inside member details")
+    console.log("inside member details");
     members?.forEach(async (mem) => {
       const docref = doc(db, "user", mem);
       const docref2 = doc(db, "user", mem, "badges", clubName);
@@ -179,7 +177,6 @@ function ClubProfile(props) {
       if (snapshot.data()) {
         memimage = snapshot.data().profileimage;
         memname = snapshot.data().name;
-
       }
       if (snapshot2) {
         if (snapshot2.data()) {
@@ -188,9 +185,12 @@ function ClubProfile(props) {
           membadge = "none";
         }
       }
-      details.push({ memname: memname, memimage: memimage, membadge: membadge });
-
-    })
+      details.push({
+        memname: memname,
+        memimage: memimage,
+        membadge: membadge,
+      });
+    });
     console.log("15", details);
     setmemberdetails(details);
   }
@@ -198,33 +198,37 @@ function ClubProfile(props) {
   useEffect(() => {
     if (clubId) {
       let applications = [];
-      const colRef = collection(db, 'clubs', clubId, 'Application');
-  
+      const colRef = collection(db, "clubs", clubId, "Applications");
+
       // Listen for real-time updates
       const unsub = onSnapshot(colRef, async (snapshot) => {
         const changes = snapshot.docChanges();
         for (const change of changes) {
-          if (change.type === 'added') {
-            const usera = await getDoc(doc(db, 'user', change.doc.id));
+          if (change.type === "added") {
+            const usera = await getDoc(doc(db, "user", change.doc.id));
             const d = usera.data();
-            applications.push({ name: d.name, rollno: change.doc.id, profileimage: d.profileimage });
-          } else if (change.type === 'removed') {
-            applications = applications.filter((application) => application.rollno !== change.doc.id);
+            applications.push({
+              name: d.name,
+              rollno: change.doc.id,
+              profileimage: d.profileimage,
+            });
+          } else if (change.type === "removed") {
+            applications = applications.filter(
+              (application) => application.rollno !== change.doc.id
+            );
           }
         }
-        setapplication(applications, ()=>{
-          setpending(false)
-          setpending(true)
+        setapplication(applications, () => {
+          setpending(false);
+          setpending(true);
         });
       });
-  
+
       return () => {
         unsub();
       };
     }
   }, [clubId]);
-  
-  
 
   // async function fetchapplications() {
   //   let applications = []
@@ -466,7 +470,6 @@ function ClubProfile(props) {
     if (docs) {
       docs.forEach(async (ele) => {
         const docrefa = doc(db, "clubs", ele.id, "Members", userRollNo);
-        // const payloada = {};
         await deleteDoc(docrefa);
       });
     }
@@ -500,8 +503,9 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${changeCover ? "" : "hidden"
-              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${
+              changeCover ? "" : "hidden"
+            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
@@ -609,33 +613,38 @@ function ClubProfile(props) {
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
-                  } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                  points >= currentClub.gold ? "hidden" : ""
+                } ${color}`}
               >
                 {pointleft} points to {badge}
               </div>
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
-                  } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                  points >= currentClub.gold ? "" : "hidden"
+                } ${color}`}
               >
                 {points} points
               </div>
               <div
-                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
-                  } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+                className={`row-start-1 ${
+                  points < currentClub.bronze ? "" : "hidden"
+                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
                 style={{
                   width: ((points / currentClub.bronze) * 100).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
-                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+                className={`row-start-1 ${
+                  points < currentClub.bronze ? "" : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
               />
               <div
-                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
-                  ? ""
-                  : "hidden"
-                  } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                className={`row-start-1 ${
+                  points < currentClub.silver && points >= currentClub.bronze
+                    ? ""
+                    : "hidden"
+                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
                 style={{
                   width:
                     (
@@ -646,28 +655,31 @@ function ClubProfile(props) {
                 }}
               />
               <div
-                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
-                  ? ""
-                  : "hidden"
-                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                className={`row-start-1 ${
+                  points < currentClub.silver && points >= currentClub.bronze
+                    ? ""
+                    : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
               />
               <div
-                className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
-                  }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+                className={`row-start-1  ${
+                  points >= currentClub.silver ? "" : "hidden"
+                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
                 style={{
                   width:
                     points > currentClub.gold
                       ? "100%"
                       : (
-                        ((points - currentClub.silver) /
-                          (currentClub.gold - currentClub.silver)) *
-                        100
-                      ).toString() + "%",
+                          ((points - currentClub.silver) /
+                            (currentClub.gold - currentClub.silver)) *
+                          100
+                        ).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
-                  }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+                className={`row-start-1 ${
+                  points >= currentClub.silver ? "" : "hidden"
+                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
             <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -695,8 +707,9 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${underline === "post" ? "border-b" : ""
-                } border-white py-4  px-8`}
+              className={`${
+                underline === "post" ? "border-b" : ""
+              } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -704,8 +717,9 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${underline === "poll" ? "border-b" : ""
-                } border-white py-4  px-8`}
+              className={`${
+                underline === "poll" ? "border-b" : ""
+              } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -1168,7 +1182,11 @@ function ClubProfile(props) {
                         alt=""
                       />
 
-                      <div className={`text-[${badgetype[element.membadge]}] font-semibold`}>
+                      <div
+                        className={`text-[${
+                          badgetype[element.membadge]
+                        }] font-semibold`}
+                      >
                         {element.memname}
                       </div>
                     </div>
@@ -1177,14 +1195,15 @@ function ClubProfile(props) {
                         <img
                           src={ClubImage}
                           alt=""
-                          className={`row-start-1 col-start-1 mx-auto border-4 border-[${badgetype[element.membadge]}] h-[50px] w-[50px] rounded-full  object-cover `}
+                          className={`row-start-1 col-start-1 mx-auto border-4 border-[${
+                            badgetype[element.membadge]
+                          }] h-[50px] w-[50px] rounded-full  object-cover `}
                         />
                       </div>
-
                     )}
                   </div>
                 </>
-              )
+              );
             })}
 
             {/* <div className=" flex justify-between">
@@ -1247,7 +1266,6 @@ function ClubProfile(props) {
           }}
         >
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-
             {application?.map((element) => {
               return (
                 <div className="flex justify-between items-center">
@@ -1263,123 +1281,79 @@ function ClubProfile(props) {
                     </div>
                   </div>
                   <div className="flex space-x-5">
-                    <CheckCircle onClick={(e) => {
+                    <CheckCircle
+                      onClick={async (e) => {
+                        deleteDoc(
+                          doc(
+                            db,
+                            "clubs",
+                            clubId,
+                            "Applications",
+                            element.rollno
+                          )
+                        ).then(() => {
+                          setDoc(
+                            doc(db, "clubs", clubId, "Members", element.rollno),
+                            {}
+                          ).then(() => {
+                            updateDoc(
+                              doc(
+                                db,
+                                "user",
+                                element.rollno,
+                                "clubs",
+                                clubName
+                              ),
+                              {
+                                role: "member",
+                              }
+                            ).then(() => {
+                              console.log("deltedfromuseralso");
+                            });
+                          });
+                          // console.log("application deleted");
+                        });
+                      }}
+                      className="text-green-500 hover:text-green-600 cursor-pointer"
+                    ></CheckCircle>
+                    <Cancel
+                      onClick={async (e) => {
+                        console.log("delete");
+                        deleteDoc(
+                          doc(
+                            db,
+                            "clubs",
+                            clubId,
+                            "Applications",
+                            element.rollno
+                          )
+                        ).then(() => {
+                          console.log("application deleted");
+                          updateDoc(
+                            doc(db, "user", element.rollno, "clubs", clubName),
+                            {
+                              role: "visitor",
+                            }
+                          ).then(() => {
+                            console.log("deltedfromuseralso");
+                          });
+                        });
 
-                    }} className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                    <Cancel onClick={async (e) => {
-                      console.log('delete')
-                      deleteDoc(doc(db, 'clubs', clubId, 'Application', element.rollno)).then(()=>console.log('application deleted'))
-                      // fetchapplications();
-                      // console.log('user deleted');
-                    }} className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
+                        // fetchapplications();
+                        // console.log('user deleted');
+                      }}
+                      className="text-red-600 hover:text-red-700 cursor-pointer"
+                    ></Cancel>
                   </div>
                 </div>
-              )
+              );
             })}
 
-            {application.length===0 && (<div className="text-slate-400">Hmmm... nothing to show here.</div>)}
-            {/*  <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
+            {application?.length === 0 && (
+              <div className="text-slate-400">
+                Hmmm... nothing to show here.
               </div>
-              <div className="flex space-x-5">
-                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
-              </div>
-              <div className="flex space-x-5">
-                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
-              </div>
-              <div className="flex space-x-5">
-                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
-              </div>
-              <div className="flex space-x-5">
-                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
-              </div>
-              <div className="flex space-x-5">
-                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#d7d7d7] font-semibold">
-                  Deepanshu Pal
-                </div>
-              </div>
-              <div className="flex space-x-5">
-                <CheckCircle className="text-green-500 hover:text-green-600 cursor-pointer"></CheckCircle>
-                <Cancel className="text-red-600 hover:text-red-700 cursor-pointer"></Cancel>
-              </div>
-            </div> */}
+            )}
           </div>
         </DialogContent>
       </Dialog>
