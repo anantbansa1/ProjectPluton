@@ -453,6 +453,7 @@ function ClubProfile(props) {
   }
   async function handleleave() {
     setleavedialog(true);
+
     console.log("leave");
   }
   const handleClosefilter = () => {
@@ -474,6 +475,8 @@ function ClubProfile(props) {
       });
     }
     setleavedialog(false);
+    setRole("visitor");
+    fetchmembers();
   };
 
   return (
@@ -1387,7 +1390,10 @@ function ClubProfile(props) {
         fullWidth
         maxWidth="sm"
         keepMounted
-        onClose={() => setleavedialog(false)}
+        onClose={() => {
+          setleavedialog(false);
+          fetchmembers();
+        }}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
@@ -1402,7 +1408,10 @@ function ClubProfile(props) {
         <DialogActions>
           <Button
             variant=""
-            onClick={() => setleavedialog(false)}
+            onClick={() => {
+              setleavedialog(false);
+              fetchmembers();
+            }}
             sx={{ borderRadius: "15px" }}
           >
             No
