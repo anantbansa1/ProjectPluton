@@ -139,7 +139,7 @@ function ClubProfile(props) {
   useEffect(() => {
     console.log(clubName);
     fetchClub();
-    fetchmembers();
+    // fetchmembers();
   }, [clubName]);
 
   useEffect(() => {
@@ -252,28 +252,63 @@ function ClubProfile(props) {
   //     setapplication(applications)
   // }
 
-  async function fetchmembers() {
-    const q = query(collection(db, "clubs"), where("name", "==", clubName));
-    const snapshot = await getDocs(q);
-    if (snapshot) {
-      snapshot.forEach(async (club) => {
-        const clubid = club.id;
-        let memberarray = [];
-        console.log("club id: ", club.id);
-        setClubId(clubid);
-        const colref = collection(db, "clubs", clubid, "Members");
-        const memshot = await getDocs(colref);
-        if (memshot) {
-          memshot.forEach(async (temp) => {
-            memberarray.push(temp.id);
-            // console.log("temp :", temp.id);
+  // async function fetchmembers() {
+  //   const q = query(collection(db, "clubs"), where("name", "==", clubName));
+  //   const snapshot = await getDocs(q);
+  //   if (snapshot) {
+  //     snapshot.forEach(async (club) => {
+  //       const clubid = club.id;
+  //       let memberarray = [];
+  //       console.log("club id: ", club.id);
+  //       setClubId(clubid);
+  //       const colref = collection(db, "clubs", clubid, "Members");
+  //       const memshot = await getDocs(colref);
+  //       if (memshot) {
+  //         memshot.forEach(async (temp) => {
+  //           memberarray.push(temp.id);
+  //           // console.log("temp :", temp.id);
+  //         });
+  //       }
+  //       setmember(memberarray);
+  //       setmemberscount(memberarray.length);
+  //     });
+  //   }
+  // }
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const q = query(collection(db, 'clubs'), where('name', '==', clubName));
+      const snapshot = await getDocs(q);
+      if (snapshot) {
+        snapshot.forEach(async (club) => {
+          const clubid = club.id;
+          let memberarray = [];
+          setClubId(clubid);
+          const colRef = collection(db, 'clubs', clubid, 'Members');
+  
+          // Listen for real-time updates
+          const unsub = onSnapshot(colRef, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+              if (change.type === 'added') {
+                memberarray.push(change.doc.id);
+              } else if (change.type === 'removed') {
+                memberarray = memberarray.filter((member) => member !== change.doc.id);
+              }
+            });
+            setmember(memberarray);
+            setmemberscount(memberarray.length);
           });
-        }
-        setmember(memberarray);
-        setmemberscount(memberarray.length);
-      });
-    }
-  }
+  
+          return () => {
+            unsub();
+          };
+        });
+      }
+    };
+  
+    fetchMembers();
+  }, [clubName]);
+  
   async function getUserDetails() {
     const q = query(collection(db, "user"), where("email", "==", user.email));
     const querySnapshot = await getDocs(q);
