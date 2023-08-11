@@ -14,6 +14,7 @@ import React, { useCallback, useRef, useEffect } from "react";
 import ReactCrop from "react-image-crop";
 import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
+import { onSnapshot } from "firebase/firestore";
 
 import Rank1 from "../Images/rank1.png";
 import Rank2 from "../Images/rank2.png";
@@ -74,8 +75,8 @@ function ClubProfile(props) {
     Rank20,
     Rank20p,
   ];
-  const [prof, setprof] = useState({minion})
-  const [cov, setcov] = useState({Zoro})
+  const [prof, setprof] = useState({ minion });
+  const [cov, setcov] = useState({ Zoro });
   const currentUser = useAuth();
   // const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -107,8 +108,8 @@ function ClubProfile(props) {
         const docdata = doc.data();
         // console.log(doc.id, " => ", doc.data());
         setname(docdata["name"]);
-        setcov(docdata["coverimage"])
-        setprof(docdata["profileimage"])
+        setcov(docdata["coverimage"]);
+        setprof(docdata["profileimage"]);
 
         // console.log(doc.data()['profileimage'])
         console.log(doc.id);
@@ -117,8 +118,6 @@ function ClubProfile(props) {
     }
   }
 
-  // const query = collection (db, "user",doc.id,"medals");
-  // const [docs, loading, error] = useCollectionData(query) ;
   const s = collection(db, `user/${id}/medals`);
   const [docs, loadin, error] = useCollectionData(s);
   useEffect(() => {
@@ -133,11 +132,10 @@ function ClubProfile(props) {
     if (user) {
       up();
     }
-  }, [user,cov,prof]);
+  }, [user, cov, prof]);
 
   const t = collection(db, `user/${id}/medals`);
 
-  
   const [name, setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -180,7 +178,7 @@ function ClubProfile(props) {
   // const handleSubmit = () => {
   //   const storage = getStorage();
   //   const imageRef = ref(storage, "images/image.jpg");
-    
+
   //   const metadata = {
   //     contentType: 'image/jpeg',
   //   };
@@ -188,18 +186,18 @@ function ClubProfile(props) {
   //   // imageRef.putData(Rank1);
   //   uploadBytesResumable(imageRef, img, metadata)
   //     .then(() => {
-      //   getDownloadURL(imageRef)
-      //     .then((u) => {
-      //       setUrl(u);
-      //     })
-      //     .catch((error) => {
-      //       console.log(error.message, "error getting the image url");
-      //     });
-      //   setimg(null);
-      // })
-      // .catch((error) => {
-      //   console.log(error.message);
-      // });
+  //   getDownloadURL(imageRef)
+  //     .then((u) => {
+  //       setUrl(u);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.message, "error getting the image url");
+  //     });
+  //   setimg(null);
+  // })
+  // .catch((error) => {
+  //   console.log(error.message);
+  // });
   // };
 
   // console.log(user?.id);
@@ -209,48 +207,54 @@ function ClubProfile(props) {
     const storage = getStorage();
     const canvas = previewCanvasRef.current;
     canvas.toBlob((blob) => {
-      const file = new File([blob], `${user?.email}.png`, {type: 'image/png'});
-      const storageRef = ref(storage, `images/${user.email}.png`);
-      uploadBytes(storageRef, file).then((snapshot) => {
-        // console.log("Uploaded a blob or file!");
-        getDownloadURL(storageRef)
-          .then((u) => {
-            setUrl(u);
-            console.log(url);
-          })
-          .catch((error) => {
-            console.log(error.message, "error getting the image url");
-          });
-        setimg(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
+      const file = new File([blob], `${user?.email}.png`, {
+        type: "image/png",
       });
-    }, 'image/png');
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file)
+        .then((snapshot) => {
+          // console.log("Uploaded a blob or file!");
+          getDownloadURL(storageRef)
+            .then((u) => {
+              setUrl(u);
+              console.log(url);
+            })
+            .catch((error) => {
+              console.log(error.message, "error getting the image url");
+            });
+          setimg(null);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }, "image/png");
   };
-  
+
   //Edit Cover Image Backend
   const handleSubmit1 = (img) => {
     const storage = getStorage();
     const canvas = previewCanvasRefCover.current;
     canvas?.toBlob((blob) => {
-      const file = new File([blob], `${user?.email}_1.png`, {type: 'image/png'});
-      const storageRef = ref(storage, `images/${user.email}.png`);
-      uploadBytes(storageRef, file).then((snapshot) => {
-        // console.log("Uploaded a blob or file!");
-        getDownloadURL(storageRef)
-          .then((u) => {
-            setUrl1(u);
-          })
-          .catch((error) => {
-            console.log(error.message, "error getting the image url");
-          });
-        setimg1(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
+      const file = new File([blob], `${user?.email}_1.png`, {
+        type: "image/png",
       });
-    }, 'image/png');
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file)
+        .then((snapshot) => {
+          // console.log("Uploaded a blob or file!");
+          getDownloadURL(storageRef)
+            .then((u) => {
+              setUrl1(u);
+            })
+            .catch((error) => {
+              console.log(error.message, "error getting the image url");
+            });
+          setimg1(null);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }, "image/png");
   };
 
   // console.log(url);
@@ -383,6 +387,37 @@ function ClubProfile(props) {
   const handleCloseCover = () => {
     setOpenCover(false);
   };
+
+  // const s = collection(db, `user/${id}/medals`);
+  // const [docs, loadin, error] = useCollectionData(s);
+  // useEffect(() => {
+  //   if (docs) {
+  //     docs.map((d) => {
+  //       // console.log(d.rank);
+  //     });
+  //   }
+  // }, [docs]);
+
+  const [id2, setid2] = useState("");
+  const collectionRef = collection(db, `user/${id}/badges`);
+
+  useEffect(() => {
+    getDocs(collectionRef).then((d) => {
+      // console.log(d)
+      if(d){
+        d.forEach((dd) => {
+          const a = (dd.data()["type"]);
+          const b = (dd.id);
+          console.log(a);
+          console.log(b);
+        })
+      }
+     })
+  },[id]);
+  // console.log(id2);
+  
+  const badgetype = {     gold: "#fee101",     silver: "#d7d7d7",     bronze: "#a77044",     core: "#00ffff",     none: "-",   };
+  
 
   return (
     <div className="">
@@ -748,9 +783,7 @@ function ClubProfile(props) {
                   "&:hover": { background: "#100d1e" },
                 }}
                 onChange={() => handleChange()}
-                onClick={() => 
-                  profileinput.current.click()
-                }
+                onClick={() => profileinput.current.click()}
               >
                 Upload File{" "}
               </Button>
@@ -872,7 +905,6 @@ function ClubProfile(props) {
               "&:hover": { borderColor: "#0a0813", color: "white" },
             }}
             onClick={handleCloseCover}
-
           >
             Cancel{" "}
           </Button>
@@ -932,7 +964,7 @@ function ClubProfile(props) {
           setclubs(false);
         }}
         aria-describedby="alert-dialog-slide-description"
-       >
+      >
         <DialogTitle>
           <div className="">{"Clubs Joined"}</div>
         </DialogTitle>
@@ -991,21 +1023,20 @@ function ClubProfile(props) {
                   className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
                 />
 
-                  <div className="font-semibold">Sports Club</div>
-                </div>
-                <div className="grid grid-rows-1 items-center grid-cols-1">
-                  <img
-                    src={CoverImage}
-                    alt=""
-                    className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
-                  />
-                </div>
-              </div> */
+                <div className="font-semibold">Sports Club</div>
               </div>
-            
-          </DialogContent> 
+              <div className="grid grid-rows-1 items-center grid-cols-1">
+                <img
+                  src={CoverImage}
+                  alt=""
+                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
+                />
+              </div>
+            </div>{" "}
+            */
+          </div>
+        </DialogContent>
       </Dialog>
-        
     </div>
   );
 }
