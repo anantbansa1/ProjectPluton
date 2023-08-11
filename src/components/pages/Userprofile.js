@@ -418,28 +418,63 @@ function ClubProfile(props) {
     getDocs(collectionRef).then((d) => {
       let type_arr = [];
       let id_arr = [];
-      // console.log(d)
       if (d) {
         d.forEach((dd) => {
           const a = dd.data()["type"];
           const b = dd.id;
-          // console.log(a);
           type_arr.push(a);
-          // console.log(b);
           id_arr.push(b);
         });
       }
-      // console.log(type_arr);
       settype2(type_arr);
-      // console.log(id_arr);
       setid2(id_arr);
     });
   }, [id]);
-  // console.log(id2);
+  
   useEffect(() => {
-    // console.log(type2);
-    // console.log(id2);
+
   }, [id2, type2]);
+
+  const [clubimg , setclubimg] = useState();
+  
+  useEffect(() => {
+    const collectionref2 = collection(db,"clubs");
+    getDocs(collectionref2).then((d) => {
+      let imgg = [];
+      id2?.forEach((dd) => {
+        // console.log(2);
+        if(dd){
+          if(d){
+            // console.log(1);
+            d.forEach((search) => {
+              if(dd == search.data().name){
+                imgg.push(search.data().logo);
+              }
+            });
+          }
+        }
+      });
+      setclubimg(imgg);
+    });
+  },[id2])
+
+  useEffect(() => {
+    console.log(clubimg);
+  },[clubimg]);
+
+  // console.log(clubimg);
+  
+
+
+  const result = [];
+  for (let i = 0; i < type2?.length; i++) {
+    result.push({ key: type2[i], value: clubimg[i] });
+  }
+  useEffect(() => {
+    console.log(result);
+  },[clubimg]);
+
+
 
   const badgetype = {
     gold: "#fee101",
@@ -448,7 +483,8 @@ function ClubProfile(props) {
     core: "#00ffff",
     none: "-",
   };
-  console.log(type2);
+  // console.log(type2)
+
   return (
     <div className="">
       <Navbar selected="profile"></Navbar>
@@ -592,80 +628,19 @@ function ClubProfile(props) {
             </span>
           </div>
           <div className="flex max-[1300px]:justify-around flex-wrap">
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-            <div>
+            {/* <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1"> */}
+            {result?.map((d) => {
+              const b = badgetype[d.key];
+              return(
               <img
-                src={ClubImage}
+                src={d.value}
                 alt=""
-                className="mx-auto border-[5px] border-[#d7d7d7] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
+                className={`mx-auto border-[5px] border-[${b}] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover`}
               />
-              </div>
-              <div>
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto border-[5px] border-[#d7d7d7] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-              </div>
-              <div>
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto border-[5px] border-[#d7d7d7] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-              </div>
-              {/* <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
+              
+              )
+            })}
 
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-              </div>
-              <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-                </div>
-              <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-              </div>
-              <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              /> */}
-            </div>
           </div>
         </div>
       </div>
