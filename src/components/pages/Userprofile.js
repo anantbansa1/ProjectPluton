@@ -49,6 +49,7 @@ import { db } from "../../firebase";
 import { useAuth, upload } from "../../firebase";
 import { doc, setDoc, updateDoc, getDocs } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { onSnapshot } from "firebase/firestore";
 
 function ClubProfile(props) {
   // const medal_data = [
@@ -170,24 +171,24 @@ function ClubProfile(props) {
     Rank20,
     Rank20p,
   ];
-  const [prof, setprof] = useState({minion})
-  const [cov, setcov] = useState({Zoro})
-  const currentUser = useAuth();
-  // const [photo, setPhoto] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [photoURL, setPhotoURL] = useState(
-    "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-  );
+  // const [prof, setprof] = useState({minion})
+  // const [cov, setcov] = useState({Zoro})
+  // const currentUser = useAuth();
+  // // const [photo, setPhoto] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [photoURL, setPhotoURL] = useState(
+  //   "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+  // );
 
   // function handleClick() {
   //   upload(photo, currentUser, setLoading);
   // }
 
-  useEffect(() => {
-    if (currentUser?.photoURL) {
-      setPhotoURL(currentUser.photoURL);
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (currentUser?.photoURL) {
+  //     setPhotoURL(currentUser.photoURL);
+  //   }
+  // }, [currentUser]);
 
   // const q2 = collection(db, path);
   // const [doc2, error] = useCollectionData(query);
@@ -203,8 +204,11 @@ function ClubProfile(props) {
         const docdata = doc.data();
         // console.log(doc.id, " => ", doc.data());
         setname(docdata["name"]);
-        setcov(docdata["coverimage"])
-        setprof(docdata["profileimage"])
+        setUrl(docdata["profileimage"])
+        setUrl1(docdata["coverimage"])
+        setdes(docdata["desc"])
+        // setcov(docdata["coverimage"])
+        // setprof(docdata["profileimage"])
 
         // console.log(doc.data()['profileimage'])
         console.log(doc.id);
@@ -229,7 +233,7 @@ function ClubProfile(props) {
     if (user) {
       up();
     }
-  }, [user,cov,prof]);
+  }, [user]);
 
   const t = collection(db, `user/${id}/medals`);
 
@@ -255,10 +259,11 @@ function ClubProfile(props) {
   const [clubs, setclubs] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
-  const [img, setimg] = useState(null);
+  const [img, setimg] = useState("");
   const [url, setUrl] = useState("");
-  const [img1, setimg1] = useState(null);
+  const [img1, setimg1] = useState("");
   const [url1, setUrl1] = useState("");
+  const [des, setdes] = useState("")
 
   const image =
     props.clubpoint < props.tbronze
@@ -267,11 +272,11 @@ function ClubProfile(props) {
       ? Silverbadge
       : Goldbadge;
 
-  function handleChange(e) {
-    if (e.target.files[0]) {
-      setimg(e.target.files[0]);
-    }
-  }
+  // function handleChange(e) {
+  //   if (e.target.files[0]) {
+  //     setimg(e.target.files[0]);
+  //   }
+  // }
 
   // const handleSubmit = () => {
   //   const storage = getStorage();
@@ -297,6 +302,7 @@ function ClubProfile(props) {
       //   console.log(error.message);
       // });
   // };
+  // const docref = doc(db, `user`,id)
   const handleSubmit = (img) => {
     const storage = getStorage();
     const canvas = previewCanvasRef.current;
@@ -307,7 +313,11 @@ function ClubProfile(props) {
         // console.log("Uploaded a blob or file!");
         getDownloadURL(storageRef)
           .then((u) => {
+            const docref = doc(db, `user`,id)
             setUrl(u);
+            console.log(u);
+            console.log(id);
+            updateDoc(docref,{profileimage : u});
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");
@@ -320,6 +330,7 @@ function ClubProfile(props) {
     }, 'image/png');
   };
 
+  
 
   //Edit Cover Image Backend
   const handleSubmit1 = (img) => {
@@ -332,7 +343,9 @@ function ClubProfile(props) {
         // console.log("Uploaded a blob or file!");
         getDownloadURL(storageRef)
           .then((u) => {
+            const dc = doc(db, 'user',id)
             setUrl1(u);
+            updateDoc(dc,{coverimage : u });
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");
@@ -345,7 +358,15 @@ function ClubProfile(props) {
     }, 'image/png');
   };
 
-  const docref = doc(db, `user/${user?.id}`)
+  // getDocs(collectionGroup(db, "badges")).then((querySnapshot) => {
+  //   console.log(querySnapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+  // });
+
+
+
+
+
+  
   
   async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
@@ -475,6 +496,41 @@ function ClubProfile(props) {
     setOpenCover(false);
   };
 
+  // const badgetype = {     gold: "#fee101",     silver: "#d7d7d7",     bronze: "#a77044",     core: "#00ffff",     none: "-",   };
+
+  // const [badges2, setbadges2] = useState([]);
+  // useEffect(() => {
+  //   const collectionRef = collection(db, `user/${id}/badges`);
+  //   const query2 = query(collectionRef);
+  //   // const unsub = onSnapshot(query2, (snapshot) =>
+  //   //   setbadges2(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })
+  //   console.log(badges2)
+  //   return unsub;
+
+  // },[badges2]);
+  const [id2, setid2] = useState("");
+  const collectionRef = collection(db, `user/${id}/badges`);
+
+  useEffect(() => {
+    getDocs(collectionRef).then((d) => {
+      // console.log(d)
+      if(d){
+        d.forEach((dd) => {
+          const a = (dd.data()["type"]);
+          const b = (dd.id);
+          console.log(a);
+          console.log(b);
+        })
+      }
+     })
+  },[id]);
+  // console.log(id2);
+  
+  const badgetype = {     gold: "#fee101",     silver: "#d7d7d7",     bronze: "#a77044",     core: "#00ffff",     none: "-",   };
+  
+
+  
+
   return (
     <div className="">
       <Navbar selected="profile"></Navbar>
@@ -483,6 +539,7 @@ function ClubProfile(props) {
           <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
             <img
               src={url1}
+              key={id}
               alt=""
               className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
               onClick={handleClickOpenCover}
@@ -530,6 +587,7 @@ function ClubProfile(props) {
                 ) : (
                   <img
                     src={url}
+                    key= {id}
                     alt=""
                     className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
                   />
@@ -547,7 +605,7 @@ function ClubProfile(props) {
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
-            {props.desc}
+            {des}
           </div>
 
           <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1 max-[375px]:m-0  max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
@@ -609,11 +667,20 @@ function ClubProfile(props) {
         </div>
         <div className="flex max-lg:hidden flex-col w-[20vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
           <div className="p-4 max-lg:text-lg text-2xl">
+
             Badges &nbsp;
             <span className="text-green-500 font-semibold"> 3 </span>
           </div>
           <div className="flex max-[1300px]:justify-around flex-wrap">
             <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
+              <div>
+              <img
+                src={ClubImage}
+                alt=""
+                className="mx-auto border border-[#d7d7d7] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
+              />
+              </div>
+              {/* <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
               <img
                 src={image}
                 alt=""
@@ -625,8 +692,8 @@ function ClubProfile(props) {
                 alt=""
                 className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
               />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
+              </div>
+              <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
               <img
                 src={image}
                 alt=""
@@ -638,8 +705,8 @@ function ClubProfile(props) {
                 alt=""
                 className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
               />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
+                </div>
+              <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
               <img
                 src={image}
                 alt=""
@@ -651,8 +718,8 @@ function ClubProfile(props) {
                 alt=""
                 className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
               />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
+              </div>
+              <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
               <img
                 src={image}
                 alt=""
@@ -663,20 +730,7 @@ function ClubProfile(props) {
                 src={ClubImage}
                 alt=""
                 className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-            </div>
-            <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
-              <img
-                src={image}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] w-[70px] h-[70px] object-cover "
-              />
-
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
+              /> */}
             </div>
           </div>
         </div>
@@ -838,7 +892,7 @@ function ClubProfile(props) {
                   background: "#130f22",
                   "&:hover": { background: "#100d1e" },
                 }}
-                onChange={() => handleChange()}
+                // onChange={() => handleChange()}
                 onClick={() => 
                   profileinput.current.click()
                 }
@@ -890,7 +944,6 @@ function ClubProfile(props) {
             onClick={() => {
               SaveChanges(previewCanvasRef.current, completedCrop);
               handleSubmit(url);
-              setDoc(docref, {profileimage : url})
             }}
           >
             save changes{" "}
@@ -938,7 +991,7 @@ function ClubProfile(props) {
                   background: "#130f22",
                   "&:hover": { background: "#100d1e" },
                 }}
-                onChange={() => handleChange()}
+                // onChange={() => handleChange()}
                 onClick={() => Coverinput.current.click()}
               >
                 Upload File{" "}
@@ -991,7 +1044,6 @@ function ClubProfile(props) {
                 completedCropCover
               );
               handleSubmit1(url1);
-              
             }}
           >
             save changes{" "}
