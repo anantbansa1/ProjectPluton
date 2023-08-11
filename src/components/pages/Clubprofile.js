@@ -53,6 +53,7 @@ import {
   updateDoc,
   addDoc,
 } from "firebase/firestore";
+import { uploadBytes, getStorage, getDownloadURL, ref } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -60,11 +61,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 function ClubProfile(props) {
-  //{clubID: clubname}
   const clubName = useParams().clubID;
   const navigate = useNavigate();
   const [profile, setprofile] = useState(true);
-  const [ClubImage, setclubimage] = useState(props.clubimage);
+  const [ClubImage, setclubimage] = useState(
+    "https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/images%2Fgroup-default-pic.png?alt=media&token=fd5eddbc-91ab-42db-aee1-1fbd89bcc0d8"
+  );
   const [CoverImage, setcoverimage] = useState(props.coverimage);
   const [open, setOpen] = React.useState(false);
   const [openCover, setOpenCover] = React.useState(false);
@@ -99,7 +101,10 @@ function ClubProfile(props) {
   const [memberdetails, setmemberdetails] = useState();
   const [clubId, setClubId] = useState();
   const [application, setapplication] = useState();
-
+  const [img, setimg] = useState("");
+  const [url, setUrl] = useState("");
+  const [img1, setimg1] = useState("");
+  const [url1, setUrl1] = useState("");
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -107,28 +112,24 @@ function ClubProfile(props) {
     core: "#00ffff",
     none: "-",
   };
-
   const image =
     points < currentClub.bronze
       ? Bronzebadge
       : points <= currentClub.silver
       ? Silverbadge
       : Goldbadge;
-
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points <= currentClub.silver
       ? "silver"
       : "gold";
-
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points <= currentClub.silver
       ? currentClub.silver - points
       : currentClub.gold - points;
-
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
@@ -139,7 +140,6 @@ function ClubProfile(props) {
   useEffect(() => {
     console.log(clubName);
     fetchClub();
-    fetchmembers();
   }, [clubName]);
 
   useEffect(() => {
@@ -230,50 +230,42 @@ function ClubProfile(props) {
     }
   }, [clubId]);
 
-  // async function fetchapplications() {
-  //   let applications = []
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const q = query(collection(db, "clubs"), where("name", "==", clubName));
+      const snapshot = await getDocs(q);
+      if (snapshot) {
+        snapshot.forEach(async (club) => {
+          const clubid = club.id;
+          let memberarray = [];
+          setClubId(clubid);
+          const colRef = collection(db, "clubs", clubid, "Members");
 
-  //     const colref = collection(db, 'clubs', clubId, 'Application')
-  //     const snapshot = await getDocs(colref);
-
-  //     snapshot.forEach((element) => {
-  //         // console.log('hello in loop', clubId)
-  //         getDoc(doc(db, 'user', element.id)).then((usera) => {
-  //           console.log('here')
-
-  //           const d = usera.data();
-  //           applications.push({ name: d.name, rollno: element.id, profileimage: d.profileimage })
-  //           console.log('here application now ', applications)
-
-  //         });
-  //       });
-
-  //     console.log("applications ", applications)
-  //     setapplication(applications)
-  // }
-
-  async function fetchmembers() {
-    const q = query(collection(db, "clubs"), where("name", "==", clubName));
-    const snapshot = await getDocs(q);
-    if (snapshot) {
-      snapshot.forEach(async (club) => {
-        const clubid = club.id;
-        let memberarray = [];
-        console.log("club id: ", club.id);
-        setClubId(clubid);
-        const colref = collection(db, "clubs", clubid, "Members");
-        const memshot = await getDocs(colref);
-        if (memshot) {
-          memshot.forEach(async (temp) => {
-            memberarray.push(temp.id);
-            // console.log("temp :", temp.id);
+          // Listen for real-time updates
+          const unsub = onSnapshot(colRef, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+              if (change.type === "added") {
+                memberarray.push(change.doc.id);
+              } else if (change.type === "removed") {
+                memberarray = memberarray.filter(
+                  (member) => member !== change.doc.id
+                );
+              }
+            });
+            setmember(memberarray);
+            setmemberscount(memberarray.length);
           });
-        }
-        setmember(memberarray);
-        setmemberscount(memberarray.length);
-      });
-    }
-  }
+
+          return () => {
+            unsub();
+          };
+        });
+      }
+    };
+
+    fetchMembers();
+  }, [clubName]);
+
   async function getUserDetails() {
     const q = query(collection(db, "user"), where("email", "==", user.email));
     const querySnapshot = await getDocs(q);
@@ -310,6 +302,9 @@ function ClubProfile(props) {
         if (a === clubName) {
           setCurrentClub(element.data());
           flag = 1;
+          setclubimage(element.data().logo);
+          setcoverimage(element.data().coverimage);
+          console.log(17, currentClub);
         }
       });
       if (flag === 0) navigate("/pagenotfound");
@@ -328,7 +323,35 @@ function ClubProfile(props) {
         setclubimage(Imageuse);
       }, "image/png");
     }
+    handleSubmit();
   }
+  const handleSubmit = () => {
+    const storage = getStorage();
+    const canvas = previewCanvasRef.current;
+    canvas.toBlob((blob) => {
+      const file = new File([blob], `${clubName}.png`, {
+        type: "image/png",
+      });
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file)
+        .then((snapshot) => {
+          // console.log("Uploaded a blob or file!");
+          getDownloadURL(storageRef)
+            .then((u) => {
+              const docref = doc(db, `clubs`, clubId);
+              setUrl(u);
+              updateDoc(docref, { logo: u });
+            })
+            .catch((error) => {
+              console.log(error.message, "error getting the image url");
+            });
+          setimg(null);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }, "image/png");
+  };
 
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
@@ -384,7 +407,33 @@ function ClubProfile(props) {
         setcoverimage(Imageuse);
       }, "image/png");
     }
+    handleSubmitcover();
   }
+  const handleSubmitcover = () => {
+    const storage = getStorage();
+    const canvas = previewCanvasRefCover.current;
+    canvas?.toBlob((blob) => {
+      const file = new File([blob], `${clubName}_1.png`, { type: "image/png" });
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file)
+        .then((snapshot) => {
+          // console.log("Uploaded a blob or file!");
+          getDownloadURL(storageRef)
+            .then((u) => {
+              const dc = doc(db, "clubs", clubId);
+              setUrl1(u);
+              updateDoc(dc, { coverimage: u });
+            })
+            .catch((error) => {
+              console.log(error.message, "error getting the image url");
+            });
+          setimg1(null);
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }, "image/png");
+  };
   function setCanvasImageCover(image, canvas, crop) {
     if (!crop || !canvas || !image) {
       return;
@@ -476,7 +525,6 @@ function ClubProfile(props) {
     }
     setleavedialog(false);
     setRole("visitor");
-    fetchmembers();
   };
 
   return (
@@ -787,8 +835,6 @@ function ClubProfile(props) {
               alt=""
               className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
             />
-            {/* <div className="max-md:text-sm">{props.name}</div> */}
-
             <Link
               to="/add"
               className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4"
@@ -796,11 +842,6 @@ function ClubProfile(props) {
               Add a Post/Poll
             </Link>
           </div>
-          {/* <div className="my-5"><img src={props.image}   alt="" /></div> */}
-          {/* <div className="flex items-center text-lg max-md:text-sm text-[#dddbdb] ">
-            <span className="font-bold text-white">{props.name}</span>{" "}
-
-          </div> */}
         </div>
       </div>
 
@@ -1136,8 +1177,6 @@ function ClubProfile(props) {
             padding: "15px",
           },
         }}
-        // TransitionComponent={Transition}
-        // fullWidth
         height={50}
         keepMounted
         onClose={() => {
@@ -1164,16 +1203,13 @@ function ClubProfile(props) {
         <DialogContent
           sx={{
             overflow: "auto",
-            scrollbarWidth: "none", // Hide the scrollbar for Firefox
+            scrollbarWidth: "none",
             "&::-webkit-scrollbar": {
-              display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+              display: "none",
             },
           }}
         >
-          {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
-
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            {/* {console.log("member detailas: ", memberdetails)} */}
             {memberdetails?.map((element) => {
               return (
                 <>
@@ -1188,7 +1224,7 @@ function ClubProfile(props) {
                       <div
                         className={`text-[${
                           badgetype[element.membadge]
-                        }] font-semibold`}
+                        }] font-semibold `}
                       >
                         {element.memname}
                       </div>
@@ -1208,27 +1244,6 @@ function ClubProfile(props) {
                 </>
               );
             })}
-
-            {/* <div className=" flex justify-between">
-              <div className="flex items-center space-x-2">
-                <img
-                  src={Zoro}
-                  className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                  alt=""
-                />
-
-                <div className="text-[#00ffff] font-semibold">
-                  Shubham Yadav
-                </div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#00ffff] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-              </div> */}
           </div>
         </DialogContent>
       </Dialog>
@@ -1341,9 +1356,6 @@ function ClubProfile(props) {
                             console.log("deltedfromuseralso");
                           });
                         });
-
-                        // fetchapplications();
-                        // console.log('user deleted');
                       }}
                       className="text-red-600 hover:text-red-700 cursor-pointer"
                     ></Cancel>
@@ -1386,14 +1398,10 @@ function ClubProfile(props) {
             backdropFilter: "blur(20px)",
           },
         }}
-        // TransitionComponent={Transition}
         fullWidth
         maxWidth="sm"
         keepMounted
-        onClose={() => {
-          setleavedialog(false);
-          fetchmembers();
-        }}
+        onClose={() => setleavedialog(false)}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
@@ -1408,10 +1416,7 @@ function ClubProfile(props) {
         <DialogActions>
           <Button
             variant=""
-            onClick={() => {
-              setleavedialog(false);
-              fetchmembers();
-            }}
+            onClick={() => setleavedialog(false)}
             sx={{ borderRadius: "15px" }}
           >
             No
@@ -1429,5 +1434,4 @@ function ClubProfile(props) {
     </div>
   );
 }
-
 export default ClubProfile;
