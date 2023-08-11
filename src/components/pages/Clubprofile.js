@@ -58,14 +58,15 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { uploadBytes, getStorage, getDownloadURL, ref } from "firebase/storage";
 
 function ClubProfile(props) {
   //{clubID: clubname}
   const clubName = useParams().clubID;
   const navigate = useNavigate();
   const [profile, setprofile] = useState(true);
-  const [ClubImage, setclubimage] = useState(props.clubimage);
-  const [CoverImage, setcoverimage] = useState(props.coverimage);
+  const [ClubImage, setclubimage] = useState("https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/images%2Fgroup-default-pic.png?alt=media&token=fd5eddbc-91ab-42db-aee1-1fbd89bcc0d8");
+  const [CoverImage, setcoverimage] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/cover.jpg?alt=media&token=4c48d4ed-e7ff-4cac-b3f9-919863e73930');
   const [open, setOpen] = React.useState(false);
   const [openCover, setOpenCover] = React.useState(false);
   const [upImg, setUpImg] = useState(ClubImage);
@@ -139,7 +140,7 @@ function ClubProfile(props) {
   useEffect(() => {
     console.log(clubName);
     fetchClub();
-    fetchmembers();
+    // fetchmembers();
   }, [clubName]);
 
   useEffect(() => {
@@ -150,7 +151,7 @@ function ClubProfile(props) {
 
   useEffect(() => {
     if (user) {
-      fetchapplications();
+      // fetchapplications();
       getmembersdetails();
     }
   }, [members]);
@@ -200,66 +201,71 @@ function ClubProfile(props) {
     setmemberdetails(details);
   }
 
-  async function fetchapplications() {
-    let applications = []
+  // async function fetchapplications() {
+  //   let applications = []
+  //   if (clubId) {
+  //     const colref = collection(db, 'clubs', clubId, 'Applications')
+  //     try {
+
+  //       const snapshot = await getDocs(colref);
+  //       snapshot.forEach((element) => {
+  //         getDoc(doc(db, 'user', element.id)).then((usera) => {
+  //           console.log('here')
+
+  //           const d = usera.data();
+  //           applications.push({ name: d.name, rollno: element.id, profileimage: d.profileimage })
+  //           console.log('here application now ', applications)
+
+  //         });
+  //       });
+  //     } catch (error) {
+  //       console.log('firebase error!')
+  //     }
+
+  //     console.log("applications ", applications)
+  //     setapplication(applications)
+  //   }
+  // }
+
+  useEffect(() => {
     if (clubId) {
-      const colref = collection(db, 'clubs', clubId, 'Applications')
+      let applications = [];
+      const colRef = collection(db, "clubs", clubId, "Applications");
+
+      // Listen for real-time updates
       try {
 
-        const snapshot = await getDocs(colref);
-        snapshot.forEach((element) => {
-          getDoc(doc(db, 'user', element.id)).then((usera) => {
-            console.log('here')
-
-            const d = usera.data();
-            applications.push({ name: d.name, rollno: element.id, profileimage: d.profileimage })
-            console.log('here application now ', applications)
-
+        const unsub = onSnapshot(colRef, async (snapshot) => {
+          const changes = snapshot.docChanges();
+          for (const change of changes) {
+            if (change.type === "added") {
+              const usera = await getDoc(doc(db, "user", change.doc.id));
+              const d = usera.data();
+              applications.push({
+                name: d.name,
+                rollno: change.doc.id,
+                profileimage: d.profileimage,
+              });
+            } else if (change.type === "removed") {
+              applications = applications.filter(
+                (application) => application.rollno !== change.doc.id
+              );
+            }
+          }
+          setapplication(applications, () => {
+            setpending(false);
+            setpending(true);
           });
         });
+
+        return () => {
+          unsub();
+        };
       } catch (error) {
-        console.log('firebase error!')
+        console.log('firebase error')
       }
-
-      console.log("applications ", applications)
-      setapplication(applications)
     }
-  }
-
-  // useEffect(() => {
-  //   if (clubId) {
-  //     let applications = [];
-  //     const colRef = collection(db, "clubs", clubId, "Applications");
-
-  //     // Listen for real-time updates
-  //     const unsub = onSnapshot(colRef, async (snapshot) => {
-  //       const changes = snapshot.docChanges();
-  //       for (const change of changes) {
-  //         if (change.type === "added") {
-  //           const usera = await getDoc(doc(db, "user", change.doc.id));
-  //           const d = usera.data();
-  //           applications.push({
-  //             name: d.name,
-  //             rollno: change.doc.id,
-  //             profileimage: d.profileimage,
-  //           });
-  //         } else if (change.type === "removed") {
-  //           applications = applications.filter(
-  //             (application) => application.rollno !== change.doc.id
-  //           );
-  //         }
-  //       }
-  //       setapplication(applications, () => {
-  //         setpending(false);
-  //         setpending(true);
-  //       });
-  //     });
-
-  //     return () => {
-  //       unsub();
-  //     };
-  //   }
-  // }, [clubId]);
+  }, [clubId]);
 
   // async function fetchapplications() {
   //   let applications = []
@@ -283,67 +289,72 @@ function ClubProfile(props) {
   //     setapplication(applications)
   // }
 
-  async function fetchmembers() {
-    const q = query(collection(db, "clubs"), where("name", "==", clubName));
-    try {
+  // async function fetchmembers() {
+  //   const q = query(collection(db, "clubs"), where("name", "==", clubName));
+  //   try {
 
-      const snapshot = await getDocs(q);
-      if (snapshot) {
-        snapshot.forEach(async (club) => {
-          const clubid = club.id;
-          let memberarray = [];
-          console.log("club id: ", club.id);
-          setClubId(clubid);
-          const colref = collection(db, "clubs", clubid, "Members");
-          const memshot = await getDocs(colref);
-          if (memshot) {
-            memshot.forEach(async (temp) => {
-              memberarray.push(temp.id);
-              // console.log("temp :", temp.id);
-            });
-          }
-          setmember(memberarray);
-          setmemberscount(memberarray.length);
-        });
-      }
-    } catch (error) {
-      console.log('firebase error')
-    }
-  }
-
-  // useEffect(() => {
-  //   const fetchMembers = async () => {
-  //     const q = query(collection(db, 'clubs'), where('name', '==', clubName));
   //     const snapshot = await getDocs(q);
   //     if (snapshot) {
   //       snapshot.forEach(async (club) => {
   //         const clubid = club.id;
   //         let memberarray = [];
+  //         console.log("club id: ", club.id);
   //         setClubId(clubid);
-  //         const colRef = collection(db, 'clubs', clubid, 'Members');
-
-  //         // Listen for real-time updates
-  //         const unsub = onSnapshot(colRef, (snapshot) => {
-  //           snapshot.docChanges().forEach((change) => {
-  //             if (change.type === 'added') {
-  //               memberarray.push(change.doc.id);
-  //             } else if (change.type === 'removed') {
-  //               memberarray = memberarray.filter((member) => member !== change.doc.id);
-  //             }
+  //         const colref = collection(db, "clubs", clubid, "Members");
+  //         const memshot = await getDocs(colref);
+  //         if (memshot) {
+  //           memshot.forEach(async (temp) => {
+  //             memberarray.push(temp.id);
+  //             // console.log("temp :", temp.id);
   //           });
-  //           setmember(memberarray);
-  //           setmemberscount(memberarray.length);
-  //         });
-
-  //         return () => {
-  //           unsub();
-  //         };
+  //         }
+  //         setmember(memberarray);
+  //         setmemberscount(memberarray.length);
   //       });
   //     }
-  //   };
+  //   } catch (error) {
+  //     console.log('firebase error')
+  //   }
+  // }
 
-  //   fetchMembers();
-  // }, [clubName]);
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const q = query(collection(db, 'clubs'), where('name', '==', clubName));
+      const snapshot = await getDocs(q);
+      try {
+
+        if (snapshot) {
+          snapshot.forEach(async (club) => {
+            const clubid = club.id;
+            let memberarray = [];
+            setClubId(clubid);
+            const colRef = collection(db, 'clubs', clubid, 'Members');
+
+            // Listen for real-time updates
+            const unsub = onSnapshot(colRef, (snapshot) => {
+              snapshot.docChanges().forEach((change) => {
+                if (change.type === 'added') {
+                  memberarray.push(change.doc.id);
+                } else if (change.type === 'removed') {
+                  memberarray = memberarray.filter((member) => member !== change.doc.id);
+                }
+              });
+              setmember(memberarray);
+              setmemberscount(memberarray.length);
+            });
+
+            return () => {
+              unsub();
+            };
+          });
+        }
+      } catch (error) {
+        console.log('firebase error');
+      }
+    };
+
+    fetchMembers();
+  }, [clubName]);
 
   async function getUserDetails() {
     const q = query(collection(db, "user"), where("email", "==", user.email));
@@ -386,6 +397,8 @@ function ClubProfile(props) {
           clubnames.push(a);
           if (a === clubName) {
             setCurrentClub(element.data());
+            setclubimage(element.data().logo);
+            setcoverimage(element.data().coverimage);
             flag = 1;
           }
         });
@@ -408,7 +421,34 @@ function ClubProfile(props) {
         setclubimage(Imageuse);
       }, "image/png");
     }
+    handleSubmit();
   }
+
+  const handleSubmit = () => {
+    const storage = getStorage();
+    const canvas = previewCanvasRef.current;
+    canvas.toBlob((blob) => {
+      const file = new File([blob], `${clubName}.png`, {
+        type: "image/png",
+      });
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file)
+        .then((snapshot) => {
+          // console.log("Uploaded a blob or file!");
+          getDownloadURL(storageRef)
+            .then((u) => {
+              const docref = doc(db, `clubs`, clubId);
+              updateDoc(docref, { logo: u });
+            })
+            .catch((error) => {
+              console.log(error.message, "error getting the image url");
+            });
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }, "image/png");
+  };
 
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
@@ -464,7 +504,35 @@ function ClubProfile(props) {
         setcoverimage(Imageuse);
       }, "image/png");
     }
+    handleSubmitCover();
   }
+  const handleSubmitCover = ()=> {
+    const storage = getStorage();
+    const canvas = previewCanvasRefCover.current;
+    canvas.toBlob((blob) => {
+      const file = new File([blob], `${clubName}_1.png`, {
+        type: "image/png",
+      });
+      const storageRef = ref(storage, `images/${file.name}`);
+      uploadBytes(storageRef, file)
+        .then((snapshot) => {
+          // console.log("Uploaded a blob or file!");
+          getDownloadURL(storageRef)
+            .then((u) => {
+              const docref = doc(db, `clubs`, clubId);
+              updateDoc(docref, { coverimage: u });
+            })
+            .catch((error) => {
+              console.log(error.message, "error getting the image url");
+            });
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }, "image/png");
+
+  }
+
   function setCanvasImageCover(image, canvas, crop) {
     if (!crop || !canvas || !image) {
       return;
@@ -561,7 +629,7 @@ function ClubProfile(props) {
         });
       }
       setleavedialog(false);
-    } catch(error) {
+    } catch (error) {
       console.log('firebase error')
     }
   };
@@ -1253,6 +1321,7 @@ function ClubProfile(props) {
             {memberdetails?.map((element) => {
               return (
                 <>
+                  {/* {console.log('1',badgetype[element.membadge])} */}
                   <div className=" flex justify-between">
                     <div className="flex items-center space-x-2 ">
                       <img
@@ -1262,9 +1331,7 @@ function ClubProfile(props) {
                       />
 
                       <div
-                        className={`text-[${badgetype[element.membadge]
-                          }] font-semibold`}
-                      >
+                        className={`text-[${badgetype[element.membadge]}] font-semibold`}>
                         {element.memname}
                       </div>
                     </div>
@@ -1273,8 +1340,7 @@ function ClubProfile(props) {
                         <img
                           src={ClubImage}
                           alt=""
-                          className={`row-start-1 col-start-1 mx-auto border-4 border-[${badgetype[element.membadge]
-                            }] h-[50px] w-[50px] rounded-full  object-cover `}
+                          className={`row-start-1 col-start-1 mx-auto border-4  border-[${badgetype[element.membadge]}] h-[50px] w-[50px] rounded-full  object-cover `}
                         />
                       </div>
                     )}
