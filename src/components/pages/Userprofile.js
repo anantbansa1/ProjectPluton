@@ -678,6 +678,20 @@ function ClubProfile(props) {
           {!medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
               <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
+                
+                <img
+                  src={image}
+                  alt=""
+                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
+                />
+
+                <img
+                  src={ClubImage}
+                  alt=""
+                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
+                />
+              </div>
+              {/* <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
                 <img
                   src={image}
                   alt=""
@@ -741,20 +755,7 @@ function ClubProfile(props) {
                   alt=""
                   className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
                 />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
+              </div> */}
             </div>
           )}
         </div>
@@ -999,22 +1000,7 @@ function ClubProfile(props) {
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
             <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-                <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
-
-                <div className="font-semibold">Music Club</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
+              
             </div>
             <div className=" flex justify-between">
               <div className="flex items-center space-x-2 ">
