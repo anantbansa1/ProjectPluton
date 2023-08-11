@@ -430,7 +430,7 @@ function ClubProfile(props) {
         });
       }
       // console.log(type_arr);
-      settype2(type_arr);
+      // console.log(type_arr[0]);
       // console.log(id_arr);
       setid2(id_arr);
     });
@@ -448,7 +448,7 @@ function ClubProfile(props) {
     core: "#00ffff",
     none: "-",
   };
-  console.log(type2);
+  // console.log(type2);
   return (
     <div className="">
       <Navbar selected="profile"></Navbar>
@@ -594,6 +594,15 @@ function ClubProfile(props) {
           <div className="flex max-[1300px]:justify-around flex-wrap">
             <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
             <div>
+              {type2?.type2.map((d)=>{
+              <img
+                src={ClubImage}
+                alt=""
+                className="mx-auto border-[5px]  row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
+              />
+              })}
+              </div>
+              {/* <div>
               <img
                 src={ClubImage}
                 alt=""
@@ -606,14 +615,7 @@ function ClubProfile(props) {
                 alt=""
                 className="mx-auto border-[5px] border-[#d7d7d7] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
               />
-              </div>
-              <div>
-              <img
-                src={ClubImage}
-                alt=""
-                className="mx-auto border-[5px] border-[#d7d7d7] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[45px] w-[45px] rounded-full  object-cover "
-              />
-              </div>
+              </div> */}
               {/* <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1">
               <img
                 src={image}
