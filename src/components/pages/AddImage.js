@@ -15,17 +15,17 @@ import { Button } from "@mui/material";
 import def_img from "../Images/def_img.jpg";
 
 function Image() {
-  const [CoverImage, setcoverimage] =useState(null);
+  const [CoverImage, setcoverimage] = useState(null);
   const [upImgCover, setUpImgCover] = useState(CoverImage);
   const imgRefCover = useRef(null);
   const previewCanvasRefCover = useRef(null);
   const [cropCover, setCropCover] = useState({ aspect: 1, height: 80 });
   const [completedCropCover, setCompletedCropCover] = useState(null);
   const [completedCrop, setCompletedCrop] = useState(null);
- const [changeCover, setChangeCover] = useState(false);
+  const [changeCover, setChangeCover] = useState(false);
   const [openCover, setOpenCover] = React.useState(false);
-  const uploadRef= useRef(null);
-  
+  const uploadRef = useRef(null);
+
   const [file, setFile] = useState();
   const Coverinput = useRef(null);
   function handleChange(e) {
@@ -104,60 +104,59 @@ function Image() {
     <div className="max-md:h-[62vw]">
       {/* <Navbar></Navbar> */}
       <div className="flex justify-center align-middle max-md:ml-[-10vw] ml-[-15vw] h-[40vw] max-[767px]:h-[60vw] w-[80vw]">
-     
+
         <div className="flex flex-col items-center ml-[20vw] max-md:ml-[15vw] my-5 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw]">
           <div className="mb-[3vw]">
             <div className="max-[414px]:ml-[0vw] ">
               <div className="grid grid-rows-1 grid-cols-1">
                 {CoverImage ? (
-              <img 
-              src={CoverImage}
-              alt=""
-              className="object-cover cursor-pointer max-[768px]:w-[50vw] max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1  "
-              onClick={handleClickOpenCover}
-              onMouseOver={(e) => {
-                setChangeCover(true);
-              }}
-              onMouseOut={(e) => {
-                setChangeCover(false);
-              }}
-            />
-                ): (
+                  <img
+                    src={CoverImage}
+                    alt=""
+                    className="object-cover cursor-pointer max-[768px]:w-[50vw] max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1  "
+                    onClick={handleClickOpenCover}
+                    onMouseOver={(e) => {
+                      setChangeCover(true);
+                    }}
+                    onMouseOut={(e) => {
+                      setChangeCover(false);
+                    }}
+                  />
+                ) : (
                   <div onClick={handleClickOpenCover} className="text-slate-200 text-lg hover:bg-[#0e0b1a] cursor-pointer max-[768px]:w-[50vw] max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] rounded-2xl row-start-1 col-start-1 bg-[#130f22] flex justify-center items-center">
                     <div>Click to add an Image</div>
                   </div>
                 )}
 
-              
-           <button
-            onMouseOver={(e) => {
-              setChangeCover(true);
-            }}
-            useRef={uploadRef}
-            // onClick={handleClickOpen}
-            onClick={handleClickOpenCover}
-            onMouseOut={(e) => {
-              setChangeCover(false);
-            }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black z-10 max-[768px]:w-[50vw] row-start-1 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
-           >
-            Change Image
-              </button>
-          </div>
 
-        </div>
-        <textarea
+                <button
+                  onMouseOver={(e) => {
+                    setChangeCover(true);
+                  }}
+                  useRef={uploadRef}
+                  // onClick={handleClickOpen}
+                  onClick={handleClickOpenCover}
+                  onMouseOut={(e) => {
+                    setChangeCover(false);
+                  }}
+                  className={`${changeCover ? "" : "hidden"
+                    } px-4 py-2 shadow-inner shadow-black z-10 max-[768px]:w-[50vw] row-start-1 max-md:h-[50vw] max-md:w-[50vw] h-[30vw] w-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+                >
+                  Change Image
+                </button>
+              </div>
+
+            </div>
+            <textarea
               onChange={(e) => {
                 setoption(e.target.value);
               }}
               className="p-[1vw] max-[768px]:ml-0 text-base  max-[768px]:w-[50vw] w-[30vw] outline-none border-none  max-md:h-[10vw] max-md:w-[40vw] text-white  bg-[#070315] h-[7vw]  mt-[1vw] shadow-lg shadow-black rounded-lg"
               placeholder="Enter caption"
-              >
-              </textarea>
+            >
+            </textarea>
           </div>
-          
+
         </div>
       </div>
       <Dialog

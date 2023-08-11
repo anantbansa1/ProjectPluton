@@ -934,7 +934,7 @@ function ClubProfile(props) {
             {/* <div className="max-md:text-sm">{props.name}</div> */}
 
             <Link
-              to="/add"
+              to={`/add/${clubName}`}
               className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4"
             >
               Add a Post/Poll

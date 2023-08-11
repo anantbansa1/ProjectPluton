@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import Navbar from "../Navbar";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { grey } from "@mui/material/colors";
-import { Button, createTheme } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
+import { Button } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Menu from "@mui/material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
@@ -23,22 +19,17 @@ export default function Poll2() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClickVisibility = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleCloseVisibility = () => {
     setAnchorEl(null);
   };
 
   const handleChange = (event) => {
     setVisibility(event.target.value);
   };
-  const searchStyle = {
-    color: grey[100],
-  };
-  const handleAdd = (e) => {
-    setoptionno(optionno + 1);
-  }
+
 
   return (
     <div className=" mt-[-5vw] max-md:ml-[-20vw] ml-[-30vw]">
@@ -304,7 +295,7 @@ export default function Poll2() {
               {" "}
               <button
                 className="flex justify-center items-center text-slate-300 "
-                onClick={handleClick}
+                onClick={handleClickVisibility}
               >
                 {" "}
                 <div className="ml-3">Visibility</div>
@@ -317,7 +308,7 @@ export default function Poll2() {
                   id="basic-menu"
                   anchorEl={anchorEl}
                   open={open}
-                  onClose={handleClose}
+                  onClose={handleCloseVisibility}
                   sx={{
                     "& .MuiPaper-root": {
                       bgcolor: "#130f22",
@@ -331,11 +322,11 @@ export default function Poll2() {
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={handleCloseVisibility}>
                     {" "}
                    Public
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={handleCloseVisibility}>
                     &nbsp;Members
                   </MenuItem>
                 </Menu>
