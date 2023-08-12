@@ -3,6 +3,7 @@ import { useState } from "react";
 import SirfPencil from "../Images/pencil_black.jpg";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
+import Tooltip from "@mui/material/Tooltip";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -51,6 +52,7 @@ import { useAuth, upload } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { onSnapshot } from "firebase/firestore";
+import { type } from "@testing-library/user-event/dist/type";
 
 function ClubProfile(props) {
   const medal_data = [
@@ -101,7 +103,7 @@ function ClubProfile(props) {
 
   const user = useAuth();
   const [id, setid] = useState();
-  async function up() {
+  async function fetch_data() {
     const q = query(collection(db, "user"), where("email", "==", user?.email));
     const querySnapshot = await getDocs(q);
     if (querySnapshot) {
@@ -116,12 +118,12 @@ function ClubProfile(props) {
         // setprof(docdata["profileimage"])
 
         // console.log(doc.data()['profileimage'])
-        console.log(doc.id);
+        // console.log(doc.id);
         setid(doc.id);
       });
     }
   }
-
+////////////////////////////////////////// Medal Data Fetch /////////////////////////////////////////////////////////////////////////////////////////
   const s = collection(db, `user/${id}/medals`);
   const [docs, loadin, error] = useCollectionData(s);
   useEffect(() => {
@@ -134,7 +136,7 @@ function ClubProfile(props) {
 
   useEffect(() => {
     if (user) {
-      up();
+      fetch_data();
     }
   }, [user]);
 
@@ -205,6 +207,10 @@ function ClubProfile(props) {
   // });
   // };
   // const docref = doc(db, `user`,id)
+
+
+
+  ///////////////////////////////////For Profile Image And Cover Image Data/////////////////////////////////////////////////////////////////////////////////
   const handleSubmit = (img) => {
     const storage = getStorage();
     const canvas = previewCanvasRef.current;
@@ -267,8 +273,9 @@ function ClubProfile(props) {
   // getDocs(collectionGroup(db, "badges")).then((querySnapshot) => {
   //   console.log(querySnapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
   // });
-
-  async function SaveChanges(canvas, crop) {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
       return;
     }
@@ -397,40 +404,9 @@ function ClubProfile(props) {
     setOpenCover(false);
   };
 
-  // const badgetype = {     gold: "#fee101",     silver: "#d7d7d7",     bronze: "#a77044",     core: "#00ffff",     none: "-",   };
 
-  // const [badges2, setbadges2] = useState([]);
-  // useEffect(() => {
-  //   const collectionRef = collection(db, `user/${id}/badges`);
-  //   const query2 = query(collectionRef);
-  //   // const unsub = onSnapshot(query2, (snapshot) =>
-  //   //   setbadges2(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })
-  //   console.log(badges2)
-  //   return unsub;
-
-  // },[badges2]);
-
+//////////////////////////////////////////////////User-Badge Id (db:document name) and type Data fetch////////////////////////////////////////////////////  
   const collectionRef = collection(db, `user/${id}/badges`);
-  
-  
-  const clubRef = collection(db, `user/${id}/clubs`);
-  const [cid,setcid] = useState();
-  useEffect(() => {
-    getDocs(clubRef).then((d) => {
-      let cid_arr = [];
-      if (d) {
-        d.forEach((dd) => {
-          // const a = dd.data()["type"];
-          const b = dd.id;
-          // type_arr.push(a);
-          cid_arr.push(b);
-        });
-      }
-      // settype2(type_arr);
-      console.log(cid_arr);
-      setcid(cid_arr);
-    });
-  }, [id]);
 
   const [type2, settype2] = useState();
   const [id2, setid2] = useState();
@@ -450,25 +426,24 @@ function ClubProfile(props) {
       setid2(id_arr);
     });
   }, [id]);
-  
-  useEffect(() => {
 
+  useEffect(() => {
+    // console.log(type2);
   }, [id2, type2]);
 
-  const [clubimg , setclubimg] = useState();
-  const [clubimg1 , setclubimg1] = useState();
-  
+  const [clubimg, setclubimg] = useState();
+
   useEffect(() => {
-    const collectionref2 = collection(db,"clubs");
+    const collectionref2 = collection(db, "clubs");
     getDocs(collectionref2).then((d) => {
       let imgg = [];
       id2?.forEach((dd) => {
         // console.log(2);
-        if(dd){
-          if(d){
+        if (dd) {
+          if (d) {
             // console.log(1);
             d.forEach((search) => {
-              if(dd == search.data().name){
+              if (dd == search.data().name) {
                 imgg.push(search.data().logo);
               }
             });
@@ -477,36 +452,13 @@ function ClubProfile(props) {
       });
       setclubimg(imgg);
     });
-  },[id2])
-
-  let value_image_obj = {};
-  useEffect(() => {
-    const clubref2 = collection(db,"clubs");
-    getDocs(clubref2).then((d) => {
-      cid?.forEach((dd) => {
-        // console.log(2);
-        if(dd){
-          if(d){
-            // console.log(1);
-            d.forEach((search) => {
-              if(dd == search.data().name){
-                value_image_obj.push(dd,search.data().logo);
-              }
-            });
-          }
-        }
-      });
-      setclubimg1(value_image_obj);
-    });
-  },[cid])
+  }, [id2]);
 
   useEffect(() => {
     // console.log(clubimg);
-  },[clubimg]);
+  }, [clubimg]);
 
   // console.log(clubimg);
-  
-  
 
   const result = [];
   for (let i = 0; i < type2?.length; i++) {
@@ -514,32 +466,148 @@ function ClubProfile(props) {
   }
   useEffect(() => {
     // console.log(result);
-  },[clubimg]);
+  }, [clubimg]);
 
   const res = [];
-  for (let i = 0; i < id2?.length ;i++ ){
-    res.push({ key: id2[i] , value: result[i] });
+  for (let i = 0; i < id2?.length; i++) {
+    res.push({ key: id2[i], value: result[i] });
   }
-
-
-  const clubres = [];
-  for (let i = 0; i < cid?.length ;i++ ){
-    clubres.push({ key: value_image_obj[i] , value: value_image_obj[i][1] });
-  }
-
-  const res_array = clubres.filter(
-    (item) => !res.some(
-      (element) => element.key === item.key
-    )
-  );
 
   useEffect(() => {
-    res.forEach((d)=>{
+    res.forEach((d) => {
       // console.log(d.key);
-      console.log(d.value.key);
+      // console.log(d.value.key);
     });
-  },[result]);
+  }, [result]);
 
+  ///////////////////////////////////////////////////////////////Reference-Badge Data for Clubs Joined Button////////////////////////////////////////////////
+
+  const [user_clubs, setuser_clubs] = useState();
+  useEffect(() => {
+    const collectionref3 = collection(db, `user/${id}/clubs`);
+    let array = [];
+    getDocs(collectionref3).then((d) => {
+      if (d) {
+        d.forEach((dd) => {
+          const a = dd.id;
+          array.push(a);
+        });
+      }
+      setuser_clubs(array);
+    });
+  }, [id]);
+
+  useEffect(() => {
+    // console.log(user_clubs);
+  }, [user_clubs]);
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  const [user_badges, setuser_badges] = useState();
+  useEffect(() => {
+    const collectionref4 = collection(db, `user/${id}/badges`);
+    let array = [];
+    getDocs(collectionref4).then((d) => {
+      if (d) {
+        user_clubs?.forEach((dd) => {
+          let flag = 0;
+          d.forEach((search) => {
+            if (dd === search.id) {
+              flag = 1;
+              array.push(search.data().type);
+            }
+          });
+          if (flag === 0) {
+            array.push(null);
+          }
+        });
+      }
+      setuser_badges(array);
+    });
+  }, [user_clubs]);
+
+  useEffect(() => {
+    // console.log(user_badges)
+  }, [user_badges]);
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  const [club_logo, setclub_logo] = useState();
+  useEffect(() => {
+    const collectionref5 = collection(db, `clubs`);
+    let array = [];
+    getDocs(collectionref5).then((d) => {
+      if (d) {
+        user_clubs?.forEach((dd) => {
+          d.forEach((search) => {
+            if (dd === search.data().name) {
+              array.push(search.data().logo);
+            }
+          });
+        });
+      }
+      setclub_logo(array);
+    });
+  }, [user_clubs]);
+
+  useEffect(() => {
+    // console.log(club_logo)
+  }, [club_logo]);
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  const [club_points , setclub_points] = useState();
+  useEffect(() => {
+    const collectionref6 = collection(db, `user/${id}/clubs`);
+    let array = [];
+    getDocs(collectionref6).then((d) => {
+      if (d) {
+        user_clubs?.forEach((dd) => {
+          d.forEach((search) => {
+            if (dd === search.id) {
+              array.push(search.data().points);
+            }
+          });
+        });
+      }
+      setclub_points(array);
+    });
+  }, [user_clubs]);
+
+  useEffect(() => {
+    // console.log(club_points);
+  }, [club_points]);
+
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  let final_array = [];
+  for (let i = 0; i < club_logo?.length; i++) {
+    const obj = {
+      name: user_clubs[i],
+      type: user_badges[i],
+      logo: club_logo[i],
+      points : club_points[i],
+    };
+    final_array.push(obj);
+  }
+
+  useEffect(() => {
+    // console.log(final_array)
+    // final_array.forEach((d) => {
+    //   // console.log(d.type);
+    // });
+  }, [final_array]);
+
+  const sortedData = [...final_array].sort((a, b) => a.points - b.points);
+  useEffect(() => {
+    console.log(sortedData);
+  },[sortedData])
+
+  const reversedData = [...sortedData].reverse();
+  final_array = reversedData
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
 
   const badgetype = {
     gold: "#fee101",
@@ -548,7 +616,6 @@ function ClubProfile(props) {
     core: "#00ffff",
     none: "-",
   };
-  // console.log(type2)
 
   return (
     <div className="">
@@ -635,7 +702,7 @@ function ClubProfile(props) {
               className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
-              &nbsp; <div> {res.length + res_array.length} Clubs Joined</div>
+              &nbsp; <div> {final_array.length} Clubs Joined</div>
             </button>
           </div>
 
@@ -696,16 +763,14 @@ function ClubProfile(props) {
             {/* <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1"> */}
             {result?.map((d) => {
               const b = badgetype[d.key];
-              return(
-              <img
-                src={d.value}
-                alt=""
-                className={`mx-auto my-1 border-[5px] border-[${b}] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
-              />
-              
-              )
+              return (
+                <img
+                  src={d.value}
+                  alt=""
+                  className={`mx-auto my-1 border-[5px] border-[${b}] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
+                />
+              );
             })}
-
           </div>
         </div>
       </div>
@@ -732,107 +797,31 @@ function ClubProfile(props) {
           {medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
               {docs
-              ? docs.map((d) => {
-                  return (
-                    <img
-                      src={medal_data[Math.min(20, d.rank - 1)]}
-                      alt={Rank20p}
-                      className="p-4 w-[130px] object-cover"
-                    />
-                  );
-                  // console.log("hello")
-                })
-              : ""}
-              {/* <img src={Rank1} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" />
-              <img src={Rank2} alt="" className="p-4 w-[130px]" /> */}
+                ? docs.map((d) => {
+                    return (
+                      <img
+                        src={medal_data[Math.min(20, d.rank - 1)]}
+                        alt={Rank20p}
+                        className="p-4 w-[130px] object-cover"
+                      />
+                    );
+                    // console.log("hello")
+                  })
+                : ""}
             </div>
           )}
           {!medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
-              {/* <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1"> */}
               {result?.map((d) => {
               const b = badgetype[d.key];
-              return(
-              <img
-                src={d.value}
-                alt=""
-                className={`mx-auto border-[5px] border-[${b}] row-start-1 col-start-1 sm:h-[65px] sm:w-[65px] h-[100px] w-[100px] rounded-full  object-cover`}
-              />
-              
-              )
-              })}  
-              {/* </div> */}
-
-              {/* <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
+              return (
                 <img
-                  src={image}
+                  src={d.value}
                   alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
+                  className={` border-[5px] border-[${b}] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
                 />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div>
-              <div className="badge grid grid-rows-1 p-2 items-center grid-cols-1">
-                <img
-                  src={image}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[120px] w-[120px]  object-cover "
-                />
-
-                <img
-                  src={ClubImage}
-                  alt=""
-                  className="mx-auto row-start-1 col-start-1 h-[85px] w-[85px] rounded-full  object-cover "
-                />
-              </div> */}
+              );
+            })}
             </div>
           )}
         </div>
@@ -1076,104 +1065,42 @@ function ClubProfile(props) {
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-              {res?.map((d)=>{
-                const b = badgetype[d.value.key]
-                  return (
-                    <div className=" flex justify-between">
-                    <div className="flex items-center space-x-2 ">
-                      <img
-                        src={d.value.value}
-                        alt=""
-                        className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                      />
-
-                      <div className="font-semibold">{d.key}</div>
-                    </div>
-                    <div className="grid grid-rows-1 items-center grid-cols-1">
-                      <img
-                        src={d.value.value}
-                        alt=""
-                        className={`row-start-1 col-start-1 mx-auto border-4 border-[${b}] h-[50px] w-[50px] rounded-full  object-cover` }
-                      />
-                    </div>
-                  </div>
-                  )
-              })}
-              {res_array?.map((d)=>{
-                return (
-                  <div className=" flex justify-between">
+            {final_array?.map((d) => {
+              const b = badgetype[d.type];
+              return (
+                <div className=" flex justify-between">
                   <div className="flex items-center space-x-2 ">
                     <img
-                      src={d.value}
+                      src={d.logo}
                       alt=""
                       className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
                     />
 
-                    <div className="font-semibold">{d.key}</div>
+                    {/* <div className="font-semibold">{d.name}</div> */}
+                    <Link
+                      to={`/club/${d.name}`}
+                      params={d.name}
+                      state={d}
+                      className="font-semibold"
+                    >
+                      <Tooltip title={d.name}>
+                        {" "}
+                        <div className="justify-center">{d.name}</div>
+                      </Tooltip>
+                    </Link>
                   </div>
-                  {/* <div className="grid grid-rows-1 items-center grid-cols-1">
-                    <img
-                      src={d.value.value}
-                      alt=""
-                      className={`row-start-1 col-start-1 mx-auto border-4 border-[${b}] h-[50px] w-[50px] rounded-full  object-cover` }
-                    />
-                  </div> */}
+                  {d.type && (
+                    <div className="grid grid-rows-1 items-center grid-cols-1">
+                      <img
+                        src={d.logo}
+                        alt=""
+                        className={`row-start-1 col-start-1 mx-auto border-4 border-[${b}] h-[50px] w-[50px] rounded-full  object-cover`}
+                      />
+                    </div>
+                  )}
                 </div>
-                )
-              })}
-            {/* <div className=" flex justify-between">
-              < className="flex items-center space-x-2 ">
-                {/* <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                /> */}
-                
-              {/* <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div> */}
-            
-            {/* <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-                <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
-
-                <div className="font-semibold">Music Club</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={Tanjiro}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#FEE101] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>
-            <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-                <img
-                  src={CoverImage}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
-
-                <div className="font-semibold">Sports Club</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={CoverImage}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto border-4 border-[#d7d7d7] h-[50px] w-[50px] rounded-full  object-cover "
-                />
-              </div>
-            </div>{" "} */}
-            
+              );
+            })}
           </div>
         </DialogContent>
       </Dialog>
