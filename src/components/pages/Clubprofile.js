@@ -196,6 +196,7 @@ function ClubProfile(props) {
           memimage: memimage,
           membadge: membadge,
         });
+        console.log(memname, membadge);
       } catch (error) {
         console.log("Firebase error!");
       }
@@ -374,10 +375,15 @@ function ClubProfile(props) {
         const docSnap = await getDoc(docref);
         setLoading(false);
         console.log("docsnap ", docSnap);
-        if (docSnap.exists()) {
-          console.log(docSnap.data());
-          setRole(docSnap.data().role);
-          setPoints(docSnap.data().points);
+        if (docSnap) {
+          if (docSnap.data()) {
+            console.log(docSnap.data());
+            setRole(docSnap.data().role);
+            setPoints(docSnap.data().points);
+            // console.log(381, points);
+          } else {
+            setRole("visitor");
+          }
         } else {
           setRole("visitor");
         }
@@ -767,7 +773,7 @@ function ClubProfile(props) {
           </div>
           <div className="row-start-6 col-start-7"></div>
         </div>
-        {role === "admin" || role === "member" || role === "core" ? (
+        {role === "member" ? (
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
@@ -943,7 +949,7 @@ function ClubProfile(props) {
               className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
             />
             <Link
-              to="/add"
+              to={`/add/${clubName}`}
               className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4"
             >
               Add a Post/Poll

@@ -39,7 +39,7 @@ function App() {
           }
         />
         <Route
-          path={'/club/:clubID'}
+          path={"/club/:clubID"}
           element={
             <ClubProfile
               name="Club of Programmers"
@@ -57,7 +57,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/getemail" element={<Resetpass />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/add" element={<Addtext />} />
+        <Route path="/add/:clubId" element={<Addtext />} />
         <Route path="/addclub" element={<Addnewclub />} />
         <Route path="/adduser" element={<AddUserAdmin />} />
         <Route path="*" element={<Pagenotfound />} />
