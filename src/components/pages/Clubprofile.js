@@ -270,56 +270,6 @@ function ClubProfile(props) {
     }
   }, [clubId]);
 
-  // async function fetchapplications() {
-  //   let applications = []
-
-  //     const colref = collection(db, 'clubs', clubId, 'Application')
-  //     const snapshot = await getDocs(colref);
-
-  //     snapshot.forEach((element) => {
-  //         // console.log('hello in loop', clubId)
-  //         getDoc(doc(db, 'user', element.id)).then((usera) => {
-  //           console.log('here')
-
-  //           const d = usera.data();
-  //           applications.push({ name: d.name, rollno: element.id, profileimage: d.profileimage })
-  //           console.log('here application now ', applications)
-
-  //         });
-  //       });
-
-  //     console.log("applications ", applications)
-  //     setapplication(applications)
-  // }
-
-  // async function fetchmembers() {
-  //   const q = query(collection(db, "clubs"), where("name", "==", clubName));
-  //   try {
-
-  //     const snapshot = await getDocs(q);
-  //     if (snapshot) {
-  //       snapshot.forEach(async (club) => {
-  //         const clubid = club.id;
-  //         let memberarray = [];
-  //         console.log("club id: ", club.id);
-  //         setClubId(clubid);
-  //         const colref = collection(db, "clubs", clubid, "Members");
-  //         const memshot = await getDocs(colref);
-  //         if (memshot) {
-  //           memshot.forEach(async (temp) => {
-  //             memberarray.push(temp.id);
-  //             // console.log("temp :", temp.id);
-  //           });
-  //         }
-  //         setmember(memberarray);
-  //         setmemberscount(memberarray.length);
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log('firebase error')
-  //   }
-  // }
-
   useEffect(() => {
     const fetchMembers = async () => {
       const q = query(collection(db, "clubs"), where("name", "==", clubName));
