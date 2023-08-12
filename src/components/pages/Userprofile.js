@@ -411,6 +411,26 @@ function ClubProfile(props) {
   // },[badges2]);
 
   const collectionRef = collection(db, `user/${id}/badges`);
+  
+  
+  const clubRef = collection(db, `user/${id}/clubs`);
+  const [cid,setcid] = useState();
+  useEffect(() => {
+    getDocs(clubRef).then((d) => {
+      let cid_arr = [];
+      if (d) {
+        d.forEach((dd) => {
+          // const a = dd.data()["type"];
+          const b = dd.id;
+          // type_arr.push(a);
+          cid_arr.push(b);
+        });
+      }
+      // settype2(type_arr);
+      console.log(cid_arr);
+      setcid(cid_arr);
+    });
+  }, [id]);
 
   const [type2, settype2] = useState();
   const [id2, setid2] = useState();
@@ -436,6 +456,7 @@ function ClubProfile(props) {
   }, [id2, type2]);
 
   const [clubimg , setclubimg] = useState();
+  const [clubimg1 , setclubimg1] = useState();
   
   useEffect(() => {
     const collectionref2 = collection(db,"clubs");
@@ -458,6 +479,27 @@ function ClubProfile(props) {
     });
   },[id2])
 
+  let value_image_obj = {};
+  useEffect(() => {
+    const clubref2 = collection(db,"clubs");
+    getDocs(clubref2).then((d) => {
+      cid?.forEach((dd) => {
+        // console.log(2);
+        if(dd){
+          if(d){
+            // console.log(1);
+            d.forEach((search) => {
+              if(dd == search.data().name){
+                value_image_obj.push(dd,search.data().logo);
+              }
+            });
+          }
+        }
+      });
+      setclubimg1(value_image_obj);
+    });
+  },[cid])
+
   useEffect(() => {
     // console.log(clubimg);
   },[clubimg]);
@@ -476,8 +518,20 @@ function ClubProfile(props) {
 
   const res = [];
   for (let i = 0; i < id2?.length ;i++ ){
-    res.push({key: id2[i] , value: result[i] });
+    res.push({ key: id2[i] , value: result[i] });
   }
+
+
+  const clubres = [];
+  for (let i = 0; i < cid?.length ;i++ ){
+    clubres.push({ key: value_image_obj[i] , value: value_image_obj[i][1] });
+  }
+
+  const res_array = clubres.filter(
+    (item) => !res.some(
+      (element) => element.key === item.key
+    )
+  );
 
   useEffect(() => {
     res.forEach((d)=>{
@@ -581,7 +635,7 @@ function ClubProfile(props) {
               className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
-              &nbsp; <div> {res.length} Clubs Joined</div>
+              &nbsp; <div> {res.length + res_array.length} Clubs Joined</div>
             </button>
           </div>
 
@@ -1022,29 +1076,51 @@ function ClubProfile(props) {
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-          {res?.map((d)=>{
-            const b = badgetype[d.value.key]
-            return (
-              <div className=" flex justify-between">
-              <div className="flex items-center space-x-2 ">
-                <img
-                  src={d.value.value}
-                  alt=""
-                  className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
-                />
+              {res?.map((d)=>{
+                const b = badgetype[d.value.key]
+                  return (
+                    <div className=" flex justify-between">
+                    <div className="flex items-center space-x-2 ">
+                      <img
+                        src={d.value.value}
+                        alt=""
+                        className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                      />
 
-                <div className="font-semibold">{d.key}</div>
-              </div>
-              <div className="grid grid-rows-1 items-center grid-cols-1">
-                <img
-                  src={d.value.value}
-                  alt=""
-                  className={`row-start-1 col-start-1 mx-auto border-4 border-[${b}] h-[50px] w-[50px] rounded-full  object-cover` }
-                />
-              </div>
-            </div>
-            )
-          })}
+                      <div className="font-semibold">{d.key}</div>
+                    </div>
+                    <div className="grid grid-rows-1 items-center grid-cols-1">
+                      <img
+                        src={d.value.value}
+                        alt=""
+                        className={`row-start-1 col-start-1 mx-auto border-4 border-[${b}] h-[50px] w-[50px] rounded-full  object-cover` }
+                      />
+                    </div>
+                  </div>
+                  )
+              })}
+              {res_array?.map((d)=>{
+                return (
+                  <div className=" flex justify-between">
+                  <div className="flex items-center space-x-2 ">
+                    <img
+                      src={d.value}
+                      alt=""
+                      className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                    />
+
+                    <div className="font-semibold">{d.key}</div>
+                  </div>
+                  {/* <div className="grid grid-rows-1 items-center grid-cols-1">
+                    <img
+                      src={d.value.value}
+                      alt=""
+                      className={`row-start-1 col-start-1 mx-auto border-4 border-[${b}] h-[50px] w-[50px] rounded-full  object-cover` }
+                    />
+                  </div> */}
+                </div>
+                )
+              })}
             {/* <div className=" flex justify-between">
               < className="flex items-center space-x-2 ">
                 {/* <img
