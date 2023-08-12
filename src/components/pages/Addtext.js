@@ -6,6 +6,8 @@ import { Button, Chip } from "@mui/material";
 import Avatar from '@mui/material/Avatar';
 import { Done } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import AddIcon from '@mui/icons-material/Add';
+
 
 export default function Text() {
   const [option, setoption] = useState("text");
@@ -18,7 +20,8 @@ export default function Text() {
   const navigate = useNavigate();
 
   const handleClick = (index) => {
-    setSelected(index);
+    if (selected === index) setSelected(-1)
+    else setSelected(index);
   };
 
   return (
@@ -81,31 +84,8 @@ export default function Text() {
           <Addpoll></Addpoll>
 
         )}
-        <div className=" flex max-md:text-sm max-[1076px]:flex-col justify-between text-black text-xl  mt-[4vh]">
-          {/* <button
-            onClick={(e) => {
-              setevent(console.log(1));
-            }}
-            className="bg-white p-[1vh] px-[5vh] rounded-full hover:text-red-500"
-          >
-            +Event
-          </button>
-          <button
-            onClick={(e) => {
-              setevent(console.log(2));
-            }}
-            className="bg-white p-[1vh] max-[1076px]:mt-3  px-[5vh] rounded-full hover:text-red-500"
-          >
-            +Announcement
-          </button>
-          <button
-            onClick={(e) => {
-              setevent(console.log(3));
-            }}
-            className="bg-white p-[1vh] max-[1076px]:mt-3 px-[5vh] rounded-full hover:text-red-500"
-          >
-            +Achievement
-          </button> */}
+        <div className=" flex max-[1076px]:space-y-3 max-md:text-sm max-[1076px]:flex-col justify-around min-[1076px]:items-center text-black text-xl  mt-[4vh]">
+
 
           <Chip
             onClick={() => handleClick(0)}
@@ -118,7 +98,7 @@ export default function Text() {
                 backgroundColor: '#dbdbdb', 
               },
             }}
-            label={<span className={`${selected === 0?'text-black':'text-white'}`}>Achievement</span>}
+            label={<div className={`${selected === 0?'text-black':'text-white'} hover:text-black flex items-center space-x-2`}><div className={`${selected===0?'hidden':''}`}><AddIcon /></div><div>Achievement</div></div>}
           />
 
           <Chip
@@ -132,7 +112,7 @@ export default function Text() {
                 backgroundColor: '#dbdbdb', 
               },
             }}
-            label={<span className={`${selected === 1?'text-black':'text-white'}`}>Event</span>}
+            label={<div className={`${selected === 1?'text-black':'text-white'} hover:text-black flex items-center space-x-2`}><div className={`${selected===1?'hidden':''}`}><AddIcon /></div><div>Event</div></div>}
           />
 
           <Chip
@@ -146,7 +126,7 @@ export default function Text() {
                 backgroundColor: '#dbdbdb', 
               },
             }}
-            label={<span className={`${selected === 2?'text-black':'text-white'}`}>Announcement</span>}
+            label={<div className={`${selected === 2?'text-black':'text-white'} hover:text-black flex items-center space-x-2`}><div className={`${selected===2?'hidden':''}`}><AddIcon /></div><div>Announcement</div></div>}
           />
          
 

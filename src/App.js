@@ -18,6 +18,7 @@ import Addtext from "./components/pages/Addtext";
 import Manage from "./components/pages/Manage";
 import AboutUs from "./components/pages/AboutUs";
 import Pagenotfound from "./components/pages/Pagenotfound";
+import Addnewclub from "./components/pages/Addnewclub";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
         <Route path="/getemail" element={<Resetpass />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/add" element={<Addtext />} />
+        <Route path="/addclub" element={<Addnewclub />} />
         <Route path="/adduser" element={<AddUserAdmin />} />
         <Route path="*" element={<Pagenotfound />} />
         <Route path="/pagenotfound" element={<Pagenotfound />} />

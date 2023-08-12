@@ -153,7 +153,7 @@ function Image() {
                 setoption(e.target.value);
               }}
               className="p-[1vw] max-[768px]:ml-0 text-base  max-[768px]:w-[50vw] w-[30vw] outline-none border-none  max-md:h-[10vw] max-md:w-[40vw] text-white  bg-[#070315] h-[7vw]  mt-[1vw] shadow-lg shadow-black rounded-lg"
-              placeholder="Enter your Text"
+              placeholder="Enter caption"
               >
               </textarea>
           </div>
