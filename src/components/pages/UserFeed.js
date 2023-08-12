@@ -71,17 +71,17 @@ export default function UserFeed() {
       const clubs = await getDocs(collection(db, 'clubs'));
       if (clubs) {
         let clubnames = [];
-        let clubroles = [];
+        // let clubroles = [];
         clubs.forEach(async(element) => {
           console.log('inside loop clubs')
           const docref = doc(db, 'user', userid, 'clubs', element.data().name);
           const getrole = await getDoc(docref);
-          clubroles.push({clubname: element.data().name, role: getrole.data().role});
+          // clubroles.push({clubname: element.data().name, role: getrole.data().role});
           clubnames.push(element.data())
         })
         setallclubs(clubnames);
-        setroles(clubroles);
-        console.log("clubroles ",roles)
+        // setroles(clubroles);
+        // console.log("clubroles ",roles)
         console.log("clubs ",allclubs)
       }
 
