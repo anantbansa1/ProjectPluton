@@ -17,84 +17,239 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import { useAuth } from "../../firebase";
 import { db } from "../../firebase";
-import { doc,getDoc, getDocs, collection, where, query } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getDocs,
+  collection,
+  where,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { useLocation } from "react-router-dom";
-import AddIcon from '@mui/icons-material/Add';
-
+import AddIcon from "@mui/icons-material/Add";
 
 export default function UserFeed() {
   const [post, underline] = useState("post");
   const [club, setclub] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allclubs, setallclubs] = useState([]);
-  const [roles, setroles] = useState([]);
-  const [userid, setuserid]=  useState();
+  const [roles, setroles] = useState({});
+  const [userid, setuserid] = useState();
   const open = Boolean(anchorEl);
   const location = useLocation();
-
-  
+  const [posts, setposts] = useState([]);
+  const [polls, setpolls] = useState([]);
+  const [clubimages, setclubimages] = useState([]);
+  const [feedCount, setfeedCount] = useState(0);
+  const [pollcount, setpollcount] = useState(0);
+  const [filterposts, setfilterposts] = useState(posts);
+  const [filterpolls, setfilterpolls] = useState(polls);
+  const [selected, setSelected] = useState("Filter");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (s) => {
+    // console.log("s: ", s, "selcted: ", selected)
+    if (s === 'close') setSelected(selected)
+    else if (s === selected) setSelected('Filter')
+    else setSelected(s);
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+
+    const tempposts = posts.filter(post => selected === 'Filter' || post.tag === selected);
+    const temppolls = polls.filter(poll => selected === 'Filter' || poll.tag === selected);
+
+    console.log("temppost: ", tempposts);
+    console.log("temppolls: ", temppolls);
+    setfilterposts(tempposts);
+    setfilterpolls(temppolls);
+  }, [posts, polls, selected])
+
+
+
   const user = useAuth();
 
-  useEffect(()=>{
-    console.log('allclubs: ', allclubs)
-  },[allclubs])
+  useEffect(() => {
+    setclubimage();
+    fetchroles();
+  }, [allclubs]);
 
-  useEffect(()=>{
+//   useEffect(() => {
+
+// }, [polls]);
+
+
+
+  useEffect(() => {
+    setfeedCount(0);
+    filterposts.map((filterpost) => {
+      if (filterpost.visibility === 'Public' || (roles[filterpost.clubname] === 'admin' || roles[filterpost.clubname] === 'core' || roles[filterpost.clubname] === 'member')) {
+        setfeedCount(feedCount + 1);
+      }
+    })
+  }, [filterposts])
+
+  useEffect(() => {
+    setpollcount(0);
+    filterpolls.map((filterpoll) => {
+      if (filterpoll.visibility === 'Public' || (roles[filterpoll.clubname] === 'admin' || roles[filterpoll.clubname] === 'core' || roles[filterpoll.clubname] === 'member')) {
+        setpollcount(pollcount + 1);
+      }
+    })
+  }, [filterpolls])
+
+  useEffect(() => {
+
+    polls.map((poll) => {
+      if (poll.visibility === 'Public' || (roles[poll.clubname] === 'admin' || roles[poll.clubname] === 'core' || roles[poll.clubname] === 'member')) {
+        setpollcount(pollcount + 1);
+      }
+    })
+    console.log("poll: ", pollcount)
+  }, [polls])
+
+
+  useEffect(() => {
     if (user) {
       const email = user.email;
-      const collref = collection(db, 'user');
-      const q = query(collref, where('email','==', email));
-      getDocs(q).then((snapshot)=>{
+      const collref = collection(db, "user");
+      const q = query(collref, where("email", "==", email));
+      getDocs(q).then((snapshot) => {
         if (snapshot) {
-          snapshot.forEach((userData)=>{
+          snapshot.forEach((userData) => {
             if (userData.data()) {
               console.log("rollno ", userData.id);
               setuserid(userData.id);
             }
-          })
+          });
         }
-      })
+      });
     }
-    
-  },[user])
+  }, [user]);
+
+  async function fetchpost() {
+    const posts = await getDocs(query(collection(db, "posts"), orderBy('timestamp', 'desc')));
+    const postarray = [];
+    if (posts) {
+      posts.forEach((post) => {
+        postarray.push(post.data());
+      });
+      setposts(postarray);
+      console.log(80, postarray);
+    }
+  }
+
+  async function fetchpolls() {
+    const pollDocs = await getDocs(query(collection(db, "polls"), orderBy('timestamp', 'desc')));
+    const pollarray = [];
+    if (pollDocs) {
+        pollDocs.forEach((poll) => {
+            let data = poll.data();
+            data.id = poll.id;
+            pollarray.push(data);
+        });
+        setpolls(pollarray);
+        let temppolls = [];
+        Promise.all(pollarray.map((poll) => {
+            return getDocs(collection(db, 'polls', poll.id, 'votes')).then((snapshot) => {
+                let a = { ...poll };
+                a.votes1 = 0;
+                a.votes2 = 0;
+                a.votes3 = 0;
+                a.votes4 = 0;
+                snapshot.forEach((p) => {
+                    const sel = p.data().selected;
+                    a[`votes${sel}`]++;
+                });
+                temppolls.push(a);
+            }).catch((error) => {
+                let a = { ...poll };
+                a.votes1 = 0;
+                a.votes2 = 0;
+                a.votes3 = 0;
+                a.votes4 = 0;
+                temppolls.push(a);
+            });
+        })).then(() => {
+            console.log("temppolls ", temppolls);
+            setpolls(temppolls);
+            setfilterpolls(temppolls)
+        });
+    }
+}
+
+
 
 
   async function fetchClubs() {
     try {
-      const clubs = await getDocs(collection(db, 'clubs'));
+      const clubs = await getDocs(collection(db, "clubs"));
       if (clubs) {
         let clubnames = [];
-        // let clubroles = [];
-        clubs.forEach(async(element) => {
-          console.log('inside loop clubs')
-          const docref = doc(db, 'user', userid, 'clubs', element.data().name);
-          const getrole = await getDoc(docref);
-          // clubroles.push({clubname: element.data().name, role: getrole.data().role});
-          clubnames.push(element.data())
-        })
+        clubs.forEach((element) => {
+          const docref = doc(db, "user", userid, "clubs", element.data().name);
+          clubnames.push(element.data());
+        });
         setallclubs(clubnames);
-        // setroles(clubroles);
-        // console.log("clubroles ",roles)
-        console.log("clubs ",allclubs)
+        console.log("clubs ", allclubs);
       }
-
     } catch (error) {
-      console.log('firebase error')
+      console.log("firebase error");
     }
   }
 
+  async function fetchroles() {
+    try {
+      const clubs = await getDocs(collection(db, "clubs"));
+      if (clubs) {
+        let clubroles = [];
+        let promises = [];
+        clubs.forEach((element) => {
+          console.log("inside loop clubs");
+          const docref = doc(db, "user", userid, "clubs", element.data().name);
+          promises.push(
+            getDoc(docref).then((getrole) => {
+              if (getrole) {
+                if (getrole.data()) {
+                  clubroles[element.data().name] = getrole.data().role;
+                } else {
+                  clubroles[element.data().name] = "visitor";
+                }
+              } else {
+                clubroles[element.data().name] = "visitor";
+              }
+            })
+          );
+        });
+        await Promise.all(promises);
+        setroles(clubroles);
+        console.log("clubroles ", clubroles);
+      }
+    } catch (error) {
+      console.log("firebase error");
+    }
+  }
+
+
+  function setclubimage() {
+    let clubimage = [];
+    allclubs.map((club) => {
+      clubimage[club.name] = club.logo;
+    });
+    setclubimages(clubimage);
+  }
+
   useEffect(() => {
-    // console.log("userid ", user.email)
-      if (userid)
-        fetchClubs();
-  }, [user,userid]);   
+    if (userid) {
+      fetchClubs();
+      fetchpost();
+      fetchpolls();
+    }
+  }, [userid]);
 
   return (
     <div>
@@ -132,7 +287,7 @@ export default function UserFeed() {
               >
                 {" "}
                 <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
-                <div className="ml-3 max-lg:hidden">Filter</div>
+                <div className="ml-3 max-lg:hidden">{(() => { let a = selected.charAt(0).toUpperCase() + selected.slice(1) + 's'; return a; })()}</div>
                 <div className="max-lg:hidden">
                   <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
                 </div>
@@ -142,7 +297,7 @@ export default function UserFeed() {
                   id="basic-menu"
                   anchorEl={anchorEl}
                   open={open}
-                  onClose={handleClose}
+                  onClose={() => { handleClose("close") }}
                   sx={{
                     "& .MuiPaper-root": {
                       bgcolor: "#130f22",
@@ -156,15 +311,15 @@ export default function UserFeed() {
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                  <MenuItem sx={{ padding: 2, bgcolor: selected === 'achievement' ? '#000' : 'inherit' }} onClick={() => { handleClose('achievement') }}>
                     {" "}
-                    <EmojiEventsIcon /> &nbsp;Achievements
+                    <EmojiEventsIcon /> &nbsp;Achievement
                   </MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                  <MenuItem sx={{ padding: 2, bgcolor: selected === 'event' ? '#000' : 'inherit' }} onClick={() => handleClose('event')}>
                     <EventAvailableIcon />
                     &nbsp;Events
                   </MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                  <MenuItem sx={{ padding: 2, bgcolor: selected === 'announcement' ? '#000' : 'inherit' }} onClick={() => handleClose('announcement')}>
                     <CampaignIcon />
                     &nbsp;Announcements
                   </MenuItem>
@@ -176,61 +331,60 @@ export default function UserFeed() {
       </div>
 
       {post === "post" && (
-        <div className="-ml-[12vw] max-[769px]:m-0">
-
-          {/* <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post> */}
+        <div className="-ml-[12vw] max-[769px]:m-0 flex flex-col">
+          {filterposts.map((post) => {
+            // console.log("heeeee", roles[post.clubname], post.clubname);
+            if (post.visibility === 'Public' || (roles[post.clubname] === 'admin' || roles[post.clubname] === 'core' || roles[post.clubname] === 'member')) {
+              // setfeedCount(feedCount+1);
+              return (
+                <Post
+                  name={post.clubname}
+                  ClubImage={clubimages[post.clubname]}
+                  image={post.imageurl}
+                  text={post.text}
+                  visibility={post.visibility}
+                  timestamp={post.timestamp}
+                  role={roles[post.clubname]}
+                ></Post>
+              );
+            }
+          })}
+          {console.log("feedcount", feedCount)}
+          {feedCount == 0 && (
+            <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">Hmm... nothing to show here.</div>
+          )}
         </div>
       )}
 
       {post === "poll" && (
         <div className="-ml-[12vw] max-[769px]:m-0">
+          {console.log("filterpolls ", filterpolls)}
+          {
+            filterpolls.map((poll) => {
+              if (poll.visibility === 'Public' || (roles[poll.clubname] === 'admin' || roles[poll.clubname] === 'core' || roles[poll.clubname] === 'member')) {
+                return (
+                  <Poll
+                    name={poll.clubname}
+                    ClubImage={clubimages[poll.clubname]}
+                    question={poll.text}
+                    option1={poll.option1}
+                    option2={poll.option2}
+                    option3={poll.option3}
+                    option4={poll.option4}
+                    timestamp={poll.timestamp}
+                    votes1={poll.votes1}
+                    votes2={poll.votes2}
+                    votes3={poll.votes3}
+                    votes4={poll.votes4}
+                  />
+                )
+              }
+            })
+          }
+          {pollcount == 0 && (
+            <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">Hmm... nothing to show here.</div>
+          )}
+          {/* 
           <Poll
             name="Club of Programmers"
             ClubImage={Minions}
@@ -295,34 +449,44 @@ export default function UserFeed() {
             votes2={1}
             votes3={6}
             votes4={2}
-          ></Poll>
+          ></Poll> */}
         </div>
       )}
 
       <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  shadow-2xl shadow-black space-y-10 bg-white bg-opacity-5 backdrop-blur-2xl ">
-
         {allclubs?.map((club) => {
-          {console.log(' afafd: ', club.name)}
+          {
+            // console.log(" afafd: ", club.name);
+          }
           return (
-            <Link to={`/club/${club.name}`} className="h-[7vw] w-[7vw] border-white rounded-full">
+            <Link
+              to={`/club/${club.name}`}
+              className="h-[7vw] w-[7vw] border-white rounded-full"
+            >
               <Tooltip title={club.name}>
                 {" "}
                 <img
-                  src={club.logo} 
+                  src={club.logo}
                   className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
                   alt=""
                 />
               </Tooltip>
             </Link>
-          )
+          );
         })}
-        <Link to="/addclub" className="h-[7vw] w-[7vw] border-white rounded-full">
+        <Link
+          to="/addclub"
+          className="h-[7vw] w-[7vw] border-white rounded-full"
+        >
           <Tooltip title="Add New Club">
             {" "}
             <div
               className="flex items-center justify-center h-[7vw] w-[7vw] cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-full  "
               alt=""
-            > <AddIcon className="text-slate-400 scale-[150%]" /> </div>
+            >
+              {" "}
+              <AddIcon className="text-slate-400 scale-[150%]" />{" "}
+            </div>
           </Tooltip>
         </Link>
       </div>
@@ -333,7 +497,6 @@ export default function UserFeed() {
         }}
         className="min-[769px]:hidden flex items-center  space-x-1 text-white fixed top-3 right-2"
       >
-
         <div>
           <GroupsIcon></GroupsIcon> Clubs
         </div>
@@ -348,17 +511,22 @@ export default function UserFeed() {
         <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
           {allclubs?.map((club) => {
             return (
-              <Link to={`/club/${club['name']}`} params={club['name']} state={club} className="">
-                <Tooltip title={club['name']}>
+              <Link
+                to={`/club/${club["name"]}`}
+                params={club["name"]}
+                state={club}
+                className=""
+              >
+                <Tooltip title={club["name"]}>
                   {" "}
                   <img
-                    src={club['logo']}
+                    src={club["logo"]}
                     className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto "
                     alt=""
                   />
                 </Tooltip>
               </Link>
-            )
+            );
           })}
           <Link to="/addclub" className="">
             <Tooltip title="Add New Club">
@@ -366,7 +534,10 @@ export default function UserFeed() {
               <div
                 className="flex items-center justify-center h-[22vw] w-[22vw] mx-auto cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-[50%]  "
                 alt=""
-              > <AddIcon className="text-slate-400 scale-[150%]" /> </div>
+              >
+                {" "}
+                <AddIcon className="text-slate-400 scale-[150%]" />{" "}
+              </div>
             </Tooltip>
           </Link>
 
