@@ -112,35 +112,35 @@ function ClubProfile(props) {
     silver: "#d7d7d7",
     bronze: "#a77044",
     core: "#00ffff",
-    none: "-",
+    none: "#ffffff"
   };
   const image =
     points < currentClub.bronze
       ? Bronzebadge
       : points <= currentClub.silver
-      ? Silverbadge
-      : Goldbadge;
+        ? Silverbadge
+        : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points <= currentClub.silver
-      ? "silver"
-      : "gold";
+        ? "silver"
+        : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points <= currentClub.silver
-      ? currentClub.silver - points
-      : currentClub.gold - points;
+        ? currentClub.silver - points
+        : currentClub.gold - points;
 
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
       : points <= currentClub.silver
-      ? "text-[#d7d7d7]"
-      : "text-[#fee101]";
+        ? "text-[#d7d7d7]"
+        : "text-[#fee101]";
 
   useEffect(() => {
     console.log(clubName);
@@ -667,9 +667,8 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${changeCover ? "" : "hidden"
+              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
@@ -777,38 +776,33 @@ function ClubProfile(props) {
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "hidden" : ""
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
+                  } ${color}`}
               >
                 {pointleft} points to {badge}
               </div>
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "" : "hidden"
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
+                  } ${color}`}
               >
                 {points} points
               </div>
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
                 style={{
                   width: ((points / currentClub.bronze) * 100).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
                 style={{
                   width:
                     (
@@ -819,31 +813,28 @@ function ClubProfile(props) {
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
               />
               <div
-                className={`row-start-1  ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+                className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
                 style={{
                   width:
                     points > currentClub.gold
                       ? "100%"
                       : (
-                          ((points - currentClub.silver) /
-                            (currentClub.gold - currentClub.silver)) *
-                          100
-                        ).toString() + "%",
+                        ((points - currentClub.silver) /
+                          (currentClub.gold - currentClub.silver)) *
+                        100
+                      ).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+                className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
             <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -871,9 +862,8 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${
-                underline === "post" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "post" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -881,9 +871,8 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${
-                underline === "poll" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "poll" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -940,23 +929,25 @@ function ClubProfile(props) {
           </div>
         </div>
       </div>
-      <div className="ml-[20vw] max-md:ml-[15vw] my-10">
-        <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
-          <div className="flex font-semibold items-center space-x-5">
-            <img
-              src={ClubImage}
-              alt=""
-              className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
-            />
-            <Link
-              to={`/add/${clubName}`}
-              className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4"
-            >
-              Add a Post/Poll
-            </Link>
+      {role === 'admin' && (
+        <div className="ml-[20vw] max-md:ml-[15vw] my-10">
+          <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
+            <div className="flex font-semibold items-center space-x-5">
+              <img
+                src={ClubImage}
+                alt=""
+                className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
+              />
+              <Link
+                to={`/add/${clubName}`}
+                className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4"
+              >
+                Add a Post/Poll
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {underline === "post" && (
         <Post
@@ -1324,39 +1315,39 @@ function ClubProfile(props) {
         >
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
             {memberdetails?.map((element) => {
-              return (
-                <>
-                  {/* {console.log('1',badgetype[element.membadge])} */}
-                  <div className=" flex justify-between">
-                    <div className="flex items-center space-x-2 ">
-                      <img
-                        src={element.memimage}
-                        className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                        alt=""
-                      />
-
-                      <div
-                        className={`text-[${
-                          badgetype[element.membadge]
-                        }] font-semibold`}
-                      >
-                        {element.memname}
-                      </div>
-                    </div>
-                    {element.membadge !== "none" && (
-                      <div className="grid grid-rows-1 items-center grid-cols-1">
+              if (element) {
+                return (
+                  <>
+                    {/* {console.log(element.membadge, 123, `border-[${badgetype[element.membadge]}]`)} */}
+                    <div className=" flex justify-between">
+                      <div className="flex items-center space-x-2 ">
                         <img
-                          src={ClubImage}
+                          src={element.memimage}
+                          className="w-[40px] h-[40px] border-2 border-white rounded-full"
                           alt=""
-                          className={`row-start-1 col-start-1 mx-auto border-4  border-[${
-                            badgetype[element.membadge]
-                          }] h-[50px] w-[50px] rounded-full  object-cover `}
                         />
+
+                        <div
+                          style={{ color: badgetype[element.membadge] }}
+                          className={` font-semibold`}
+                        >
+                          {element.memname}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </>
-              );
+                      {element.membadge !== "none" && (
+                        <div className="grid grid-rows-1 items-center grid-cols-1">
+                          <img style={{ borderColor: badgetype[element.membadge] }}
+                            src={ClubImage}
+                            alt=""
+                            className={`row-start-1 col-start-1 mx-auto border-4 h-[50px] w-[50px] rounded-full  object-cover`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </>
+                );
+              }
+
             })}
           </div>
         </DialogContent>

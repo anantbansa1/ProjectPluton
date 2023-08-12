@@ -17,7 +17,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import { useAuth } from "../../firebase";
 import { db } from "../../firebase";
-import { doc, getDocs, collection } from "firebase/firestore";
+import { doc,getDoc, getDocs, collection, where, query } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 
@@ -27,8 +27,12 @@ export default function UserFeed() {
   const [club, setclub] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allclubs, setallclubs] = useState([]);
+  const [roles, setroles] = useState([]);
+  const [userid, setuserid]=  useState();
   const open = Boolean(anchorEl);
   const location = useLocation();
+
+  
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,17 +42,47 @@ export default function UserFeed() {
   };
   const user = useAuth();
 
+  useEffect(()=>{
+    console.log('allclubs: ', allclubs)
+  },[allclubs])
+
+  useEffect(()=>{
+    if (user) {
+      const email = user.email;
+      const collref = collection(db, 'user');
+      const q = query(collref, where('email','==', email));
+      getDocs(q).then((snapshot)=>{
+        if (snapshot) {
+          snapshot.forEach((userData)=>{
+            if (userData.data()) {
+              console.log("rollno ", userData.id);
+              setuserid(userData.id);
+            }
+          })
+        }
+      })
+    }
+    
+  },[user])
+
 
   async function fetchClubs() {
     try {
       const clubs = await getDocs(collection(db, 'clubs'));
       if (clubs) {
         let clubnames = [];
-        clubs.forEach((element) => {
-          // console.log(element.data());
+        let clubroles = [];
+        clubs.forEach(async(element) => {
+          console.log('inside loop clubs')
+          const docref = doc(db, 'user', userid, 'clubs', element.data().name);
+          const getrole = await getDoc(docref);
+          clubroles.push({clubname: element.data().name, role: getrole.data().role});
           clubnames.push(element.data())
         })
         setallclubs(clubnames);
+        setroles(clubroles);
+        console.log("clubroles ",roles)
+        console.log("clubs ",allclubs)
       }
 
     } catch (error) {
@@ -57,19 +91,15 @@ export default function UserFeed() {
   }
 
   useEffect(() => {
-    console.log(allclubs)
-  }, [allclubs])
-
-  useEffect(() => {
-    return () => {
-      fetchClubs();
-    };
-  }, [user]);
+    // console.log("userid ", user.email)
+      if (userid)
+        fetchClubs();
+  }, [user,userid]);   
 
   return (
     <div>
       <Navbar selected="home" />
-      <div className="">
+      <div className="hello">
         <div className=" md:ml-[22vw] ml-[18vw] max-[769px]:mt-[8vh]  my-[2vw] max-[769px]:mr-0 mr-[12vw] max-md:py-0 py-8 px-4  text-white ">
           <div className="flex max-md:text-lg text-3xl items-center justify-between  ">
             {" "}
@@ -147,7 +177,8 @@ export default function UserFeed() {
 
       {post === "post" && (
         <div className="-ml-[12vw] max-[769px]:m-0">
-          <Post
+
+          {/* <Post
             name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
@@ -194,7 +225,7 @@ export default function UserFeed() {
             text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
             date="08/03/2023"
             time="09:06"
-          ></Post>
+          ></Post> */}
         </div>
       )}
 
@@ -270,13 +301,14 @@ export default function UserFeed() {
 
       <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  shadow-2xl shadow-black space-y-10 bg-white bg-opacity-5 backdrop-blur-2xl ">
 
-        {allclubs.map((club) => {
+        {allclubs?.map((club) => {
+          {console.log(' afafd: ', club.name)}
           return (
-            <Link to={`/club/${club['name']}`} params={club['name']} state={club} className="h-[7vw] w-[7vw] border-white rounded-full">
-              <Tooltip title={club['name']}>
+            <Link to={`/club/${club.name}`} className="h-[7vw] w-[7vw] border-white rounded-full">
+              <Tooltip title={club.name}>
                 {" "}
                 <img
-                  src={club['logo']}
+                  src={club.logo} 
                   className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
                   alt=""
                 />
@@ -314,7 +346,7 @@ export default function UserFeed() {
         />
       ) : (
         <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
-          {allclubs.map((club) => {
+          {allclubs?.map((club) => {
             return (
               <Link to={`/club/${club['name']}`} params={club['name']} state={club} className="">
                 <Tooltip title={club['name']}>
