@@ -549,22 +549,56 @@ function ClubProfile(props) {
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const final_array = [];
+  const [club_points , setclub_points] = useState();
+  useEffect(() => {
+    const collectionref6 = collection(db, `user/${id}/clubs`);
+    let array = [];
+    getDocs(collectionref6).then((d) => {
+      if (d) {
+        user_clubs?.forEach((dd) => {
+          d.forEach((search) => {
+            if (dd === search.id) {
+              array.push(search.data().points);
+            }
+          });
+        });
+      }
+      setclub_points(array);
+    });
+  }, [user_clubs]);
+
+  useEffect(() => {
+    // console.log(club_points);
+  }, [club_points]);
+
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+  let final_array = [];
   for (let i = 0; i < club_logo?.length; i++) {
     const obj = {
       name: user_clubs[i],
       type: user_badges[i],
       logo: club_logo[i],
+      points : club_points[i],
     };
     final_array.push(obj);
   }
 
   useEffect(() => {
     // console.log(final_array)
-    final_array.forEach((d) => {
-      console.log(d.type);
-    });
+    // final_array.forEach((d) => {
+    //   // console.log(d.type);
+    // });
   }, [final_array]);
+
+  const sortedData = [...final_array].sort((a, b) => a.points - b.points);
+  useEffect(() => {
+    console.log(sortedData);
+  },[sortedData])
+
+  const reversedData = [...sortedData].reverse();
+  final_array = reversedData
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
