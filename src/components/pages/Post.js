@@ -1,15 +1,13 @@
 import React from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import {useState} from 'react';
-
+import { useState } from "react";
 
 function Post(props) {
-
   const [open, setOpen] = useState(false);
 
   const handleNo = () => {
@@ -19,7 +17,6 @@ function Post(props) {
   const handleYes = () => {
     setOpen(false);
   };
-
 
   return (
     <div>
@@ -32,9 +29,16 @@ function Post(props) {
                 alt=""
                 className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px] max-sm:m-2"
               />
-              <div className="max-md:text-sm">{props.name}</div>
+              <div className="max-md:text-sm">{props.role}</div>
             </div>
-            <div className="text-[#962a28] cursor-pointer hover:text-[#c43836] px-4" onClick={()=>{setOpen(true)}}><DeleteIcon className="max-sm:scale-[80%] lg:scale-[130%]" /></div>
+            <div
+              className="text-[#962a28] cursor-pointer hover:text-[#c43836] px-4"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              <DeleteIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
+            </div>
           </div>
           <div className="my-5">
             <img src={props.image} alt="" />
@@ -60,13 +64,12 @@ function Post(props) {
             background: "#1e1936",
             color: "#fff",
             borderRadius: 25,
-            padding: '10px',
+            padding: "10px",
           },
-          
         }}
         sx={{
-          '& .MuiBackdrop-root': {
-            backdropFilter: 'blur(20px)',
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
           },
         }}
         // TransitionComponent={Transition}
@@ -76,15 +79,24 @@ function Post(props) {
         onClose={handleNo}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle><div className="">{"Delete post"}</div></DialogTitle>
+        <DialogTitle>
+          <div className="">{"Delete post"}</div>
+        </DialogTitle>
         <DialogContent>
-          <div className="text-[#e4e2e2] text-lg">Are you sure you want to delete?</div>
+          <div className="text-[#e4e2e2] text-lg">
+            Are you sure you want to delete?
+          </div>
         </DialogContent>
         <DialogActions>
-           <Button variant="" onClick={handleNo} sx={{borderRadius: '15px'}}>
+          <Button variant="" onClick={handleNo} sx={{ borderRadius: "15px" }}>
             No
           </Button>
-          <Button variant="outlined" color="error" sx={{borderRadius: '15px'}} onClick={handleYes}>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: "15px" }}
+            onClick={handleYes}
+          >
             Yes
           </Button>
         </DialogActions>

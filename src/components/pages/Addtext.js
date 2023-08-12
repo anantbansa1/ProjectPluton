@@ -38,6 +38,7 @@ import Menu from "@mui/material/Menu";
 import TextField from "@mui/material/TextField";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
+
 export default function Text() {
   const [option, setoption] = useState("text");
   const [event, setevent] = useState("");
@@ -47,7 +48,7 @@ export default function Text() {
   const [text, settext] = useState("");
   const [selected, setSelected] = useState(3);
   const navigate = useNavigate();
-  const [visibility, setvisibility] = useState("public");
+  const [visibility, setvisibility] = useState("Public");
   const [CoverImage, setcoverimage] = useState(null);
   const [upImgCover, setUpImgCover] = useState(CoverImage);
   const imgRefCover = useRef(null);
@@ -65,6 +66,10 @@ export default function Text() {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openVisibility = Boolean(anchorEl);
+  const [polloption1, setpolloption1] = useState("");
+  const [polloption2, setpolloption2] = useState("");
+  const [polloption3, setpolloption3] = useState("");
+  const [polloption4, setpolloption4] = useState("");
 
   const handleClickVisibility = (event) => {
     setAnchorEl(event.currentTarget);
@@ -128,6 +133,15 @@ export default function Text() {
       }
     } else if (option === "post") {
       handleSubmit();
+    } else if (option === 'poll') {
+      const collref = collection(db, 'polls');
+      const payload = { clubname: clubName, option1: polloption1, option2: polloption2, option3: polloption3, option4: polloption4, tag: tags[selected], visibility: visibility, text: text, timestamp: serverTimestamp() }
+      try {
+        await addDoc(collref, payload);
+        navigate(`/club/${clubName}`);
+      } catch(error) {
+        console.log("firebase error ", error);
+      }
     }
   }
 
@@ -152,6 +166,7 @@ export default function Text() {
           if (getuser) {
             if (getuser.data()) {
               const role = getuser.data().role;
+
               if (role !== "admin") {
                 navigate("/pagenotfound");
               }
@@ -178,12 +193,6 @@ export default function Text() {
     console.log("hahahah");
     if (crop.width && crop.height) {
       canvas.toBlob((blob) => {
-        // if (blob.size > 2 * 1024 * 1024) {
-        //   setmessage("Image should be of size less the 2 MB");
-        //   setOpen(true);
-        //   setetype("error");
-        //   return;
-        // }
         const Imageuse = canvas.toDataURL("image/png");
         setcoverimage(Imageuse);
       }, "image/png");
@@ -299,9 +308,8 @@ export default function Text() {
               onClick={(e) => {
                 setoption("text");
               }}
-              className={`p-[1vh] px-[3vh] border-white ${
-                option === "text" ? "border-b text-white" : "text-slate-300"
-              }`}
+              className={`p-[1vh] px-[3vh] border-white ${option === "text" ? "border-b text-white" : "text-slate-300"
+                }`}
             >
               Text
             </button>
@@ -311,9 +319,8 @@ export default function Text() {
               onClick={(e) => {
                 setoption("post");
               }}
-              className={`p-[1vh] px-[3vh] border-white ${
-                option === "post" ? "border-b text-white" : "text-slate-300"
-              }`}
+              className={`p-[1vh] px-[3vh] border-white ${option === "post" ? "border-b text-white" : "text-slate-300"
+                }`}
             >
               Image
             </button>
@@ -323,9 +330,8 @@ export default function Text() {
               onClick={(e) => {
                 setoption("poll");
               }}
-              className={`p-[1vh] px-[3vh] border-white ${
-                option === "poll" ? "border-b text-white" : "text-slate-300"
-              }`}
+              className={`p-[1vh] px-[3vh] border-white ${option === "poll" ? "border-b text-white" : "text-slate-300"
+                }`}
             >
               Poll
             </button>
@@ -426,9 +432,8 @@ export default function Text() {
                           onMouseOut={(e) => {
                             setChangeCover(false);
                           }}
-                          className={`${
-                            changeCover ? "" : "hidden"
-                          } px-4 py-2 shadow-inner  shadow-black z-10  row-start-1  w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] lg:w-[30vw] lg:h-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-2xl`}
+                          className={`${changeCover ? "" : "hidden"
+                            } px-4 py-2 shadow-inner  shadow-black z-10  row-start-1  w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] lg:w-[30vw] lg:h-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-2xl`}
                         >
                           Change Image
                         </button>
@@ -473,9 +478,9 @@ export default function Text() {
                             borderColor: "#475569 !important",
                           },
                           "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                            {
-                              borderColor: "#475569 !important",
-                            },
+                          {
+                            borderColor: "#475569 !important",
+                          },
                         }}
                         multiline
                         fullWidth
@@ -485,11 +490,11 @@ export default function Text() {
                         label="Caption (optional)"
                         variant="outlined"
                         color="grey"
-                        // inputProps={{
-                        //   style: {
-                        //     width: "30vw",
-                        //   },
-                        // }}
+                      // inputProps={{
+                      //   style: {
+                      //     width: "30vw",
+                      //   },
+                      // }}
                       />
                     </div>
                   </div>
@@ -505,9 +510,7 @@ export default function Text() {
                 <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22]  shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
                   <div className="flex flex-col  space-y-5">
                     <TextField
-                      onChange={(e) => {
-                        setevent(e.target.value);
-                      }}
+                      onChange={(e) => settext(e.target.value)}
                       sx={{
                         "& .MuiInputBase-root": {
                           color: "#DFE2E8",
@@ -534,11 +537,12 @@ export default function Text() {
                           borderColor: "#475569 !important",
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                          {
-                            borderColor: "#475569 !important",
-                          },
+                        {
+                          borderColor: "#475569 !important",
+                        },
                       }}
                       multiline
+                      value={text}
                       rows={4}
                       id="myfilled-name"
                       label="Poll Question"
@@ -552,7 +556,7 @@ export default function Text() {
                     />
                     <TextField
                       onChange={(e) => {
-                        setevent(e.target.value);
+                        setpolloption1(e.target.value)
                       }}
                       sx={{
                         "& .MuiInputBase-root": {
@@ -580,10 +584,11 @@ export default function Text() {
                           borderColor: "#475569 !important",
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                          {
-                            borderColor: "#475569 !important",
-                          },
+                        {
+                          borderColor: "#475569 !important",
+                        },
                       }}
+                      value={polloption1}
                       id="myfilled-name"
                       label="Option 1"
                       variant="outlined"
@@ -596,7 +601,7 @@ export default function Text() {
                     />
                     <TextField
                       onChange={(e) => {
-                        setevent(e.target.value);
+                        setpolloption2(e.target.value)
                       }}
                       sx={{
                         "& .MuiInputBase-root": {
@@ -624,14 +629,15 @@ export default function Text() {
                           borderColor: "#475569 !important",
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                          {
-                            borderColor: "#475569 !important",
-                          },
+                        {
+                          borderColor: "#475569 !important",
+                        },
                       }}
                       id="myfilled-name"
                       label="Option 2"
                       variant="outlined"
                       color="grey"
+                      value={polloption2}
                       inputProps={{
                         style: {
                           width: "45vw",
@@ -641,7 +647,7 @@ export default function Text() {
                     {optionno >= 3 && (
                       <TextField
                         onChange={(e) => {
-                          setevent(e.target.value);
+                          setpolloption3(e.target.value)
                         }}
                         sx={{
                           "& .MuiInputBase-root": {
@@ -669,13 +675,14 @@ export default function Text() {
                             borderColor: "#475569 !important",
                           },
                           "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                            {
-                              borderColor: "#475569 !important",
-                            },
+                          {
+                            borderColor: "#475569 !important",
+                          },
                         }}
                         id="myfilled-name"
                         label="Option 3"
                         variant="outlined"
+                        value={polloption3}
                         color="grey"
                         inputProps={{
                           style: {
@@ -687,7 +694,7 @@ export default function Text() {
                     {optionno > 3 && (
                       <TextField
                         onChange={(e) => {
-                          setevent(e.target.value);
+                          setpolloption4(e.target.value)
                         }}
                         sx={{
                           "& .MuiInputBase-root": {
@@ -715,12 +722,13 @@ export default function Text() {
                             borderColor: "#475569 !important",
                           },
                           "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                            {
-                              borderColor: "#475569 !important",
-                            },
+                          {
+                            borderColor: "#475569 !important",
+                          },
                         }}
                         id="myfilled-name"
                         label="Option 4"
+                        value={polloption4}
                         variant="outlined"
                         color="grey"
                         inputProps={{
@@ -737,8 +745,9 @@ export default function Text() {
                           variant="contained"
                           color="primary"
                           onClick={() => {
-                            if (optionno < 4) setoptionno(optionno + 1);
-                            console.log(optionno + 1);
+                            if (optionno < 4) {
+                              setoptionno(optionno + 1);
+                            }
                           }}
                           sx={{
                             background: "#130f22",
@@ -760,7 +769,12 @@ export default function Text() {
                           variant="contained"
                           color="primary"
                           onClick={() => {
-                            if (optionno > 2) setoptionno(optionno - 1);
+                            if (optionno > 2) {
+                              if (optionno === 3) setpolloption3("");
+                              else if (optionno === 4) setpolloption4("")
+                              setoptionno(optionno - 1);
+
+                            }
                             console.log(optionno + 1);
                           }}
                           sx={{
@@ -804,9 +818,8 @@ export default function Text() {
               }}
               label={
                 <div
-                  className={`${
-                    selected === 0 ? "text-black" : "text-white"
-                  } hover:text-black flex items-center space-x-2`}
+                  className={`${selected === 0 ? "text-black" : "text-white"
+                    } hover:text-black flex items-center space-x-2`}
                 >
                   <div className={`${selected === 0 ? "hidden" : ""}`}>
                     <AddIcon />
@@ -835,9 +848,8 @@ export default function Text() {
               }}
               label={
                 <div
-                  className={`${
-                    selected === 1 ? "text-black" : "text-white"
-                  } hover:text-black flex items-center space-x-2`}
+                  className={`${selected === 1 ? "text-black" : "text-white"
+                    } hover:text-black flex items-center space-x-2`}
                 >
                   <div className={`${selected === 1 ? "hidden" : ""}`}>
                     <AddIcon />
@@ -866,9 +878,8 @@ export default function Text() {
               }}
               label={
                 <div
-                  className={`${
-                    selected === 2 ? "text-black" : "text-white"
-                  } hover:text-black flex items-center space-x-2`}
+                  className={`${selected === 2 ? "text-black" : "text-white"
+                    } hover:text-black flex items-center space-x-2`}
                 >
                   <div className={`${selected === 2 ? "hidden" : ""}`}>
                     <AddIcon />

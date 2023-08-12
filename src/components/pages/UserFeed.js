@@ -17,18 +17,28 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import { useAuth } from "../../firebase";
 import { db } from "../../firebase";
-import { doc, getDocs, collection } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getDocs,
+  collection,
+  where,
+  query,
+} from "firebase/firestore";
 import { useLocation } from "react-router-dom";
-import AddIcon from '@mui/icons-material/Add';
-
+import AddIcon from "@mui/icons-material/Add";
 
 export default function UserFeed() {
   const [post, underline] = useState("post");
   const [club, setclub] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allclubs, setallclubs] = useState([]);
+  const [roles, setroles] = useState([]);
+  const [userid, setuserid] = useState();
   const open = Boolean(anchorEl);
   const location = useLocation();
+  const [posts, setposts] = useState([]);
+  const [clubimages, setclubimages] = useState([]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,46 +48,105 @@ export default function UserFeed() {
   };
   const user = useAuth();
 
+  useEffect(() => {
+    console.log("allclubs: ", allclubs);
+    setclubimage();
+  }, [allclubs]);
 
-  async function fetchClubs() {
-    try {
-      const clubs = await getDocs(collection(db, 'clubs'));
-      if (clubs) {
-        let clubnames = [];
-        clubs.forEach((element) => {
-          // console.log(element.data());
-          clubnames.push(element.data())
-        })
-        setallclubs(clubnames);
-      }
+  useEffect(() => {
+    console.log("57", roles["Club of Programmers"]);
+  }, [roles]);
+  useEffect(() => {
+    if (user) {
+      const email = user.email;
+      const collref = collection(db, "user");
+      const q = query(collref, where("email", "==", email));
+      getDocs(q).then((snapshot) => {
+        if (snapshot) {
+          snapshot.forEach((userData) => {
+            if (userData.data()) {
+              console.log("rollno ", userData.id);
+              setuserid(userData.id);
+            }
+          });
+        }
+      });
+    }
+  }, [user]);
 
-    } catch (error) {
-      console.log('firebase error')
+  async function fetchpost() {
+    const posts = await getDocs(collection(db, "posts"));
+    const postarray = [];
+    if (posts) {
+      posts.forEach((post) => {
+        postarray.push(post.data());
+      });
+      setposts(postarray);
+      console.log(80, postarray);
     }
   }
 
-  useEffect(() => {
-    console.log(allclubs)
-  }, [allclubs])
+  async function fetchClubs() {
+    try {
+      const clubs = await getDocs(collection(db, "clubs"));
+      if (clubs) {
+        let clubnames = [];
+        let clubroles = [];
+        clubs.forEach((element) => {
+          console.log("inside loop clubs");
+          const docref = doc(db, "user", userid, "clubs", element.data().name);
+          getDoc(docref).then((getrole) => {
+            if (getrole) {
+              if (getrole.data()) {
+                console.log("happyboy");
+                clubroles[element.data().name] = getrole.data().role;
+              } else {
+                clubroles[element.data().name] = "visitor";
+              }
+            } else {
+              clubroles[element.data().name] = "visitor";
+            }
+          });
+          clubnames.push(element.data());
+        });
+        setallclubs(clubnames);
+        setroles(clubroles);
+        console.log("clubroles ", clubroles);
+        console.log("clubs ", allclubs);
+      }
+    } catch (error) {
+      console.log("firebase error");
+    }
+  }
+
+  function setclubimage() {
+    let clubimage = [];
+    allclubs.map((club) => {
+      clubimage[club.name] = club.logo;
+    });
+    setclubimages(clubimage);
+  }
 
   useEffect(() => {
-    return () => {
+    if (userid) {
       fetchClubs();
-    };
-  }, [user]);
+      fetchpost();
+    }
+  }, [userid]);
 
   return (
     <div>
       <Navbar selected="home" />
-      <div className="">
+      <div className="hello">
         <div className=" md:ml-[22vw] ml-[18vw] max-[769px]:mt-[8vh]  my-[2vw] max-[769px]:mr-0 mr-[12vw] max-md:py-0 py-8 px-4  text-white ">
           <div className="flex max-md:text-lg text-3xl items-center justify-between  ">
             {" "}
             <div className=""> </div>
             <div className="flex space-x-[5vw] max-md:space-x-4  ">
               <button
-                className={`${post === "post" ? "border-b" : ""
-                  } border-white py-4  px-8`}
+                className={`${
+                  post === "post" ? "border-b" : ""
+                } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("post");
                 }}
@@ -85,8 +154,9 @@ export default function UserFeed() {
                 Post
               </button>
               <button
-                className={`${post === "poll" ? "border-b" : ""
-                  } border-white py-4  px-8`}
+                className={`${
+                  post === "poll" ? "border-b" : ""
+                } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("poll");
                 }}
@@ -147,7 +217,21 @@ export default function UserFeed() {
 
       {post === "post" && (
         <div className="-ml-[12vw] max-[769px]:m-0">
-          <Post
+          {posts.map((post) => {
+            console.log("heeeee", roles[post.clubname], post.clubname);
+            return (
+              <Post
+                name={post.clubname}
+                ClubImage={clubimages[post.clubname]}
+                image={post.imageurl}
+                text={post.text}
+                visibility={post.visibility}
+                timestamp={post.timestamp}
+                role={roles[post.clubname]}
+              ></Post>
+            );
+          })}
+          {/* <Post
             name="Club of Programmers"
             ClubImage={Tanjiro}
             image={Tanjiro}
@@ -194,7 +278,7 @@ export default function UserFeed() {
             text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
             date="08/03/2023"
             time="09:06"
-          ></Post>
+          ></Post> */}
         </div>
       )}
 
@@ -269,28 +353,39 @@ export default function UserFeed() {
       )}
 
       <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  shadow-2xl shadow-black space-y-10 bg-white bg-opacity-5 backdrop-blur-2xl ">
-
-        {allclubs.map((club) => {
+        {allclubs?.map((club) => {
+          {
+            console.log(" afafd: ", club.name);
+          }
           return (
-            <Link to={`/club/${club['name']}`} params={club['name']} state={club} className="h-[7vw] w-[7vw] border-white rounded-full">
-              <Tooltip title={club['name']}>
+            <Link
+              to={`/club/${club.name}`}
+              className="h-[7vw] w-[7vw] border-white rounded-full"
+            >
+              <Tooltip title={club.name}>
                 {" "}
                 <img
-                  src={club['logo']}
+                  src={club.logo}
                   className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
                   alt=""
                 />
               </Tooltip>
             </Link>
-          )
+          );
         })}
-        <Link to="/addclub" className="h-[7vw] w-[7vw] border-white rounded-full">
+        <Link
+          to="/addclub"
+          className="h-[7vw] w-[7vw] border-white rounded-full"
+        >
           <Tooltip title="Add New Club">
             {" "}
             <div
               className="flex items-center justify-center h-[7vw] w-[7vw] cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-full  "
               alt=""
-            > <AddIcon className="text-slate-400 scale-[150%]" /> </div>
+            >
+              {" "}
+              <AddIcon className="text-slate-400 scale-[150%]" />{" "}
+            </div>
           </Tooltip>
         </Link>
       </div>
@@ -301,7 +396,6 @@ export default function UserFeed() {
         }}
         className="min-[769px]:hidden flex items-center  space-x-1 text-white fixed top-3 right-2"
       >
-
         <div>
           <GroupsIcon></GroupsIcon> Clubs
         </div>
@@ -314,19 +408,24 @@ export default function UserFeed() {
         />
       ) : (
         <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
-          {allclubs.map((club) => {
+          {allclubs?.map((club) => {
             return (
-              <Link to={`/club/${club['name']}`} params={club['name']} state={club} className="">
-                <Tooltip title={club['name']}>
+              <Link
+                to={`/club/${club["name"]}`}
+                params={club["name"]}
+                state={club}
+                className=""
+              >
+                <Tooltip title={club["name"]}>
                   {" "}
                   <img
-                    src={club['logo']}
+                    src={club["logo"]}
                     className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto "
                     alt=""
                   />
                 </Tooltip>
               </Link>
-            )
+            );
           })}
           <Link to="/addclub" className="">
             <Tooltip title="Add New Club">
@@ -334,7 +433,10 @@ export default function UserFeed() {
               <div
                 className="flex items-center justify-center h-[22vw] w-[22vw] mx-auto cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-[50%]  "
                 alt=""
-              > <AddIcon className="text-slate-400 scale-[150%]" /> </div>
+              >
+                {" "}
+                <AddIcon className="text-slate-400 scale-[150%]" />{" "}
+              </div>
             </Tooltip>
           </Link>
 

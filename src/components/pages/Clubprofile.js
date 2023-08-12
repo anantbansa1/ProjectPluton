@@ -9,28 +9,22 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Bronzebadge from "../Images/badge_bronze.png";
 import Silverbadge from "../Images/badge_silver.png";
 import Goldbadge from "../Images/badge_golden.png";
-import corebadge from "../Images/badge_core.png";
 import React, { useCallback, useRef, useEffect } from "react";
 import ReactCrop from "react-image-crop";
 import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
 import Post from "./Post";
-import GroupIcon from "@mui/icons-material/Group";
 import Poll from "./Poll";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import tanjiro from "../Images/Tanjiro.jpg";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
-import minion from "../Images/Minions.jpg";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CampaignIcon from "@mui/icons-material/Campaign";
-import DoneIcon from "@mui/icons-material/Done";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import {
   Cancel,
   CheckCircle,
@@ -57,7 +51,6 @@ import { uploadBytes, getStorage, getDownloadURL, ref } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 function ClubProfile(props) {
@@ -103,10 +96,6 @@ function ClubProfile(props) {
   const [memberdetails, setmemberdetails] = useState();
   const [clubId, setClubId] = useState();
   const [application, setapplication] = useState();
-  const [img, setimg] = useState("");
-  const [url, setUrl] = useState("");
-  const [img1, setimg1] = useState("");
-  const [url1, setUrl1] = useState("");
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -155,7 +144,6 @@ function ClubProfile(props) {
 
   useEffect(() => {
     if (user) {
-      // fetchapplications();
       getmembersdetails();
     }
   }, [members]);
@@ -174,11 +162,8 @@ function ClubProfile(props) {
       try {
         const docref = doc(db, "user", mem);
         const docref2 = doc(db, "user", mem, "badges", clubName);
-
         const snapshot = await getDoc(docref);
         const snapshot2 = await getDoc(docref2);
-
-        // console.log(11, mem);
         let memimage, memname, membadge;
         if (snapshot.data()) {
           memimage = snapshot.data().profileimage;
@@ -204,32 +189,6 @@ function ClubProfile(props) {
     console.log("15", details);
     setmemberdetails(details);
   }
-
-  // async function fetchapplications() {
-  //   let applications = []
-  //   if (clubId) {
-  //     const colref = collection(db, 'clubs', clubId, 'Applications')
-  //     try {
-
-  //       const snapshot = await getDocs(colref);
-  //       snapshot.forEach((element) => {
-  //         getDoc(doc(db, 'user', element.id)).then((usera) => {
-  //           console.log('here')
-
-  //           const d = usera.data();
-  //           applications.push({ name: d.name, rollno: element.id, profileimage: d.profileimage })
-  //           console.log('here application now ', applications)
-
-  //         });
-  //       });
-  //     } catch (error) {
-  //       console.log('firebase error!')
-  //     }
-
-  //     console.log("applications ", applications)
-  //     setapplication(applications)
-  //   }
-  // }
 
   useEffect(() => {
     if (clubId) {
@@ -281,8 +240,6 @@ function ClubProfile(props) {
             let memberarray = [];
             setClubId(clubid);
             const colRef = collection(db, "clubs", clubid, "Members");
-
-            // Listen for real-time updates
             const unsub = onSnapshot(colRef, (snapshot) => {
               snapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
@@ -315,12 +272,10 @@ function ClubProfile(props) {
     try {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (docp) => {
-        // console.log(docp.id, '=>', docp.data());
         setUserData(docp.data());
         setUserRollNo(docp.id);
         console.log(docp.id);
         const docref = doc(db, "user", docp.id, "clubs", clubName);
-        // console.log(clubName)
         console.log("docref ", docref);
         const docSnap = await getDoc(docref);
         setLoading(false);
@@ -330,7 +285,6 @@ function ClubProfile(props) {
             console.log(docSnap.data());
             setRole(docSnap.data().role);
             setPoints(docSnap.data().points);
-            // console.log(381, points);
           } else {
             setRole("visitor");
           }
@@ -677,7 +631,6 @@ function ClubProfile(props) {
           {role === "pending" && (
             <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <div
-                // onClick={handlepending}
                 className={`px-4 py-2 max-sm:pr-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10  bg-white rounded-full  text-white`}
               >
                 {" "}
@@ -706,7 +659,6 @@ function ClubProfile(props) {
                 className={`px-4 py-2  max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
-                {/* <GroupIcon className="scale-[80%]" /> */}
                 &nbsp; <div>Pending</div> &nbsp;
               </button>
             </div>
