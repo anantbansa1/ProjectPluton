@@ -1,23 +1,54 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DeleteIcon from '@mui/icons-material/Delete';
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { green } from "@mui/material/colors";
 import { grey } from "@mui/material/colors";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { Link } from "react-router-dom";
+import { setDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import { addDoc, doc, updateDo, getDoc } from "firebase/firestore";
 
 function Poll(props) {
-  const [option1, setoption1] = useState(false);
-  const [option2, setoption2] = useState(false);
-  const [option3, setoption3] = useState(false);
-  const [option4, setoption4] = useState(false);
-  
+  const [option, setoption] = useState(0);
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openmenu = Boolean(anchorEl);
+  const [votes1, setvotes1] = useState(props.votes1);
+  const [votes2, setvotes2] = useState(props.votes2);
+  const [votes3, setvotes3] = useState(props.votes3);
+  const [votes4, setvotes4] = useState(props.votes4);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const [uploaded, setuploaded] = useState(false);
+  useEffect(() => {
+    if (props.user) {
+      const docref = doc(db, "polls", props.pollid, "votes", props.user);
+      getDoc(docref).then((snapshot) => {
+        if (snapshot) {
+          if (snapshot.data()) {
+            setoption(snapshot.data().selected);
+          }
+        }
+        setuploaded(true);
+      });
+    }
+  }, [props.user]);
+
+  const date = new Date(props.timestamp?.seconds * 1000);
+  const options = { hour: "2-digit", minute: "2-digit" };
 
   const handleNo = () => {
     setOpen(false);
@@ -27,46 +58,165 @@ function Poll(props) {
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (uploaded) {
+      addvote();
+    }
+    // console.log("calls");
+  }, [option]);
+
+  async function addvote() {
+    const docref = doc(db, "polls", props.pollid, "votes", props.user);
+    const payload = {
+      selected: option,
+    };
+    await setDoc(docref, payload);
+  }
+
   const handleoption1 = (e) => {
-    setoption1(!option1);
-    console.log("topion1");
-    setoption2(false);
-    setoption3(false);
-    setoption4(false);
+    if (option === 1) {
+      setoption(0);
+      setvotes1(votes1 - 1);
+    } else {
+      if (option === 2) {
+        setvotes2(votes2 - 1);
+      }
+      if (option === 3) {
+        setvotes3(votes3 - 1);
+      }
+      if (option === 4) {
+        setvotes4(votes4 - 1);
+      }
+      setoption(1);
+      setvotes1(votes1 + 1);
+    }
+    // console.log(votes1);
+    // addvote();
   };
   const handleoption2 = (e) => {
-    setoption2(!option2);
-    setoption1(false);
-    setoption3(false);
-    setoption4(false);
+    if (option === 2) {
+      setoption(0);
+      setvotes2(votes2 - 1);
+    } else {
+      if (option === 1) {
+        setvotes1(votes1 - 1);
+      }
+      if (option === 3) {
+        setvotes3(votes3 - 1);
+      }
+      if (option === 4) {
+        setvotes4(votes4 - 1);
+      }
+      setoption(2);
+      setvotes2(votes2 + 1);
+    }
+    // console.log(votes2);
+    // addvote();
   };
   const handleoption3 = (e) => {
-    setoption3(!option3);
-    setoption2(false);
-    setoption1(false);
-    setoption4(false);
+    if (option === 3) {
+      setoption(0);
+      setvotes3(votes3 - 1);
+    } else {
+      if (option === 2) {
+        setvotes2(votes2 - 1);
+      }
+      if (option === 1) {
+        setvotes1(votes1 - 1);
+      }
+      if (option === 4) {
+        setvotes4(votes4 - 1);
+      }
+      setoption(3);
+      setvotes3(votes3 + 1);
+    }
+    // console.log(votes3);
+    // addvote();
   };
   const handleoption4 = (e) => {
-    setoption4(!option4);
-    setoption2(false);
-    setoption3(false);
-    setoption1(false);
+    if (option === 4) {
+      setoption(0);
+      setvotes4(votes4 - 1);
+    } else {
+      if (option === 2) {
+        setvotes2(votes2 - 1);
+      }
+      if (option === 3) {
+        setvotes3(votes3 - 1);
+      }
+      if (option === 1) {
+        setvotes1(votes1 - 1);
+      }
+      setoption(4);
+      setvotes4(votes4 + 1);
+      // votes4 = votes4 + 1;
+    }
+    console.log(votes4);
+    // addvote();
   };
 
   return (
     <div>
       <div className="ml-[20vw] max-md:ml-[15vw] my-10">
         <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
-        <div className="flex justify-between font-semibold items-center ">
-            <div className="flex items-center space-x-5">
+          <div className="flex justify-between font-semibold items-center ">
+            <Link
+              to={`/club/${props.name}`}
+              className="flex items-center space-x-5"
+            >
               <img
                 src={props.ClubImage}
                 alt=""
                 className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
               />
               <div className="max-md:text-sm">{props.name}</div>
+            </Link>
+            <div>
+              <button
+                className="text-slate-200  hover:text-slate-300 px-4"
+                aria-controls={openmenu ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={openmenu ? "true" : undefined}
+                onClick={handleClick}
+              >
+                <MoreHorizIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
+              </button>
+              <div className="">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openmenu}
+                  onClose={handleClose}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      bgcolor: "#17132b",
+                      color: "#fff",
+                      margin: 1,
+                      borderRadius: 2,
+                    },
+                  }}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "center" }}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                      setOpen(true);
+                    }}
+                    sx={{ borderRadius: 2 }}
+                  >
+                    {" "}
+                    <span className="text-red-700 font-semibold">
+                      {" "}
+                      Delete post
+                    </span>
+                  </MenuItem>
+                </Menu>
+              </div>
             </div>
-            <div className="text-[#962a28] cursor-pointer hover:text-[#c43836] px-4" onClick={()=>{setOpen(true)}}><DeleteIcon className="scale-[130%]" /></div>
           </div>
           <div className="my-3"></div>
           <div className="text-lg max-md:text-sm text-[#dddbdb] ">
@@ -77,8 +227,11 @@ function Poll(props) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Checkbox
-                      checked={option1}
-                      onChange={handleoption1}
+                      checked={option === 1}
+                      onChange={() => {
+                        handleoption1();
+                        // addvote();
+                      }}
                       label={props.option1}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
@@ -94,7 +247,7 @@ function Poll(props) {
                   </div>
                   <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
                     {" "}
-                    {props.votes1} votes
+                    {votes1} votes
                   </div>
                 </div>
               )}
@@ -102,9 +255,12 @@ function Poll(props) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Checkbox
-                      checked={option2}
-                      onChange={handleoption2}
-                      label={props.option1}
+                      checked={option === 2}
+                      onChange={() => {
+                        handleoption2();
+                        // addvote();
+                      }}
+                      label={props.option2}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
                       checkedIcon={<CheckCircleIcon />}
@@ -119,7 +275,7 @@ function Poll(props) {
                   </div>
                   <div className="px-3  text-sm py-1 bg-white bg-opacity-30 rounded-full">
                     {" "}
-                    {props.votes2} votes
+                    {votes2} votes
                   </div>
                 </div>
               )}
@@ -127,9 +283,12 @@ function Poll(props) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Checkbox
-                      checked={option3}
-                      onChange={handleoption3}
-                      label={props.option1}
+                      checked={option === 3}
+                      onChange={() => {
+                        handleoption3();
+                        // addvote();
+                      }}
+                      label={props.option3}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
                       checkedIcon={<CheckCircleIcon />}
@@ -142,9 +301,11 @@ function Poll(props) {
                     />{" "}
                     <div className="flex">{props.option3}</div>
                   </div>
+
                   <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
                     {" "}
-                    {props.votes3} votes
+                    {/* {console.log(votes3)} */}
+                    {votes3} votes
                   </div>
                 </div>
               )}
@@ -152,9 +313,12 @@ function Poll(props) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Checkbox
-                      checked={option4}
-                      onChange={handleoption4}
-                      label={props.option1}
+                      checked={option === 4}
+                      onChange={() => {
+                        handleoption4();
+                        // addvote();
+                      }}
+                      label={props.option4}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
                       checkedIcon={<CheckCircleIcon />}
@@ -169,7 +333,7 @@ function Poll(props) {
                   </div>
                   <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
                     {" "}
-                    {props.votes4} votes
+                    {votes4} votes
                   </div>
                 </div>
               )}
@@ -177,10 +341,10 @@ function Poll(props) {
           </div>
           <div className="flex justify-between mx-2 ">
             <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">
-              {props.date}
+              {date.toLocaleDateString()}
             </div>
             <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">
-              {props.time}
+              {date.toLocaleTimeString(undefined, options)}
             </div>
           </div>
         </div>
@@ -189,33 +353,42 @@ function Poll(props) {
         open={open}
         PaperProps={{
           style: {
-            background: "#232323",
+            background: "#1e1936",
             color: "#fff",
             borderRadius: 25,
-            padding: '10px',
+            padding: "10px",
+          },
+        }}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
           },
         }}
         // TransitionComponent={Transition}
-        sx={{
-          '& .MuiBackdrop-root': {
-            backdropFilter: 'blur(20px)',
-          },
-        }}
         fullWidth
         maxWidth="sm"
         keepMounted
         onClose={handleNo}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle><div className="">{"Delete Poll"}</div></DialogTitle>
+        <DialogTitle>
+          <div className="">{"Delete post"}</div>
+        </DialogTitle>
         <DialogContent>
-          <div className="text-[#e4e2e2] text-lg">Are you sure you want to delete?</div>
+          <div className="text-[#e4e2e2] text-lg">
+            Are you sure you want to delete?
+          </div>
         </DialogContent>
         <DialogActions>
-        <Button variant="" onClick={handleNo} sx={{borderRadius: '15px'}}>
+          <Button variant="" onClick={handleNo} sx={{ borderRadius: "15px" }}>
             No
           </Button>
-          <Button variant="outlined" color="error" sx={{borderRadius: '15px'}} onClick={handleYes}>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: "15px" }}
+            onClick={handleYes}
+          >
             Yes
           </Button>
         </DialogActions>

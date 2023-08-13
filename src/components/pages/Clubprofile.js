@@ -106,21 +106,21 @@ function ClubProfile(props) {
   const image =
     points < currentClub.bronze
       ? Bronzebadge
-      : points <= currentClub.silver
+      : points < currentClub.silver
       ? Silverbadge
       : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
-      : points <= currentClub.silver
+      : points < currentClub.silver
       ? "silver"
       : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
-      : points <= currentClub.silver
+      : points < currentClub.silver
       ? currentClub.silver - points
       : currentClub.gold - points;
 
@@ -1229,7 +1229,7 @@ function ClubProfile(props) {
               return (
                 <>
                   {/* {console.log('1',badgetype[element.membadge])} */}
-                  <div className=" flex justify-between">
+                  <div className=" flex text-white justify-between">
                     <div className="flex items-center space-x-2 ">
                       <img
                         src={element.memimage}
@@ -1238,9 +1238,7 @@ function ClubProfile(props) {
                       />
 
                       <div
-                        className={`text-[${
-                          badgetype[element.membadge]
-                        }] font-semibold`}
+                        className={`font-semibold`} style={{color: badgetype[element.membadge]}}
                       >
                         {element.memname}
                       </div>
@@ -1249,10 +1247,9 @@ function ClubProfile(props) {
                       <div className="grid grid-rows-1 items-center grid-cols-1">
                         <img
                           src={ClubImage}
+                          style={{borderColor: badgetype[element.membadge]}}
                           alt=""
-                          className={`row-start-1 col-start-1 mx-auto border-4  border-[${
-                            badgetype[element.membadge]
-                          }] h-[50px] w-[50px] rounded-full  object-cover `}
+                          className={`row-start-1 col-start-1 mx-auto border-4 h-[50px] w-[50px] rounded-full  object-cover `}
                         />
                       </div>
                     )}

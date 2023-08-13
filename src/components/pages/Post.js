@@ -1,14 +1,25 @@
 import React from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { Link } from "react-router-dom";
 
 function Post(props) {
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openmenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleNo = () => {
     setOpen(false);
@@ -18,41 +29,112 @@ function Post(props) {
     setOpen(false);
   };
 
+  const date = new Date(props.timestamp?.seconds * 1000);
+
+  const options = { hour: "2-digit", minute: "2-digit" };
+
   return (
     <div>
-      <div className="ml-[20vw] max-md:ml-[15vw] my-10 max-sm:mr-0">
-        <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 max-sm:px-0 shadow-black text-white">
-          <div className="flex justify-between font-semibold items-center ">
-            <div className="flex items-center max-sm:space-x-2 space-x-5">
+      <div className="ml-[20vw] max-md:ml-[18vw] flex  my-10  max-sm:mr-0">
+        <div
+          className={`flex items-center flex-col mx-auto ${
+            props.image !== "" ? "w-fit h-fit" : "w-[100%] md:w-[45vw]   h-fit"
+          } max-sm:pb-5 bg-[#130f22] shadow-xl rounded-md max-md:py-4 py-8 max-sm:px-0 px-10  shadow-black text-white`}
+        >
+          <div className="flex justify-between font-semibold items-center self-start w-full">
+            <Link
+              to={`/club/${props.name}`}
+              className="flex items-center max-sm:space-x-2 space-x-5"
+            >
               <img
                 src={props.ClubImage}
                 alt=""
                 className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px] max-sm:m-2"
               />
-              <div className="max-md:text-sm">{props.role}</div>
-            </div>
-            <div
-              className="text-[#962a28] cursor-pointer hover:text-[#c43836] px-4"
-              onClick={() => {
-                setOpen(true);
-              }}
-            >
-              <DeleteIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
-            </div>
+              <div className="max-md:text-sm ">{props.name}</div>
+            </Link>
+            {props.role === "admin" && (
+              <div>
+                <button
+                  className="text-slate-200  hover:text-slate-300 px-4"
+                  aria-controls={openmenu ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openmenu ? "true" : undefined}
+                  onClick={handleClick}
+                >
+                  <MoreHorizIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
+                </button>
+                <div className="">
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openmenu}
+                    onClose={handleClose}
+                    sx={{
+                      "& .MuiPaper-root": {
+                        bgcolor: "#17132b",
+                        color: "#fff",
+                        margin: 1,
+                        borderRadius: 2,
+                      },
+                    }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                    transformOrigin={{ vertical: "top", horizontal: "center" }}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                        setOpen(true);
+                      }}
+                      sx={{ borderRadius: 2 }}
+                    >
+                      {" "}
+                      <span className="text-red-700 font-semibold">
+                        {" "}
+                        Delete post
+                      </span>
+                    </MenuItem>
+                  </Menu>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="my-5">
-            <img src={props.image} alt="" />
-          </div>
-          <div className="text-lg max-md:text-sm text-[#dddbdb] ">
-            <span className="font-bold text-white">{props.name}</span>{" "}
-            {props.text}
-          </div>
-          <div className="flex justify-between mx-2 ">
-            <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">
-              {props.date}
-            </div>
-            <div className="text-md max-md:text-xs py-4  text-[#c5c2c2]">
-              {props.time}
+          <div
+            className={`flex  flex-col ${
+              props.image !== "" ? "items-center" : "items-start"
+            } space-y-5 w-full`}
+          >
+            {props.image !== "" && (
+              <div className="mt-5 sm:mx-auto  w-[40vw]  max-md:w-[100%] ">
+                <img
+                  src={props.image}
+                  className="object-cover h-[100%] w-[100%] max-md:w-[100%] max-md:h-[100%] rounded-md"
+                  alt=""
+                />
+                <div className="text-lg my-5 max-sm:my-2 max-md:text-sm text-[#dddbdb] ">
+                  {props.text !== "" && (
+                    <span className="font-bold text-white">{props.name} </span>
+                  )}{" "}
+                  <span className="text-justify"> {props.text}</span>
+                </div>
+              </div>
+            )}
+            {props.image === "" && (
+              <div className="self-start text-lg mt-5 max-md:text-sm max-sm:px-0 text-[#dddbdb] w-[100%]">
+                <span className="font-bold text-white ">{props.name} </span>
+                {props.text}
+              </div>
+            )}
+            <div className="flex justify-between w-full">
+              <div className="text-md max-md:text-xs  text-[#c5c2c2]">
+                {date.toLocaleDateString()}
+              </div>
+              <div className="text-md max-md:text-xs  text-[#c5c2c2]">
+                {date.toLocaleTimeString(undefined, options)}
+              </div>
             </div>
           </div>
         </div>

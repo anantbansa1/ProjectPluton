@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../Navbar";
 import Minions from "../Images/Minions.jpg";
-import Tanjiro from "../Images/Tanjiro.jpg";
 import Post from "./Post";
 import Poll from "./Poll";
 import Tooltip from "@mui/material/Tooltip";
@@ -9,7 +8,6 @@ import { Link } from "react-router-dom";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import GroupsIcon from "@mui/icons-material/Groups";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -17,6 +15,7 @@ import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import { useAuth } from "../../firebase";
 import { db } from "../../firebase";
+import { Backdrop, CircularProgress } from "@mui/material";
 import {
   doc,
   getDoc,
@@ -24,38 +23,119 @@ import {
   collection,
   where,
   query,
+  orderBy,
 } from "firebase/firestore";
 import { useLocation } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 
 export default function UserFeed() {
+  const user = useAuth();
   const [post, underline] = useState("post");
   const [club, setclub] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [allclubs, setallclubs] = useState([]);
-  const [roles, setroles] = useState([]);
+  const [roles, setroles] = useState({});
   const [userid, setuserid] = useState();
+  const [Loading, setLoading] = useState(true);
   const open = Boolean(anchorEl);
   const location = useLocation();
   const [posts, setposts] = useState([]);
+  const [polls, setpolls] = useState([]);
   const [clubimages, setclubimages] = useState([]);
-
+  const [feedCount, setfeedCount] = useState(0);
+  const [pollcount, setpollcount] = useState(0);
+  const [filterposts, setfilterposts] = useState(posts);
+  const [filterpolls, setfilterpolls] = useState(polls);
+  const [selected, setSelected] = useState("Filter");
+  // const [checkclubs, setcheckclubs] = useState(false);
+  // const [checkfeed, setcheckfeed] = useState(false);
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  useEffect(() => {
+    sleep(500).then(() => {
+      setLoading(false);
+    });
+  }, [user]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = (s) => {
+    // console.log("s: ", s, "selcted: ", selected)
+    if (s === "close") setSelected(selected);
+    else if (s === selected) setSelected("Filter");
+    else setSelected(s);
     setAnchorEl(null);
   };
-  const user = useAuth();
 
   useEffect(() => {
-    console.log("allclubs: ", allclubs);
+    const tempposts = posts.filter(
+      (post) => selected === "Filter" || post.tag === selected
+    );
+    const temppolls = polls.filter(
+      (poll) => selected === "Filter" || poll.tag === selected
+    );
+
+    console.log("temppost: ", tempposts);
+    console.log("temppolls: ", temppolls);
+    setfilterposts(tempposts);
+    setfilterpolls(temppolls);
+  }, [posts, polls, selected]);
+
+  useEffect(() => {
     setclubimage();
+    fetchroles();
+    // setcheckclubs(true);
+    // setLoading(!(checkclubs && checkfeed));
   }, [allclubs]);
 
+  //   useEffect(() => {
+
+  // }, [polls]);
+
   useEffect(() => {
-    console.log("57", roles["Club of Programmers"]);
-  }, [roles]);
+    setfeedCount(0);
+    filterposts.map((filterpost) => {
+      if (
+        filterpost.visibility === "Public" ||
+        roles[filterpost.clubname] === "admin" ||
+        roles[filterpost.clubname] === "core" ||
+        roles[filterpost.clubname] === "member"
+      ) {
+        setfeedCount(feedCount + 1);
+      }
+    });
+  }, [filterposts]);
+
+  useEffect(() => {
+    setpollcount(0);
+    filterpolls.map((filterpoll) => {
+      if (
+        filterpoll.visibility === "Public" ||
+        roles[filterpoll.clubname] === "admin" ||
+        roles[filterpoll.clubname] === "core" ||
+        roles[filterpoll.clubname] === "member"
+      ) {
+        setpollcount(pollcount + 1);
+      }
+    });
+  }, [filterpolls]);
+
+  useEffect(() => {
+    polls.map((poll) => {
+      if (
+        poll.visibility === "Public" ||
+        roles[poll.clubname] === "admin" ||
+        roles[poll.clubname] === "core" ||
+        roles[poll.clubname] === "member"
+      ) {
+        setpollcount(pollcount + 1);
+      }
+    });
+    console.log("poll: ", pollcount);
+  }, [polls]);
+
   useEffect(() => {
     if (user) {
       const email = user.email;
@@ -72,10 +152,13 @@ export default function UserFeed() {
         }
       });
     }
+    // setLoading(!(checkclubs && checkfeed));
   }, [user]);
 
   async function fetchpost() {
-    const posts = await getDocs(collection(db, "posts"));
+    const posts = await getDocs(
+      query(collection(db, "posts"), orderBy("timestamp", "desc"))
+    );
     const postarray = [];
     if (posts) {
       posts.forEach((post) => {
@@ -83,6 +166,52 @@ export default function UserFeed() {
       });
       setposts(postarray);
       console.log(80, postarray);
+      // setcheckfeed(true);
+    }
+  }
+
+  async function fetchpolls() {
+    const pollDocs = await getDocs(
+      query(collection(db, "polls"), orderBy("timestamp", "desc"))
+    );
+    const pollarray = [];
+    if (pollDocs) {
+      pollDocs.forEach((poll) => {
+        let data = poll.data();
+        data.id = poll.id;
+        pollarray.push(data);
+      });
+      setpolls(pollarray);
+      let temppolls = [];
+      Promise.all(
+        pollarray.map((poll) => {
+          return getDocs(collection(db, "polls", poll.id, "votes"))
+            .then((snapshot) => {
+              let a = { ...poll };
+              a.votes1 = 0;
+              a.votes2 = 0;
+              a.votes3 = 0;
+              a.votes4 = 0;
+              snapshot.forEach((p) => {
+                const sel = p.data().selected;
+                a[`votes${sel}`]++;
+              });
+              temppolls.push(a);
+            })
+            .catch((error) => {
+              let a = { ...poll };
+              a.votes1 = 0;
+              a.votes2 = 0;
+              a.votes3 = 0;
+              a.votes4 = 0;
+              temppolls.push(a);
+            });
+        })
+      ).then(() => {
+        console.log("temppolls ", temppolls);
+        setpolls(temppolls);
+        setfilterpolls(temppolls);
+      });
     }
   }
 
@@ -91,28 +220,44 @@ export default function UserFeed() {
       const clubs = await getDocs(collection(db, "clubs"));
       if (clubs) {
         let clubnames = [];
-        let clubroles = [];
         clubs.forEach((element) => {
-          console.log("inside loop clubs");
           const docref = doc(db, "user", userid, "clubs", element.data().name);
-          getDoc(docref).then((getrole) => {
-            if (getrole) {
-              if (getrole.data()) {
-                console.log("happyboy");
-                clubroles[element.data().name] = getrole.data().role;
-              } else {
-                clubroles[element.data().name] = "visitor";
-              }
-            } else {
-              clubroles[element.data().name] = "visitor";
-            }
-          });
           clubnames.push(element.data());
         });
         setallclubs(clubnames);
+        console.log("clubs ", allclubs);
+      }
+    } catch (error) {
+      console.log("firebase error");
+    }
+  }
+
+  async function fetchroles() {
+    try {
+      const clubs = await getDocs(collection(db, "clubs"));
+      if (clubs) {
+        let clubroles = [];
+        let promises = [];
+        clubs.forEach((element) => {
+          console.log("inside loop clubs");
+          const docref = doc(db, "user", userid, "clubs", element.data().name);
+          promises.push(
+            getDoc(docref).then((getrole) => {
+              if (getrole) {
+                if (getrole.data()) {
+                  clubroles[element.data().name] = getrole.data().role;
+                } else {
+                  clubroles[element.data().name] = "visitor";
+                }
+              } else {
+                clubroles[element.data().name] = "visitor";
+              }
+            })
+          );
+        });
+        await Promise.all(promises);
         setroles(clubroles);
         console.log("clubroles ", clubroles);
-        console.log("clubs ", allclubs);
       }
     } catch (error) {
       console.log("firebase error");
@@ -131,6 +276,7 @@ export default function UserFeed() {
     if (userid) {
       fetchClubs();
       fetchpost();
+      fetchpolls();
     }
   }, [userid]);
 
@@ -149,6 +295,7 @@ export default function UserFeed() {
                 } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("post");
+                  // setcheckfeed(false);
                 }}
               >
                 Post
@@ -159,6 +306,7 @@ export default function UserFeed() {
                 } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("poll");
+                  // setcheckfeed(true);
                 }}
               >
                 Poll
@@ -172,7 +320,15 @@ export default function UserFeed() {
               >
                 {" "}
                 <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
-                <div className="ml-3 max-lg:hidden">Filter</div>
+                <div className="ml-3 max-lg:hidden">
+                  {(() => {
+                    let a =
+                      selected.charAt(0).toUpperCase() +
+                      selected.slice(1) +
+                      "s";
+                    return a;
+                  })()}
+                </div>
                 <div className="max-lg:hidden">
                   <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
                 </div>
@@ -182,7 +338,9 @@ export default function UserFeed() {
                   id="basic-menu"
                   anchorEl={anchorEl}
                   open={open}
-                  onClose={handleClose}
+                  onClose={() => {
+                    handleClose("close");
+                  }}
                   sx={{
                     "& .MuiPaper-root": {
                       bgcolor: "#130f22",
@@ -196,15 +354,35 @@ export default function UserFeed() {
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                  <MenuItem
+                    sx={{
+                      padding: 2,
+                      bgcolor: selected === "achievement" ? "#000" : "inherit",
+                    }}
+                    onClick={() => {
+                      handleClose("achievement");
+                    }}
+                  >
                     {" "}
-                    <EmojiEventsIcon /> &nbsp;Achievements
+                    <EmojiEventsIcon /> &nbsp;Achievement
                   </MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                  <MenuItem
+                    sx={{
+                      padding: 2,
+                      bgcolor: selected === "event" ? "#000" : "inherit",
+                    }}
+                    onClick={() => handleClose("event")}
+                  >
                     <EventAvailableIcon />
                     &nbsp;Events
                   </MenuItem>
-                  <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
+                  <MenuItem
+                    sx={{
+                      padding: 2,
+                      bgcolor: selected === "announcement" ? "#000" : "inherit",
+                    }}
+                    onClick={() => handleClose("announcement")}
+                  >
                     <CampaignIcon />
                     &nbsp;Announcements
                   </MenuItem>
@@ -216,147 +394,79 @@ export default function UserFeed() {
       </div>
 
       {post === "post" && (
-        <div className="-ml-[12vw] max-[769px]:m-0">
-          {posts.map((post) => {
-            console.log("heeeee", roles[post.clubname], post.clubname);
-            return (
-              <Post
-                name={post.clubname}
-                ClubImage={clubimages[post.clubname]}
-                image={post.imageurl}
-                text={post.text}
-                visibility={post.visibility}
-                timestamp={post.timestamp}
-                role={roles[post.clubname]}
-              ></Post>
-            );
+        <div className="-ml-[12vw] max-[769px]:m-0 flex flex-col">
+          {filterposts.map((post) => {
+            // console.log("heeeee", roles[post.clubname], post.clubname);
+            if (
+              post.visibility === "Public" ||
+              roles[post.clubname] === "admin" ||
+              roles[post.clubname] === "core" ||
+              roles[post.clubname] === "member"
+            ) {
+              // setfeedCount(feedCount+1);
+              return (
+                <Post
+                  name={post.clubname}
+                  ClubImage={clubimages[post.clubname]}
+                  image={post.imageurl}
+                  text={post.text}
+                  visibility={post.visibility}
+                  timestamp={post.timestamp}
+                  role={roles[post.clubname]}
+                ></Post>
+              );
+            }
           })}
-          {/* <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post>
-          <Post
-            name="Club of Programmers"
-            ClubImage={Tanjiro}
-            image={Tanjiro}
-            text="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aperiam nisi omnis aliquam maxime iste sunt porro. Dignissimos repudiandae ratione blanditiis velit, nisi dolorem non quasi quaerat quibusdam tenetur quia aspernatur."
-            date="08/03/2023"
-            time="09:06"
-          ></Post> */}
+          {console.log("feedcount", feedCount)}
+          {feedCount == 0 && (
+            <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">
+              Hmm... nothing to show here.
+            </div>
+          )}
         </div>
       )}
 
       {post === "poll" && (
         <div className="-ml-[12vw] max-[769px]:m-0">
-          <Poll
-            name="Club of Programmers"
-            ClubImage={Minions}
-            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
-            option1="Option 1"
-            option2="Option 2"
-            option3="Option 3"
-            option4="Option 4"
-            votes1={5}
-            votes2={1}
-            votes3={6}
-            votes4={2}
-          ></Poll>
-          <Poll
-            name="Club of Programmers"
-            ClubImage={Minions}
-            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
-            option1="Option 1"
-            option2="Option 2"
-            option3="Option 3"
-            option4="Option 4"
-            votes1={5}
-            votes2={1}
-            votes3={6}
-            votes4={2}
-          ></Poll>
-          <Poll
-            name="Club of Programmers"
-            ClubImage={Minions}
-            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
-            option1="Option 1"
-            option2="Option 2"
-            option3="Option 3"
-            option4="Option 4"
-            votes1={5}
-            votes2={1}
-            votes3={6}
-            votes4={2}
-          ></Poll>
-          <Poll
-            name="Club of Programmers"
-            ClubImage={Minions}
-            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
-            option1="Option 1"
-            option2="Option 2"
-            option3="Option 3"
-            option4="Option 4"
-            votes1={5}
-            votes2={1}
-            votes3={6}
-            votes4={2}
-          ></Poll>
-          <Poll
-            name="Club of Programmers"
-            ClubImage={Minions}
-            question="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita doloremque ex vitae molestias tempora quasi rerum ipsa aperiam aut itaque!"
-            option1="Option 1"
-            option2="Option 2"
-            option3="Option 3"
-            option4="Option 4"
-            votes1={5}
-            votes2={1}
-            votes3={6}
-            votes4={2}
-          ></Poll>
+          {console.log("filterpolls ", filterpolls)}
+          {filterpolls.map((poll) => {
+            // console.log("poll", poll.id);
+            if (
+              poll.visibility === "Public" ||
+              roles[poll.clubname] === "admin" ||
+              roles[poll.clubname] === "core" ||
+              roles[poll.clubname] === "member"
+            ) {
+              return (
+                <Poll
+                  name={poll.clubname}
+                  ClubImage={clubimages[poll.clubname]}
+                  question={poll.text}
+                  option1={poll.option1}
+                  option2={poll.option2}
+                  option3={poll.option3}
+                  option4={poll.option4}
+                  timestamp={poll.timestamp}
+                  votes1={poll.votes1}
+                  votes2={poll.votes2}
+                  votes3={poll.votes3}
+                  votes4={poll.votes4}
+                  user={userid}
+                  pollid={poll.id}
+                />
+              );
+            }
+          })}
+          {pollcount == 0 && (
+            <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">
+              Hmm... nothing to show here.
+            </div>
+          )}
         </div>
       )}
 
       <div className="flex max-[769px]:hidden  flex-col fixed h-[100%] w-[12vw] items-center overflow-y-scroll scrollbar-hide top-0 right-0  py-4  shadow-2xl shadow-black space-y-10 bg-white bg-opacity-5 backdrop-blur-2xl ">
         {allclubs?.map((club) => {
-          {
-            console.log(" afafd: ", club.name);
-          }
           return (
             <Link
               to={`/club/${club.name}`}
@@ -401,11 +511,7 @@ export default function UserFeed() {
         </div>
       </button>
       {club === false ? (
-        <img
-          src={Minions}
-          alt=""
-          className="h-[20vw] w-[15vw] fixed top-10 right-1 hidden"
-        />
+        ""
       ) : (
         <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
           {allclubs?.map((club) => {
@@ -441,6 +547,17 @@ export default function UserFeed() {
           </Link>
         </div>
       )}
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backdropFilter: "blur(20px)",
+        }}
+        open={Loading}
+        close={Loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }
