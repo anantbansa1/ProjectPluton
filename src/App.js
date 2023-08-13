@@ -17,6 +17,8 @@ import Leaderboard from "./components/pages/Leaderboard";
 import Addtext from "./components/pages/Addtext";
 import Manage from "./components/pages/Manage";
 import AboutUs from "./components/pages/AboutUs";
+import Pagenotfound from "./components/pages/Pagenotfound";
+import Addnewclub from "./components/pages/Addnewclub";
 
 function App() {
   return (
@@ -37,12 +39,11 @@ function App() {
           }
         />
         <Route
-          path="/clubprofile"
+          path={"/club/:clubID"}
           element={
             <ClubProfile
               name="Club of Programmers"
-              desc="
-    Lorem ipsum dolor s sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
+              desc="Lorem ipsum dolor s sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
               clubimage={minion}
               coverimage={cover}
               clubpoint={125}
@@ -56,8 +57,11 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/getemail" element={<Resetpass />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/add" element={<Addtext />} />
+        <Route path="/add/:clubId" element={<Addtext />} />
+        <Route path="/addclub" element={<Addnewclub />} />
         <Route path="/adduser" element={<AddUserAdmin />} />
+        <Route path="*" element={<Pagenotfound />} />
+        <Route path="/pagenotfound" element={<Pagenotfound />} />
         <Route path="/ourteam" element={<AboutUs />} />
         <Route
           path="/manage/:clubid"

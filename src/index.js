@@ -5,6 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+// var admin = require("firebase-admin");
+
+// var serviceAccount = require("serviceAccount.json");
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+
+// exports.default = admin;
+
 root.render(
   <React.StrictMode>
     <App />
