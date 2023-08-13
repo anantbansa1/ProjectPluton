@@ -64,14 +64,10 @@ function App() {
         <Route path="/pagenotfound" element={<Pagenotfound />} />
         <Route path="/ourteam" element={<AboutUs />} />
         <Route
-          path="/manage/:clubid"
+          path="/manage/:clubID"
           element={
             <Manage
-              name="Club of Programmers"
-              desc="
-    Lorem ipsum dolor s sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
-              clubimage={minion}
-              coverimage={cover}
+              
             />
           }
         />

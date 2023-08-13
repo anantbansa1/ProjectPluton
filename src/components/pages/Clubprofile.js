@@ -1204,7 +1204,7 @@ function ClubProfile(props) {
             <div>Members</div>
             {role === "admin" ? (
               <Link
-                to="/manage"
+                to={`/manage/${clubName}`}
                 className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"
               >
                 {" "}
