@@ -16,8 +16,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { getDocs, query, collection, where } from "firebase/firestore";
 import { db } from "../firebase";
 // bg-[#1c1733]
@@ -29,38 +29,40 @@ export default function Navbar(props) {
   const navigate = useNavigate();
   const [Loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [profileimage, setprofileimage] = useState("https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg")
+  const [profileimage, setprofileimage] = useState(
+    "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg"
+  );
   const user = useAuth();
   const [helper, sethelper] = useState(false);
 
   useEffect(() => {
     if (user) {
-      getDocs(query(collection(db, 'user')), where('email', '==', user.email)).then((snapshot) => {
+      getDocs(
+        query(collection(db, "user")),
+        where("email", "==", user.email)
+      ).then((snapshot) => {
         snapshot.forEach((u) => {
           setprofileimage(u.data().profileimage);
-        })
-      })
+        });
+      });
     }
-
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
-    sleep(500).then(() => {
+    sleep(1000).then(() => {
       sethelper(true);
-    })
-  }, [])
+    });
+  }, []);
 
   useEffect(() => {
     if (helper) {
-
       if (user) {
         // console.log(user?.email);
       } else {
         navigate("/login");
       }
     }
-
-  }, [helper])
+  }, [helper]);
 
   const handleNo = () => {
     setOpen(false);
@@ -70,7 +72,6 @@ export default function Navbar(props) {
     setOpen(false);
     handleLogOut();
   };
-
 
   const Title = ({ children }) => <div className="title">{children}</div>;
 
@@ -91,14 +92,11 @@ export default function Navbar(props) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
   function redirectIn() {
-
-
     if (user) {
       // console.log(user?.email);
     } else {
       navigate("/login");
     }
-
   }
 
   return (
@@ -117,8 +115,9 @@ export default function Navbar(props) {
         <div className="flex flex-col space-y-[1.5vw]">
           <Link
             to="/"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${props.selected === "home" ? " bg-opacity-10  bg-white" : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-xl`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${
+              props.selected === "home" ? " bg-opacity-10  bg-white" : ""
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-xl`}
           >
             {" "}
             <HomeIcon className=" scale-[120%]"></HomeIcon>
@@ -127,30 +126,33 @@ export default function Navbar(props) {
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/leaderboard"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "leaderboard"
-              ? " bg-opacity-10  bg-white  border-[#323232]"
-              : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "leaderboard"
+                ? " bg-opacity-10  bg-white  border-[#323232]"
+                : ""
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
           >
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
           </Link>
           <Link
             to="/adduser"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "manageusers"
-              ? " bg-opacity-10  bg-white  border-[#323232]"
-              : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "manageusers"
+                ? " bg-opacity-10  bg-white  border-[#323232]"
+                : ""
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
           >
             <ManageAccountsIcon className=" scale-[120%]"></ManageAccountsIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Manage </button>
           </Link>
           <Link
             to="/faq"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${props.selected === "faq"
-              ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
-              : ""
-              } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-xl`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${
+              props.selected === "faq"
+                ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
+                : ""
+            } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-xl`}
           >
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
@@ -159,18 +161,20 @@ export default function Navbar(props) {
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/ourteam"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "ourteam"
-              ? " bg-opacity-10  bg-white  border-[#323232]"
-              : ""
-              } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-xl`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "ourteam"
+                ? " bg-opacity-10  bg-white  border-[#323232]"
+                : ""
+            } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-xl`}
           >
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Our Team</button>
           </Link>
           <Link
             to="/userprofile"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
-              } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-xl`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
+            } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-xl`}
           >
             {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
             <button

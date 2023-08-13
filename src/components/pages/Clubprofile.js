@@ -102,8 +102,8 @@ function ClubProfile(props) {
   const [filterposts, setfilterposts] = useState([]);
   const [filterpolls, setfilterpolls] = useState([]);
   const [selected, setselected] = useState("Filter");
-  const [feedCount, setfeedCount] = useState(0)
-  const [pollcount, setpollCount] = useState(0)
+  const [feedCount, setfeedCount] = useState(0);
+  const [pollcount, setpollCount] = useState(0);
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -115,29 +115,29 @@ function ClubProfile(props) {
     points < currentClub.bronze
       ? Bronzebadge
       : points < currentClub.silver
-        ? Silverbadge
-        : Goldbadge;
+      ? Silverbadge
+      : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points < currentClub.silver
-        ? "silver"
-        : "gold";
+      ? "silver"
+      : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points < currentClub.silver
-        ? currentClub.silver - points
-        : currentClub.gold - points;
+      ? currentClub.silver - points
+      : currentClub.gold - points;
 
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
       : points <= currentClub.silver
-        ? "text-[#d7d7d7]"
-        : "text-[#fee101]";
+      ? "text-[#d7d7d7]"
+      : "text-[#fee101]";
 
   useEffect(() => {
     console.log(clubName);
@@ -280,11 +280,15 @@ function ClubProfile(props) {
       fetchpost();
       fetchpolls();
     }
-  }, [clubId])
+  }, [clubId]);
 
   async function fetchpost() {
     const posts = await getDocs(
-      query(collection(db, "posts"),where('clubname','==',clubName), orderBy("timestamp", "desc"))
+      query(
+        collection(db, "posts"),
+        where("clubname", "==", clubName),
+        orderBy("timestamp", "desc")
+      )
     );
     const postarray = [];
     if (posts) {
@@ -301,7 +305,11 @@ function ClubProfile(props) {
 
   async function fetchpolls() {
     const pollDocs = await getDocs(
-      query(collection(db, "polls"),where('clubname','==',clubName), orderBy("timestamp", "desc"))
+      query(
+        collection(db, "polls"),
+        where("clubname", "==", clubName),
+        orderBy("timestamp", "desc")
+      )
     );
     const pollarray = [];
     if (pollDocs) {
@@ -362,9 +370,9 @@ function ClubProfile(props) {
     filterposts.map((filterpost) => {
       if (
         filterpost.visibility === "Public" ||
-        role=== "admin" ||
-        role=== "core" ||
-        role=== "member"
+        role === "admin" ||
+        role === "core" ||
+        role === "member"
       ) {
         setfeedCount(feedCount + 1);
       }
@@ -376,15 +384,14 @@ function ClubProfile(props) {
     filterpolls.map((filterpoll) => {
       if (
         filterpoll.visibility === "Public" ||
-        role=== "admin" ||
-        role=== "core" ||
-        role=== "member"
+        role === "admin" ||
+        role === "core" ||
+        role === "member"
       ) {
         setpollCount(pollcount + 1);
       }
     });
   }, [filterpolls]);
-
 
   async function getUserDetails() {
     const q = query(collection(db, "user"), where("email", "==", user.email));
@@ -643,7 +650,6 @@ function ClubProfile(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  
   const handleClosefilter = (s) => {
     // console.log("s: ", s, "selcted: ", selected)
     if (s === "close") setselected(selected);
@@ -672,7 +678,7 @@ function ClubProfile(props) {
 
   return (
     <div className="">
-      <Navbar selected="profile"></Navbar>
+      <Navbar selected="none"></Navbar>
       <div className=" md:ml-[22vw]  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
           <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
@@ -697,8 +703,9 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${changeCover ? "" : "hidden"
-              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${
+              changeCover ? "" : "hidden"
+            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
@@ -804,33 +811,38 @@ function ClubProfile(props) {
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
-                  } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                  points >= currentClub.gold ? "hidden" : ""
+                } ${color}`}
               >
                 {pointleft} points to {badge}
               </div>
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
-                  } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                  points >= currentClub.gold ? "" : "hidden"
+                } ${color}`}
               >
                 {points} points
               </div>
               <div
-                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
-                  } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+                className={`row-start-1 ${
+                  points < currentClub.bronze ? "" : "hidden"
+                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
                 style={{
                   width: ((points / currentClub.bronze) * 100).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
-                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+                className={`row-start-1 ${
+                  points < currentClub.bronze ? "" : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
               />
               <div
-                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
-                  ? ""
-                  : "hidden"
-                  } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                className={`row-start-1 ${
+                  points < currentClub.silver && points >= currentClub.bronze
+                    ? ""
+                    : "hidden"
+                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
                 style={{
                   width:
                     (
@@ -841,28 +853,31 @@ function ClubProfile(props) {
                 }}
               />
               <div
-                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
-                  ? ""
-                  : "hidden"
-                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                className={`row-start-1 ${
+                  points < currentClub.silver && points >= currentClub.bronze
+                    ? ""
+                    : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
               />
               <div
-                className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
-                  }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+                className={`row-start-1  ${
+                  points >= currentClub.silver ? "" : "hidden"
+                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
                 style={{
                   width:
                     points > currentClub.gold
                       ? "100%"
                       : (
-                        ((points - currentClub.silver) /
-                          (currentClub.gold - currentClub.silver)) *
-                        100
-                      ).toString() + "%",
+                          ((points - currentClub.silver) /
+                            (currentClub.gold - currentClub.silver)) *
+                          100
+                        ).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
-                  }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+                className={`row-start-1 ${
+                  points >= currentClub.silver ? "" : "hidden"
+                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
             <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -890,8 +905,9 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${underline === "post" ? "border-b" : ""
-                } border-white py-4  px-8`}
+              className={`${
+                underline === "post" ? "border-b" : ""
+              } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -899,8 +915,9 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${underline === "poll" ? "border-b" : ""
-                } border-white py-4  px-8`}
+              className={`${
+                underline === "poll" ? "border-b" : ""
+              } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -909,87 +926,84 @@ function ClubProfile(props) {
             </button>
           </div>
           <div className="">
+            {" "}
+            <button
+              className="flex justify-center items-center text-xl "
+              onClick={handleClickfilter}
+            >
               {" "}
-              <button
-                className="flex justify-center items-center text-xl "
-                onClick={handleClickfilter}
+              <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
+              <div className="ml-3 max-lg:hidden">
+                {(() => {
+                  let a =
+                    selected.charAt(0).toUpperCase() + selected.slice(1) + "s";
+                  return a;
+                })()}
+              </div>
+              <div className="max-lg:hidden">
+                <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
+              </div>
+            </button>
+            <div className="">
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={openfilter}
+                onClose={() => {
+                  handleClosefilter("close");
+                }}
+                sx={{
+                  "& .MuiPaper-root": {
+                    bgcolor: "#130f22",
+                    color: "#fff",
+                    margin: 2,
+                  },
+                }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
               >
-                {" "}
-                <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
-                <div className="ml-3 max-lg:hidden">
-                  {(() => {
-                    let a =
-                      selected.charAt(0).toUpperCase() +
-                      selected.slice(1) +
-                      "s";
-                    return a;
-                  })()}
-                </div>
-                <div className="max-lg:hidden">
-                  <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
-                </div>
-              </button>
-              <div className="">
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={openfilter}
-                  onClose={() => {
-                    handleClosefilter("close");
-                  }}
+                <MenuItem
                   sx={{
-                    "& .MuiPaper-root": {
-                      bgcolor: "#130f22",
-                      color: "#fff",
-                      margin: 2,
-                    },
+                    padding: 2,
+                    bgcolor: selected === "achievement" ? "#000" : "inherit",
                   }}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                  transformOrigin={{ vertical: "top", horizontal: "center" }}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
+                  onClick={() => {
+                    handleClosefilter("achievement");
                   }}
                 >
-                  <MenuItem
-                    sx={{
-                      padding: 2,
-                      bgcolor: selected === "achievement" ? "#000" : "inherit",
-                    }}
-                    onClick={() => {
-                      handleClosefilter("achievement");
-                    }}
-                  >
-                    {" "}
-                    <EmojiEventsIcon /> &nbsp;Achievement
-                  </MenuItem>
-                  <MenuItem
-                    sx={{
-                      padding: 2,
-                      bgcolor: selected === "event" ? "#000" : "inherit",
-                    }}
-                    onClick={() => handleClosefilter("event")}
-                  >
-                    <EventAvailableIcon />
-                    &nbsp;Events
-                  </MenuItem>
-                  <MenuItem
-                    sx={{
-                      padding: 2,
-                      bgcolor: selected === "announcement" ? "#000" : "inherit",
-                    }}
-                    onClick={() => handleClosefilter("announcement")}
-                  >
-                    <CampaignIcon />
-                    &nbsp;Announcements
-                  </MenuItem>
-                </Menu>
-              </div>
+                  {" "}
+                  <EmojiEventsIcon /> &nbsp;Achievement
+                </MenuItem>
+                <MenuItem
+                  sx={{
+                    padding: 2,
+                    bgcolor: selected === "event" ? "#000" : "inherit",
+                  }}
+                  onClick={() => handleClosefilter("event")}
+                >
+                  <EventAvailableIcon />
+                  &nbsp;Events
+                </MenuItem>
+                <MenuItem
+                  sx={{
+                    padding: 2,
+                    bgcolor: selected === "announcement" ? "#000" : "inherit",
+                  }}
+                  onClick={() => handleClosefilter("announcement")}
+                >
+                  <CampaignIcon />
+                  &nbsp;Announcements
+                </MenuItem>
+              </Menu>
             </div>
+          </div>
         </div>
       </div>
 
-      {(role === 'admin' || role === 'core') && (
-
+      {(role === "admin" || role === "core") && (
         <div className="ml-[20vw] max-md:ml-[15vw] my-10">
           <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
             <div className="flex font-semibold items-center space-x-5">
@@ -1008,7 +1022,7 @@ function ClubProfile(props) {
           </div>
         </div>
       )}
-      
+
       {underline === "post" && (
         <>
           {filterposts.map((post) => {
@@ -1459,7 +1473,8 @@ function ClubProfile(props) {
                       />
 
                       <div
-                        className={`font-semibold`} style={{ color: badgetype[element.membadge] }}
+                        className={`font-semibold`}
+                        style={{ color: badgetype[element.membadge] }}
                       >
                         {element.memname}
                       </div>
