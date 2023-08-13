@@ -60,7 +60,7 @@ function App() {
         <Route path="/adduser" element={<AddUserAdmin />} />
         <Route path="/ourteam" element={<AboutUs />} />
         <Route
-          path="/manage"
+          path="/manage/:clubid"
           element={
             <Manage
               name="Club of Programmers"

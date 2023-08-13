@@ -34,6 +34,17 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { Cancel, CheckCircle, ManageAccounts, MoreVert, Settings } from "@mui/icons-material";
 
 
+import { doc, updateDoc } from "firebase/firestore";
+import { collection, collectionGroup, where, query } from "@firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { db } from "../../firebase";
+import { useAuth, upload } from "../../firebase";
+import { getDocs } from "firebase/firestore";
+import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { onSnapshot } from "firebase/firestore";
+import { type } from "@testing-library/user-event/dist/type";
+
+
 function ClubProfile(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -99,7 +110,7 @@ function ClubProfile(props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-[35%_55%_10%] max-sm:grid-cols-[35%_35%_30%] gap-y-4 striped bg-[#130f22]  items-stretch max-sm:px-0 p-4 rounded-lg max-sm:text-base text-lg my-10">
+                <div className="grid grid-cols-[35%_55%_10%] max-sm:grid-cols-[35%_35%_30%] gap-y-4  bg-[#130f22]  items-stretch max-sm:px-0 p-4 rounded-lg max-sm:text-base text-lg my-10">
                     <div className="row-start-1 bg-[#090811] p-4 col-start-1">Name</div>
                     <div className="row-start-1 bg-[#090811] p-4 col-start-2">Assign Points</div>
                     <div className="row-start-1 bg-[#090811] p-4 col-start-3 text-[#130f22b6]"><button className="cursor-default"><MoreVert /></button></div>
