@@ -12,15 +12,21 @@ import { grey } from "@mui/material/colors";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
-import { setDoc } from "firebase/firestore";
+import { deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { addDoc, doc, updateDo, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Poll(props) {
+  const navigate = useNavigate();
   const [option, setoption] = useState(0);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openmenu = Boolean(anchorEl);
+  const [loading, setloading] = useState(false);
   const [votes1, setvotes1] = useState(props.votes1);
   const [votes2, setvotes2] = useState(props.votes2);
   const [votes3, setvotes3] = useState(props.votes3);
@@ -56,6 +62,11 @@ function Poll(props) {
 
   const handleYes = () => {
     setOpen(false);
+    setloading(true);
+    deleteDoc(doc(db, 'polls', props.pollid)).then(() => {
+      setloading(false);
+      navigate(0)
+    })
   };
 
   useEffect(() => {
@@ -70,7 +81,9 @@ function Poll(props) {
     const payload = {
       selected: option,
     };
+    setloading(true);
     await setDoc(docref, payload);
+    setloading(false);
   }
 
   const handleoption1 = (e) => {
@@ -171,7 +184,8 @@ function Poll(props) {
               />
               <div className="max-md:text-sm">{props.name}</div>
             </Link>
-            <div>
+            {(props.role === 'admin' || props.role === 'core') && (
+              <div>
               <button
                 className="text-slate-200  hover:text-slate-300 px-4"
                 aria-controls={openmenu ? "basic-menu" : undefined}
@@ -217,6 +231,7 @@ function Poll(props) {
                 </Menu>
               </div>
             </div>
+            )}
           </div>
           <div className="my-3"></div>
           <div className="text-lg max-md:text-sm text-[#dddbdb] ">
@@ -225,13 +240,13 @@ function Poll(props) {
             <div className="flex mt-2 flex-col space-y-2">
               {props.option1 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center">
+                  <div className="flex items-center  cursor-pointer " onClick={handleoption1}>
                     <Checkbox
                       checked={option === 1}
-                      onChange={() => {
-                        handleoption1();
-                        // addvote();
-                      }}
+                      // onChange={() => {
+                      //   handleoption1();
+                      //   // addvote();
+                      // }}
                       label={props.option1}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
@@ -243,9 +258,9 @@ function Poll(props) {
                         },
                       }}
                     />{" "}
-                    <div className="flex">{props.option1}</div>
+                    <div className="flex  ">{props.option1}</div>
                   </div>
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 max-sm:text-xs text-sm py-1 w-fit ml-5 whitespace-nowrap bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {votes1} votes
                   </div>
@@ -253,13 +268,13 @@ function Poll(props) {
               )}
               {props.option2 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center">
+                  <div className="flex items-center  cursor-pointer " onClick={handleoption2}>
                     <Checkbox
                       checked={option === 2}
-                      onChange={() => {
-                        handleoption2();
-                        // addvote();
-                      }}
+                      // onChange={() => {
+                      //   handleoption2();
+                      //   // addvote();
+                      // }}
                       label={props.option2}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
@@ -271,9 +286,9 @@ function Poll(props) {
                         },
                       }}
                     />{" "}
-                    <div className="flex">{props.option2}</div>
+                    <div className="flex  ">{props.option2}</div>
                   </div>
-                  <div className="px-3  text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 ml-5 max-sm:text-xs text-sm py-1 w-fit whitespace-nowrap bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {votes2} votes
                   </div>
@@ -281,13 +296,13 @@ function Poll(props) {
               )}
               {props.option3 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center">
+                  <div className="flex items-center  cursor-pointer " onClick={handleoption3}>
                     <Checkbox
                       checked={option === 3}
-                      onChange={() => {
-                        handleoption3();
-                        // addvote();
-                      }}
+                      // onChange={() => {
+                      //   handleoption3();
+                      //   // addvote();
+                      // }}
                       label={props.option3}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
@@ -299,10 +314,10 @@ function Poll(props) {
                         },
                       }}
                     />{" "}
-                    <div className="flex">{props.option3}</div>
+                    <div className="flex  ">{props.option3}</div>
                   </div>
 
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 max-sm:text-xs text-sm py-1 w-fit ml-5 whitespace-nowrap bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {/* {console.log(votes3)} */}
                     {votes3} votes
@@ -311,13 +326,13 @@ function Poll(props) {
               )}
               {props.option4 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center">
+                  <div className="flex items-center cursor-pointer " onClick={handleoption4}>
                     <Checkbox
                       checked={option === 4}
-                      onChange={() => {
-                        handleoption4();
-                        // addvote();
-                      }}
+                      // onChange={() => {
+                      //   handleoption4();
+                      //   // addvote();
+                      // }}
                       label={props.option4}
                       inputProps={{ "aria-label": "controlled" }}
                       icon={<CheckCircleIcon />}
@@ -329,9 +344,9 @@ function Poll(props) {
                         },
                       }}
                     />{" "}
-                    <div className="flex">{props.option4}</div>
+                    <div className="flex  ">{props.option4}</div>
                   </div>
-                  <div className="px-3 text-sm py-1 bg-white bg-opacity-30 rounded-full">
+                  <div className="px-3 max-sm:text-xs text-sm py-1 w-fit ml-5 whitespace-nowrap bg-white bg-opacity-30 rounded-full">
                     {" "}
                     {votes4} votes
                   </div>
@@ -393,6 +408,13 @@ function Poll(props) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1, backdropFilter: "blur(20px)", }}
+        open={loading}
+        close={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

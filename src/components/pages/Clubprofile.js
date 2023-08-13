@@ -45,6 +45,7 @@ import {
   deleteDoc,
   onSnapshot,
   updateDoc,
+  orderBy,
   addDoc,
 } from "firebase/firestore";
 import { uploadBytes, getStorage, getDownloadURL, ref } from "firebase/storage";
@@ -96,6 +97,13 @@ function ClubProfile(props) {
   const [memberdetails, setmemberdetails] = useState();
   const [clubId, setClubId] = useState();
   const [application, setapplication] = useState();
+  const [posts, setposts] = useState([]);
+  const [polls, setpolls] = useState([]);
+  const [filterposts, setfilterposts] = useState([]);
+  const [filterpolls, setfilterpolls] = useState([]);
+  const [selected, setselected] = useState("Filter");
+  const [feedCount, setfeedCount] = useState(0)
+  const [pollcount, setpollCount] = useState(0)
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -107,29 +115,29 @@ function ClubProfile(props) {
     points < currentClub.bronze
       ? Bronzebadge
       : points < currentClub.silver
-      ? Silverbadge
-      : Goldbadge;
+        ? Silverbadge
+        : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points < currentClub.silver
-      ? "silver"
-      : "gold";
+        ? "silver"
+        : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points < currentClub.silver
-      ? currentClub.silver - points
-      : currentClub.gold - points;
+        ? currentClub.silver - points
+        : currentClub.gold - points;
 
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
       : points <= currentClub.silver
-      ? "text-[#d7d7d7]"
-      : "text-[#fee101]";
+        ? "text-[#d7d7d7]"
+        : "text-[#fee101]";
 
   useEffect(() => {
     console.log(clubName);
@@ -266,6 +274,117 @@ function ClubProfile(props) {
 
     fetchMembers();
   }, [clubName]);
+
+  useEffect(() => {
+    if (clubId) {
+      fetchpost();
+      fetchpolls();
+    }
+  }, [clubId])
+
+  async function fetchpost() {
+    const posts = await getDocs(
+      query(collection(db, "posts"),where('clubname','==',clubName), orderBy("timestamp", "desc"))
+    );
+    const postarray = [];
+    if (posts) {
+      posts.forEach((post) => {
+        let data = post.data();
+        data.id = post.id;
+        postarray.push(data);
+      });
+      setposts(postarray);
+      console.log(80, postarray);
+      // setcheckfeed(true);
+    }
+  }
+
+  async function fetchpolls() {
+    const pollDocs = await getDocs(
+      query(collection(db, "polls"),where('clubname','==',clubName), orderBy("timestamp", "desc"))
+    );
+    const pollarray = [];
+    if (pollDocs) {
+      pollDocs.forEach((poll) => {
+        let data = poll.data();
+        data.id = poll.id;
+        pollarray.push(data);
+      });
+      setpolls(pollarray);
+      let temppolls = [];
+      Promise.all(
+        pollarray.map((poll) => {
+          return getDocs(collection(db, "polls", poll.id, "votes"))
+            .then((snapshot) => {
+              let a = { ...poll };
+              a.votes1 = 0;
+              a.votes2 = 0;
+              a.votes3 = 0;
+              a.votes4 = 0;
+              snapshot.forEach((p) => {
+                const sel = p.data().selected;
+                a[`votes${sel}`]++;
+              });
+              temppolls.push(a);
+            })
+            .catch((error) => {
+              let a = { ...poll };
+              a.votes1 = 0;
+              a.votes2 = 0;
+              a.votes3 = 0;
+              a.votes4 = 0;
+              temppolls.push(a);
+            });
+        })
+      ).then(() => {
+        console.log("temppolls ", temppolls);
+        setpolls(temppolls);
+        setfilterpolls(temppolls);
+      });
+    }
+  }
+  useEffect(() => {
+    const tempposts = posts.filter(
+      (post) => selected === "Filter" || post.tag === selected
+    );
+    const temppolls = polls.filter(
+      (poll) => selected === "Filter" || poll.tag === selected
+    );
+
+    console.log("temppost: ", tempposts);
+    console.log("temppolls: ", temppolls);
+    setfilterposts(tempposts);
+    setfilterpolls(temppolls);
+  }, [posts, polls, selected]);
+
+  useEffect(() => {
+    setfeedCount(0);
+    filterposts.map((filterpost) => {
+      if (
+        filterpost.visibility === "Public" ||
+        role=== "admin" ||
+        role=== "core" ||
+        role=== "member"
+      ) {
+        setfeedCount(feedCount + 1);
+      }
+    });
+  }, [filterposts]);
+
+  useEffect(() => {
+    setpollCount(0);
+    filterpolls.map((filterpoll) => {
+      if (
+        filterpoll.visibility === "Public" ||
+        role=== "admin" ||
+        role=== "core" ||
+        role=== "member"
+      ) {
+        setpollCount(pollcount + 1);
+      }
+    });
+  }, [filterpolls]);
+
 
   async function getUserDetails() {
     const q = query(collection(db, "user"), where("email", "==", user.email));
@@ -519,11 +638,18 @@ function ClubProfile(props) {
 
     console.log("leave");
   }
-  const handleClosefilter = () => {
-    setAnchorEl(null);
-  };
+
   const handleClickfilter = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  
+  const handleClosefilter = (s) => {
+    // console.log("s: ", s, "selcted: ", selected)
+    if (s === "close") setselected(selected);
+    else if (s === selected) setselected("Filter");
+    else setselected(s);
+    setAnchorEl(null);
   };
 
   const Leavebox = async () => {
@@ -571,9 +697,8 @@ function ClubProfile(props) {
             onMouseOut={(e) => {
               setChangeCover(false);
             }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+            className={`${changeCover ? "" : "hidden"
+              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
           >
             Edit Cover Photo
           </button>
@@ -679,38 +804,33 @@ function ClubProfile(props) {
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "hidden" : ""
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
+                  } ${color}`}
               >
                 {pointleft} points to {badge}
               </div>
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
-                  points >= currentClub.gold ? "" : "hidden"
-                } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
+                  } ${color}`}
               >
                 {points} points
               </div>
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
                 style={{
                   width: ((points / currentClub.bronze) * 100).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.bronze ? "" : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
                 style={{
                   width:
                     (
@@ -721,31 +841,28 @@ function ClubProfile(props) {
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points < currentClub.silver && points >= currentClub.bronze
-                    ? ""
-                    : "hidden"
-                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
+                  ? ""
+                  : "hidden"
+                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
               />
               <div
-                className={`row-start-1  ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+                className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
                 style={{
                   width:
                     points > currentClub.gold
                       ? "100%"
                       : (
-                          ((points - currentClub.silver) /
-                            (currentClub.gold - currentClub.silver)) *
-                          100
-                        ).toString() + "%",
+                        ((points - currentClub.silver) /
+                          (currentClub.gold - currentClub.silver)) *
+                        100
+                      ).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${
-                  points >= currentClub.silver ? "" : "hidden"
-                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+                className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
+                  }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
             <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -773,9 +890,8 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${
-                underline === "post" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "post" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -783,9 +899,8 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${
-                underline === "poll" ? "border-b" : ""
-              } border-white py-4  px-8`}
+              className={`${underline === "poll" ? "border-b" : ""
+                } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -794,73 +909,179 @@ function ClubProfile(props) {
             </button>
           </div>
           <div className="">
-            {" "}
-            <button
-              className="flex items-center text-xl "
-              onClick={handleClickfilter}
-            >
               {" "}
-              <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
-              <div className="ml-3 max-lg:hidden">Filter</div>
-              <div className="max-lg:hidden">
-                <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
-              </div>
-            </button>
-            <div className="">
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={openfilter}
-                onClose={handleClosefilter}
-                sx={{
-                  "& .MuiPaper-root": {
-                    bgcolor: "#130f22",
-                    color: "#fff",
-                    margin: 2,
-                  },
-                }}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                transformOrigin={{ vertical: "top", horizontal: "center" }}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
+              <button
+                className="flex justify-center items-center text-xl "
+                onClick={handleClickfilter}
               >
-                <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}>
-                  {" "}
-                  <EmojiEventsIcon /> &nbsp;Achievements
-                </MenuItem>
-                <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}>
-                  <EventAvailableIcon />
-                  &nbsp;Events
-                </MenuItem>
-                <MenuItem sx={{ padding: 2 }} onClick={handleClosefilter}>
-                  <CampaignIcon />
-                  &nbsp;Announcements
-                </MenuItem>
-              </Menu>
+                {" "}
+                <FilterAltIcon className="lg:scale-[125%]"></FilterAltIcon>
+                <div className="ml-3 max-lg:hidden">
+                  {(() => {
+                    let a =
+                      selected.charAt(0).toUpperCase() +
+                      selected.slice(1) +
+                      "s";
+                    return a;
+                  })()}
+                </div>
+                <div className="max-lg:hidden">
+                  <KeyboardArrowDownIcon className="ml-3 scale-[150%]"></KeyboardArrowDownIcon>{" "}
+                </div>
+              </button>
+              <div className="">
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={openfilter}
+                  onClose={() => {
+                    handleClosefilter("close");
+                  }}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      bgcolor: "#130f22",
+                      color: "#fff",
+                      margin: 2,
+                    },
+                  }}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "center" }}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
+                  }}
+                >
+                  <MenuItem
+                    sx={{
+                      padding: 2,
+                      bgcolor: selected === "achievement" ? "#000" : "inherit",
+                    }}
+                    onClick={() => {
+                      handleClosefilter("achievement");
+                    }}
+                  >
+                    {" "}
+                    <EmojiEventsIcon /> &nbsp;Achievement
+                  </MenuItem>
+                  <MenuItem
+                    sx={{
+                      padding: 2,
+                      bgcolor: selected === "event" ? "#000" : "inherit",
+                    }}
+                    onClick={() => handleClosefilter("event")}
+                  >
+                    <EventAvailableIcon />
+                    &nbsp;Events
+                  </MenuItem>
+                  <MenuItem
+                    sx={{
+                      padding: 2,
+                      bgcolor: selected === "announcement" ? "#000" : "inherit",
+                    }}
+                    onClick={() => handleClosefilter("announcement")}
+                  >
+                    <CampaignIcon />
+                    &nbsp;Announcements
+                  </MenuItem>
+                </Menu>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      {(role === 'admin' || role === 'core') && (
+
+        <div className="ml-[20vw] max-md:ml-[15vw] my-10">
+          <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
+            <div className="flex font-semibold items-center space-x-5">
+              <img
+                src={ClubImage}
+                alt=""
+                className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
+              />
+              <Link
+                to={`/add/${clubName}`}
+                className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4"
+              >
+                Add a Post/Poll
+              </Link>
             </div>
           </div>
         </div>
-      </div>
-      <div className="ml-[20vw] max-md:ml-[15vw] my-10">
-        <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
-          <div className="flex font-semibold items-center space-x-5">
-            <img
-              src={ClubImage}
-              alt=""
-              className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px]"
-            />
-            <Link
-              to={`/add/${clubName}`}
-              className="w-[90%] flex items-center cursor-pointer h-[7vh] bg-[#0b0914] ml-5 rounded-3xl text-[#dad6d6] py-5 px-4"
-            >
-              Add a Post/Poll
-            </Link>
-          </div>
-        </div>
-      </div>
-
+      )}
+      
       {underline === "post" && (
+        <>
+          {filterposts.map((post) => {
+            // console.log("heeeee", roles[post.clubname], post.clubname);
+            if (
+              post.visibility === "Public" ||
+              role === "admin" ||
+              role === "core" ||
+              role === "member"
+            ) {
+              return (
+                <Post
+                  name={post.clubname}
+                  ClubImage={ClubImage}
+                  image={post.imageurl}
+                  text={post.text}
+                  visibility={post.visibility}
+                  timestamp={post.timestamp}
+                  role={role}
+                  postid={post.id}
+                ></Post>
+              );
+            }
+          })}
+          {console.log("feedcount", feedCount)}
+          {feedCount == 0 && (
+            <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">
+              Hmm... nothing to show here.
+            </div>
+          )}
+        </>
+      )}
+
+      {underline === "poll" && (
+        <>
+          {console.log("filterpolls ", filterpolls)}
+          {filterpolls.map((poll) => {
+            // console.log("poll", poll.id);
+            if (
+              poll.visibility === "Public" ||
+              role === "admin" ||
+              role === "core" ||
+              role === "member"
+            ) {
+              return (
+                <Poll
+                  name={poll.clubname}
+                  ClubImage={ClubImage}
+                  question={poll.text}
+                  option1={poll.option1}
+                  option2={poll.option2}
+                  option3={poll.option3}
+                  option4={poll.option4}
+                  timestamp={poll.timestamp}
+                  votes1={poll.votes1}
+                  votes2={poll.votes2}
+                  votes3={poll.votes3}
+                  votes4={poll.votes4}
+                  role={role}
+                  user={userRollNo}
+                  pollid={poll.id}
+                />
+              );
+            }
+          })}
+          {pollcount == 0 && (
+            <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">
+              Hmm... nothing to show here.
+            </div>
+          )}
+        </>
+      )}
+      {/* {underline === "post" && (
         <Post
           name={props.name}
           ClubImage={ClubImage}
@@ -984,8 +1205,8 @@ function ClubProfile(props) {
           question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?"
           date="7/29/2023"
           time="10:24 PM"
-        ></Poll>
-      )}
+        ></Poll> */}
+      {/* )} */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -1238,7 +1459,7 @@ function ClubProfile(props) {
                       />
 
                       <div
-                        className={`font-semibold`} style={{color: badgetype[element.membadge]}}
+                        className={`font-semibold`} style={{ color: badgetype[element.membadge] }}
                       >
                         {element.memname}
                       </div>
@@ -1247,7 +1468,7 @@ function ClubProfile(props) {
                       <div className="grid grid-rows-1 items-center grid-cols-1">
                         <img
                           src={ClubImage}
-                          style={{borderColor: badgetype[element.membadge]}}
+                          style={{ borderColor: badgetype[element.membadge] }}
                           alt=""
                           className={`row-start-1 col-start-1 mx-auto border-4 h-[50px] w-[50px] rounded-full  object-cover `}
                         />

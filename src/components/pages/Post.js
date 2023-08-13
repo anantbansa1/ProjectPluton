@@ -9,11 +9,18 @@ import { useState } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { db } from "../../firebase";
+import { deleteDoc, doc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 function Post(props) {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openmenu = Boolean(anchorEl);
+  const [loading, setloading] = useState(false);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -27,6 +34,11 @@ function Post(props) {
 
   const handleYes = () => {
     setOpen(false);
+    setloading(true);
+    deleteDoc(doc(db, 'posts', props.postid)).then(() => {
+      setloading(false);
+      navigate(0)
+    })
   };
 
   const date = new Date(props.timestamp?.seconds * 1000);
@@ -183,6 +195,13 @@ function Post(props) {
           </Button>
         </DialogActions>
       </Dialog>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1, backdropFilter: "blur(20px)", }}
+        open={loading}
+        close={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

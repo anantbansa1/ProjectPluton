@@ -31,6 +31,7 @@ export default function Navbar(props) {
   const [open, setOpen] = useState(false);
   const [profileimage, setprofileimage] = useState("https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg")
   const user = useAuth();
+  const [helper, sethelper] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -42,6 +43,24 @@ export default function Navbar(props) {
     }
 
   }, [user])
+
+  useEffect(() => {
+    sleep(500).then(() => {
+      sethelper(true);
+    })
+  }, [])
+
+  useEffect(() => {
+    if (helper) {
+
+      if (user) {
+        // console.log(user?.email);
+      } else {
+        navigate("/login");
+      }
+    }
+
+  }, [helper])
 
   const handleNo = () => {
     setOpen(false);
@@ -68,17 +87,22 @@ export default function Navbar(props) {
     setLoading(false);
   }
 
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   function redirectIn() {
+
+
     if (user) {
       // console.log(user?.email);
     } else {
       navigate("/login");
     }
+
   }
 
   return (
     <div className="">
-      {redirectIn()}
       <div className="flex-col shadow-2xl shadow-black bg-white bg-opacity-5 backdrop-blur-2xl backdrop-filter text-white  font-semibold flex  fixed left-0 top-0 h-full w-[15vw] md:w-[20vw]  place-content-around">
         <Link
           to="/"
@@ -104,8 +128,8 @@ export default function Navbar(props) {
           <Link
             to="/leaderboard"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "leaderboard"
-                ? " bg-opacity-10  bg-white  border-[#323232]"
-                : ""
+              ? " bg-opacity-10  bg-white  border-[#323232]"
+              : ""
               } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
           >
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
@@ -114,8 +138,8 @@ export default function Navbar(props) {
           <Link
             to="/adduser"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "manageusers"
-                ? " bg-opacity-10  bg-white  border-[#323232]"
-                : ""
+              ? " bg-opacity-10  bg-white  border-[#323232]"
+              : ""
               } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
           >
             <ManageAccountsIcon className=" scale-[120%]"></ManageAccountsIcon>
@@ -124,8 +148,8 @@ export default function Navbar(props) {
           <Link
             to="/faq"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${props.selected === "faq"
-                ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
-                : ""
+              ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
+              : ""
               } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-xl`}
           >
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
@@ -136,8 +160,8 @@ export default function Navbar(props) {
           <Link
             to="/ourteam"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "ourteam"
-                ? " bg-opacity-10  bg-white  border-[#323232]"
-                : ""
+              ? " bg-opacity-10  bg-white  border-[#323232]"
+              : ""
               } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-xl`}
           >
             <InfoIcon className=" scale-[120%]"></InfoIcon>

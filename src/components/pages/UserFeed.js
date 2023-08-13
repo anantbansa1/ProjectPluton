@@ -68,6 +68,7 @@ export default function UserFeed() {
     else setSelected(s);
     setAnchorEl(null);
   };
+  
 
   useEffect(() => {
     const tempposts = posts.filter(
@@ -162,7 +163,9 @@ export default function UserFeed() {
     const postarray = [];
     if (posts) {
       posts.forEach((post) => {
-        postarray.push(post.data());
+        let data = post.data();
+        data.id = post.id;
+        postarray.push(data);
       });
       setposts(postarray);
       console.log(80, postarray);
@@ -217,7 +220,7 @@ export default function UserFeed() {
 
   async function fetchClubs() {
     try {
-      const clubs = await getDocs(collection(db, "clubs"));
+      const clubs = await getDocs(query(collection(db, "clubs"), orderBy('name')));
       if (clubs) {
         let clubnames = [];
         clubs.forEach((element) => {
@@ -413,6 +416,7 @@ export default function UserFeed() {
                   visibility={post.visibility}
                   timestamp={post.timestamp}
                   role={roles[post.clubname]}
+                  postid={post.id}
                 ></Post>
               );
             }
@@ -444,6 +448,7 @@ export default function UserFeed() {
                   question={poll.text}
                   option1={poll.option1}
                   option2={poll.option2}
+                  role={roles[poll.clubname]}
                   option3={poll.option3}
                   option4={poll.option4}
                   timestamp={poll.timestamp}
