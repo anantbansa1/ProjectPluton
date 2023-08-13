@@ -439,49 +439,6 @@ export default function UserFeed() {
               </div>
             </Tooltip>
           </Link>
-
-          {/* <Link to="/clubprofile" className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
-            />
-          </Link>
-          <Link to="/clubprofile" className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
-            />
-          </Link>
-          <Link to="/clubprofile" className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
-            />
-          </Link>
-          <Link to="/clubprofile" className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
-            />
-          </Link>
-          <Link to="/clubprofile" className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
-            />
-          </Link>
-          <Link to="/clubprofile" className="">
-            <img
-              src={Minions}
-              alt=""
-              className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto"
-            />
-          </Link> */}
         </div>
       )}
     </div>
