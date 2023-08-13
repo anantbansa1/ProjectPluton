@@ -17,6 +17,7 @@ import Leaderboard from "./components/pages/Leaderboard";
 import Addtext from "./components/pages/Addtext";
 import Manage from "./components/pages/Manage";
 import AboutUs from "./components/pages/AboutUs";
+import Addnewclub from "./components/pages/Addnewclub";
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
             />
           }
         />
+        <Route path="/addclub" element = {<Addnewclub/>}  />
       </Routes>
     </Router>
   );
