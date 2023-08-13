@@ -113,7 +113,7 @@ function ClubProfile(props) {
         setname(docdata["name"]);
         setUrl(docdata["profileimage"]);
         setUrl1(docdata["coverimage"]);
-        setdes(docdata["desc"]);
+        setdes(docdata["email"]);
         // setcov(docdata["coverimage"])
         // setprof(docdata["profileimage"])
 
@@ -652,7 +652,7 @@ async function SaveChanges(canvas, crop) {
           >
             Edit Cover Photo
           </button>
-          <div className="max-sm:mx-auto max-sm:col-start-4 items-center row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
+          <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 max-[375px]:mx-[-5vw] col-start-2 col-span-1 w-fit ">
             <div className=" ">
               <button
                 onClick={handleClickOpen}
@@ -682,31 +682,39 @@ async function SaveChanges(canvas, crop) {
             </div>
           </div>
           <div className="row-start-6 col-start-1 "></div>
-          <div className="row-start-6 col-start-7 "></div>
-          <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
-              {" "}
-              {name}{" "}
+          <div className="row-start-6 col-start-4 "></div>
+          <div className="max-sm:col-start-3 max-sm:mx-[9vw]  max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
+            <div className="text-[2.25rem] ml-[-9vw] max-lg:text-2xl max-sm:ml-[-21vw] text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
+              
+              {name}
             </div>
           </div>
-          <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
+          {/* <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
-            {des}
+            {id}
+          </div> */}
+          <div className="flex flex-col h-fit max-sm:col-start-3 row-start-8 col-start-2 row-span-1 col-span-2 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
+            <div className="max-sm:mx-[5vw] max-[375px]:mx-[10vw]">
+                {id}
+              <div className="max-sm:mx-[-5vw] max-[375px]:mx-[-3vw] ">
+                  {des}
+             </div>
+            </div>
           </div>
 
-          <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1 max-[375px]:m-0  max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+          <div className="row-start-6 max-sm:col-start-2  max-sm:col-span-1 max-[375px]:m-0  max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
             <button
               onClick={() => {
                 setclubs(true);
               }}
-              className={`px-4 lg:py-2 py-[0.65rem] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              className={`px-4 lg:py-2 py-[0.65rem] max-[375px]:mx-[-20vw] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
               &nbsp; <div> {final_array.length} Clubs Joined</div>
             </button>
           </div>
 
-          <div className="row-start-6 max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
+          <div className="row-start-6 max-sm:mx-[40vw] max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
             <Link
               to="/leaderboard"
               className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center"
