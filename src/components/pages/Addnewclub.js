@@ -6,7 +6,7 @@ import { ThemeProvider } from '@mui/material';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import SirfPencil from "../Images/SirfPencil.jpg";
 import { db } from "../../firebase";
-import { onSnapshot, collection, addDoc, doc, getDoc, updateDoc, setDoc, query, where, getDocs } from 'firebase/firestore';
+import { onSnapshot, collection, addDoc, doc, getDoc, updateDoc, setDoc, query, where, getDocs, QuerySnapshot } from 'firebase/firestore';
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import ReactCrop from "react-image-crop";
 import Dialog from "@mui/material/Dialog";
@@ -35,7 +35,7 @@ const allowedExtensions = ["jpg"];
 export default function Addnewclub(props) {
   const [profile, setprofile] = useState(true);
   const [open, setOpen] = React.useState(false);
-  const [ClubImage, setclubimage] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/images%2Fgroup-default-pic.png?alt=media&token=fd5eddbc-91ab-42db-aee1-1fbd89bcc0d8');
+  const [ClubImage, setclubimage] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/Screenshot%202023-08-14%20at%203.02.08%20PM.png?alt=media&token=dfd92663-aaa6-4068-93b7-1735b1569339');
   const [upImg, setUpImg] = useState(ClubImage);
   // const [imageError, setimageerror] = useState('');
   // const [successMessage, setSuccessMessage] = useState('')
@@ -50,24 +50,28 @@ export default function Addnewclub(props) {
   const [Presidentrollno, setpresidentrollno] = useState('')
   const profileinput = React.useRef();
   const [Loading, setLoading] = useState(false);
-  const [imageurl, setimageurl] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/images%2Fgroup-default-pic.png?alt=media&token=fd5eddbc-91ab-42db-aee1-1fbd89bcc0d8');
+  //const [imageurl, setimageurl] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/Screenshot%202023-08-14%20at%203.02.08%20PM.png?alt=media&token=dfd92663-aaa6-4068-93b7-1735b1569339');
   const [canvasref, setcanvasref] = useState()
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
   const [openalert, setopenalert] = useState(false);
   const [imagecheck1, setimagecheck1] = useState(false)
   const [imagecheck2, setimagecheck2] = useState(false)
+  const [imagecheck3, setimagecheck3] = useState(false)
+  const [clubid, setclubid] = useState(null)
 
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
       return;
     }
+    setimagecheck2(true)
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
     const ctx = canvas.getContext("2d");
     const pixelRatio = window.devicePixelRatio;
     canvas.width = crop.width * pixelRatio * scaleX;
     canvas.height = crop.height * pixelRatio * scaleY;
+    console.log("here", canvas.width, canvas.height)
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
     ctx.imageSmoothingQuality = "high";
     ctx.drawImage(
@@ -84,21 +88,21 @@ export default function Addnewclub(props) {
   }
 
   const handleNewClub = async () => {
-      if(clubName=='' || clubDescription=='' || Presidentrollno==''){
-              setmessage("No field can be empty before adding club")
-              setetype("error")
-              setopenalert(true)
-      }
-      else{
+    if (clubName == '' || clubDescription == '' || Presidentrollno == '') {
+      setmessage("No field can be empty before adding club")
+      setetype("error")
+      setopenalert(true)
+    }
+    else {
       const docRef = doc(db, "user", `${Presidentrollno}`)
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
-        if(clubName.indexOf("%")==-1){
-          const q = query(collection(db, "clubs"), where("name", "==", `${clubName.toLowerCase()}`));
+        if (clubName.indexOf("%") == -1) {
+          const q = query(collection(db, "clubs"), where("lowercasename", "==", `${clubName.toLowerCase()}`));
           const querySnapshot = await getDocs(q);
           console.log(querySnapshot)
-          if(querySnapshot.empty){
-            if(imagecheck1 && imagecheck2){
+          if (querySnapshot.empty) {
+            if (imagecheck1 && imagecheck2 && imagecheck3) {
               setLoading(true)
               await addNewclub()
               await makeclubadmin()
@@ -107,27 +111,30 @@ export default function Addnewclub(props) {
               setmessage("Club added :)")
               setetype("success")
               setopenalert(true)
+              setimagecheck1(false)
+              setimagecheck2(false)
+              setimagecheck3(false)
             }
-            else{
-              if(imagecheck1){
-                setmessage("You must save changes to uploaded picture")
+            else {
+              if (!imagecheck1) {
+                setmessage("You must upload a picture")
                 setetype("error")
                 setopenalert(true)
               }
-              else{
-                setmessage("You must upload a picture")
+              else {
+                setmessage("You must crop correctly and save changes to cropped picture")
                 setetype("error")
                 setopenalert(true)
               }
             }
           }
-          else{
+          else {
             setmessage("A club with this name already exists!")
             setetype("error")
             setopenalert(true)
           }
         }
-        else{
+        else {
           setmessage("Club Name can not contain '%' ")
           setetype("error")
           setopenalert(true)
@@ -142,8 +149,9 @@ export default function Addnewclub(props) {
       setclubdescription('')
       setclubimage('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/images%2Fgroup-default-pic.png?alt=media&token=fd5eddbc-91ab-42db-aee1-1fbd89bcc0d8')
       setpresidentrollno('')
-      setimageurl('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/images%2Fgroup-default-pic.png?alt=media&token=fd5eddbc-91ab-42db-aee1-1fbd89bcc0d8')
-  }}
+      //setimageurl('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/images%2Fgroup-default-pic.png?alt=media&token=fd5eddbc-91ab-42db-aee1-1fbd89bcc0d8')
+    }
+  }
 
   const makeclubadmin = async () => {
     const docRef = doc(db, "user", `${Presidentrollno}`, "clubs", `${clubName}`)
@@ -153,12 +161,8 @@ export default function Addnewclub(props) {
 
   }
 
-  const uploadImage = async()=>{
-    
-  }
 
   const addNewclub = async () => {
-
     console.log(canvasref)
     const storage = getStorage()
     canvasref.toBlob((blob) => {
@@ -181,8 +185,17 @@ export default function Addnewclub(props) {
             coverimage: "https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/cover.jpg?alt=media&token=4c48d4ed-e7ff-4cac-b3f9-919863e73930",
             lowercasename: clubName.toLowerCase()
           };
-          addDoc(collectionRef, payload).then(data => console.log("hello"))
-          })
+          addDoc(collectionRef, payload).then((docref) => {
+            const collectionRef = doc(db, "clubs", `${docref.id}`, "members", `${Presidentrollno}`)
+            const payload = {
+            }
+            setDoc(collectionRef, payload)
+            console.log("member added")
+          }
+
+          )
+
+        })
       })
     }, 'image/jpg')
   }
@@ -199,10 +212,11 @@ export default function Addnewclub(props) {
         const Imageuse = canvas.toDataURL("image/png");
         setclubimage(Imageuse);
       }, "image/png");
+      setimagecheck3(true)
     }
     setcanvasref(previewCanvasRef.current)
-    setimagecheck2(true)
-    
+
+
   }
   const onSelectFile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -227,7 +241,7 @@ export default function Addnewclub(props) {
     setOpen(false);
   };
 
-  const handleclose = ()=>{
+  const handleclose = () => {
     setopenalert(false)
   }
 
@@ -235,13 +249,13 @@ export default function Addnewclub(props) {
   return (
     <div>
       <Navbar></Navbar>
-      <div className="ml-[20vw] max-md:ml-[15vw] mt-10">
-        <div className=" mx-auto w-[60vw] text-center max-md:w-[75vw] h-[90vh] bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white text-2xl">
-          <div className="flex flex-col items-start h-[60vh] max-[414px]:h-[80vh] ">
-            <div className="mx-auto h-[5vh] w-[40vh] min-[375px]:w-[30vh] min-[375px]:mb-[5vh] font-semibold ">
+      <div className="ml-[20vw] max-md:ml-[15vw] mt-10  max-md:content-center">
+        <div className="flex justify-center mx-auto w-[60vw] text-center max-md:w-[75vw] h-[80vh] bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white text-2xl">
+          <div className="flex flex-col min-lg:items-start max-md:items-center h-[60vh] max-[414px]:h-[40vh]">
+            <div className="mx-auto h-[5vh] w-[40vh] min-[375px]:w-[30vh] font-semibold mb-2 max-md:mb-6">
               Add New Club
             </div>
-            <div className="flex flex-col h-[30vw] w-[40vw] min-[414px]:h-[15vh] items-start object-fill mb-4">
+            <div className="flex flex-col h-[40vw] w-[40vw] min-[414px]:h-[10vh] max-md:flex-row min-lg:items-start max-md:justify-center object-fill min-lg:mb-6 max-md:mb-6 ">
               <button
                 onClick={handleClickOpen}
                 onMouseOut={(e) => {
@@ -250,7 +264,7 @@ export default function Addnewclub(props) {
                 onMouseOver={(e) => {
                   setprofile(false);
                 }}
-                className=" h-[5w] w-[5vw] self-start min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
+                className=" h-[5w] w-[5vw] self-start min-w-[80px] min-h-[80px] object-cover rounded-[50%]"
               >
                 {profile === false ? (
                   <img
@@ -266,9 +280,10 @@ export default function Addnewclub(props) {
                   />
                 )}
               </button>
+              <br />
             </div>
-            <div className="flex flex-col max-[414px]:justify-center max-[414px]:w-[60vw] h-[65vh] max-[414px]:mt-[25vw] max-[414px]:h-[10vh] ">
-              <div className="mt-[1vw]">
+            <div className="flex flex-col max-[414px]:justify-center max-[414px]:w-[60vw] h-[65vh] max-[414px]:mt-[25vw] max-[414px]:h-[10vh] mt-[2vw]">
+              <div className="max-[375px]:mt-[5vw] mt-[2vw]">
                 <ThemeProvider theme={theme}>
                   <TextField
                     onChange={(e) => {
@@ -330,7 +345,7 @@ export default function Addnewclub(props) {
                     id="myfilled-name"
                     label="Club Description"
                     variant="filled"
-                    color="secondary"
+                    color="grey"
                     inputProps={{
                       style: {
                         height: "3vh",
@@ -367,7 +382,7 @@ export default function Addnewclub(props) {
                     id="myfilled-name"
                     label="President Roll No."
                     variant="filled"
-                    color="secondary"
+                    color="grey"
                     inputProps={{
                       style: {
                         height: "3vh ",
@@ -377,19 +392,37 @@ export default function Addnewclub(props) {
                   />
                 </ThemeProvider>
               </div>
-              <button
-                onClick={(e) => {
-                  handleNewClub();
-                }}
-                className="bg-[#060606] max-[414px]:self-center shadow-xl rounded-lg px-6 py-2 self-center mt-[8vh] text-xl text-[#FFFFFF] hover:bg-opacity-50 ">
-                Add
-              </button>
+              {/* <button
 
+                className="bg-[#060606]  shadow-xl rounded-lg px-6 py-2 self-center mt-[8vh] text-xl text-[#FFFFFF] hover:bg-opacity-50 ">
+                BUTTON
+              </button> */}
+              <div className='self-center mt-[8vh]'>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(e) => {
+                    handleNewClub();
+                  }}
+                  sx={{
+                    background: "#0A0815",
+                    color: "white",
+                    borderColor: "#0A0815",
+                    // borderRadius: "15px",
+                    "&:hover": {
+                      background: "#0A0815",
+                      borderColor: "#0A0815",
+                      color: "white",
+                    },
+                  }}
+                >
+                  SUBMIT
+                </Button>
+              </div>
 
             </div>
           </div>
         </div>
-
       </div>
 
       <Dialog
@@ -423,7 +456,7 @@ export default function Addnewclub(props) {
               onChange={(c) => setCrop(c)}
               ruleOfThirds={true}
               circularCrop={true}
-              onComplete={(c) => setCompletedCrop(c)}
+              onComplete={(c) => { setCompletedCrop(c); }}
             />
             <div className="flex my-1 justify-between">
               <Button
