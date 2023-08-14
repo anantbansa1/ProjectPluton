@@ -57,12 +57,7 @@ function ClubProfile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const names = ["Anant", "Deepanshu", "Samrath", "Madhav", "Duke"];
-  function handleoption(event, index, name) {
-    setAnchorEl(event.currentTarget);
-  }
-  function handleClose() {
-    setAnchorEl(null);
-  }
+  
   const user = useAuth();
   async function checkClub() {
     if (user) {
@@ -108,6 +103,12 @@ function ClubProfile(props) {
 // console.log(clubName);
 
 
+const [final_array, setfinal_array] = useState([]);
+
+  const [menuState, setMenuState] = useState(
+    []
+  );
+  
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -175,11 +176,14 @@ function ClubProfile(props) {
   },[member_name]);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  let member_points = [];
-  for(let i=0;i<member_name?.length;i++){
-    member_points.push(0);
-  }
+  const [member_points , setmember_points] = useState([]);
+  useEffect(() => {
+    let memberpoints = [];
+    for(let i=0;i<member_name?.length;i++){
+      memberpoints.push(0);
+    }
+    setmember_points(memberpoints);
+  },[member_name])
 
   useEffect(() => {
     // console.log(member_points);
@@ -206,18 +210,25 @@ function ClubProfile(props) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  let final_array = [];
-  for(let i=0;i<member_points?.length;i++){
-    let obj = {
-        roll_no: member_id[i],
-        name: member_name[i],
-        points: member_points[i],
-        role: member_role[i],
-    }
-    final_array.push(obj);
-  }
+  
   useEffect(() => {
-    console.log(final_array)
+    if(member_role && member_id && member_name && member_points){
+      let finalarray = [];
+      for(let i=0;i<member_points?.length;i++){
+        let obj = {
+            roll_no: member_id[i],
+            name: member_name[i],
+            points: member_points[i],
+            role: member_role[i],
+        }
+        finalarray.push(obj);
+      }
+      setfinal_array(finalarray);
+    }
+  },[member_role, member_name, member_points, member_id])
+  useEffect(() => {
+    setMenuState(final_array.map(() => ({ anchorEl: null, open: false })));
+    console.log(final_array);
   },[final_array])
 
 
@@ -242,6 +253,27 @@ useEffect(() => {
 },[points]);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  async function handleRemove(roll_no){
+
+  }
+  async function handlePromote(roll_no){
+
+  }
+
+
+
+  const handleoption = (event, index) => {
+    const newMenuState = [...menuState];
+    newMenuState[index] = { anchorEl: event.currentTarget, open: true };
+    setMenuState(newMenuState);
+  };
+
+  const handleClose = (index) => {
+    const newMenuState = [...menuState];
+    newMenuState[index] = { anchorEl: null, open: false };
+    setMenuState(newMenuState);
+  };
 
 
   // clubName -> club ka naam
@@ -311,8 +343,9 @@ useEffect(() => {
               <MoreVert />
             </button>
           </div>
-
-          {final_array.map((d, index) => {
+          
+          {final_array?.map((d, index) => {
+            if(menuState.length)
             return (
               <React.Fragment key={index}>
                 <div className={`row-start-${index + 2}   p-4 col-start-1`}>
@@ -337,12 +370,12 @@ useEffect(() => {
                     InputProps={{ style: { backgroundColor: "inherit" } }}
                   />{" "}
                 </div>
-                <div className={`row-start-${index + 2}  p-4 col-start-3`}>
+                {/* <div className={`row-start-${index + 2}  p-4 col-start-3`}>
                   {" "}
                   <Button
-                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-controls={menuState[index].open ? "basic-menu" : undefined}
                     aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
+                    aria-expanded={menuState[index].open ? "true" : undefined}
                     sx={{ color: "#fff", borderRadius: 50 }}
                     onClick={(event) => {
                       handleoption(event, index, d.name);
@@ -368,17 +401,78 @@ useEffect(() => {
                       "aria-labelledby": "basic-button",
                     }}
                   >
-                    <MenuItem sx={{ padding: 2 }} onClick={handleClose}>
-                      Promote
+                {    console.log(d.role)}
+                    
+                    <MenuItem sx={{ padding: 2 }}
+                    onClick={() => {
+                      handleClose();
+                      // handlePromote(d.roll_no);
+                    }} 
+                    >
+                      {d.name}
                     </MenuItem>
                     <MenuItem
                       sx={{ padding: 2, color: "#b91c1c" }}
-                      onClick={handleClose}
+                      onClick={() => {
+                        handleClose();
+                        // handleRemove(d.roll_no);
+                      }}
                     >
                       Remove
                     </MenuItem>
                   </Menu>{" "}
-                </div>
+                </div> */}
+                <div className={`row-start-${index + 2}  p-4 col-start-3`}>
+              {" "}
+              <Button
+                aria-controls={menuState[index].open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={menuState[index].open ? "true" : undefined}
+                sx={{ color: "#fff", borderRadius: 50 }}
+                onClick={(event) => {
+                  handleoption(event, index);
+                }}
+              >
+                <MoreVert />
+              </Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={menuState[index].anchorEl}
+                sx={{
+                  "& .MuiPaper-root": {
+                    bgcolor: "#130f22",
+                    color: "#fff",
+                    margin: 2,
+                  },
+                }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
+                open={menuState[index].open}
+                onClose={() => handleClose(index)}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem
+                  sx={{ padding: 2 }}
+                  onClick={() => {
+                    handleClose(index);
+                    // handlePromote(d.roll_no);
+                  }}
+                >
+                  {d.role === "admin" ? "Demote" : "Promote"}
+                </MenuItem>
+                <MenuItem
+                  sx={{ padding: 2, color: "#b91c1c" }}
+                  onClick={() => {
+                    handleClose(index);
+                    // handleRemove(d.roll_no);
+                  }}
+                >
+                  Remove
+                </MenuItem>
+              </Menu>{" "}
+            </div>
               </React.Fragment>
             );
           })}
