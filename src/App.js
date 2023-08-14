@@ -24,7 +24,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<UserFeed />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<UserFeed />} />
         <Route
           path="/userprofile"

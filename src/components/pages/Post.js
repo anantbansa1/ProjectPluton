@@ -14,6 +14,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { db } from "../../firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { getStorage, ref  , deleteObject } from "firebase/storage";
+
+const storage = getStorage();
+
 
 function Post(props) {
   const navigate = useNavigate();
@@ -31,15 +35,23 @@ function Post(props) {
   const handleNo = () => {
     setOpen(false);
   };
-
+  
   const handleYes = () => {
     setOpen(false);
     setloading(true);
-    deleteDoc(doc(db, 'posts', props.postid)).then(() => {
-      setloading(false);
-      navigate(0)
-    })
+    const imageRef = ref(storage, props.image);
+    deleteObject(imageRef)
+      .then(() => {
+        deleteDoc(doc(db, "posts", props.postid)).then(() => {
+          setloading(false);
+          navigate(0);
+        });
+      })
+      .catch((error) => {
+        console.log("firebase error delete post image");
+      });
   };
+
 
   const date = new Date(props.timestamp?.seconds * 1000);
 
@@ -49,9 +61,8 @@ function Post(props) {
     <div>
       <div className="ml-[20vw] max-md:ml-[18vw] flex  my-10  max-sm:mr-0">
         <div
-          className={`flex items-center flex-col mx-auto ${
-            props.image !== "" ? "w-fit h-fit" : "w-[100%] md:w-[45vw]   h-fit"
-          } max-sm:pb-5 bg-[#130f22] shadow-xl rounded-md max-md:py-4 py-8 max-sm:px-0 px-10  shadow-black text-white`}
+          className={`flex items-center flex-col mx-auto ${props.image !== "" ? "w-fit h-fit" : "w-[100%] md:w-[45vw]   h-fit"
+            } max-sm:pb-5 bg-[#130f22] shadow-xl rounded-md max-md:py-4 py-8 max-sm:px-0 px-10  shadow-black text-white`}
         >
           <div className="flex justify-between font-semibold items-center self-start w-full">
             <Link
@@ -115,9 +126,8 @@ function Post(props) {
             )}
           </div>
           <div
-            className={`flex  flex-col ${
-              props.image !== "" ? "items-center" : "items-start"
-            } space-y-5 w-full`}
+            className={`flex  flex-col ${props.image !== "" ? "items-center" : "items-start"
+              } space-y-5 w-full`}
           >
             {props.image !== "" && (
               <div className="mt-5 sm:mx-auto  w-[40vw]  max-md:w-[100%] ">

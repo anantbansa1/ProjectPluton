@@ -16,7 +16,7 @@ import { deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { addDoc, doc, updateDo, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -81,9 +81,7 @@ function Poll(props) {
     const payload = {
       selected: option,
     };
-    setloading(true);
     await setDoc(docref, payload);
-    setloading(false);
   }
 
   const handleoption1 = (e) => {
@@ -249,7 +247,7 @@ function Poll(props) {
                       // }}
                       label={props.option1}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={<CheckCircleIcon />}
+                      icon={option===1?<CheckCircleIcon />:<CircleOutlinedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],
@@ -277,7 +275,7 @@ function Poll(props) {
                       // }}
                       label={props.option2}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={<CheckCircleIcon />}
+                      icon={option===2?<CheckCircleIcon />:<CircleOutlinedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],
@@ -305,7 +303,7 @@ function Poll(props) {
                       // }}
                       label={props.option3}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={<CheckCircleIcon />}
+                      icon={option===3?<CheckCircleIcon />:<CircleOutlinedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],
@@ -335,7 +333,7 @@ function Poll(props) {
                       // }}
                       label={props.option4}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={<CheckCircleIcon />}
+                      icon={option===4?<CheckCircleIcon />:<CircleOutlinedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],

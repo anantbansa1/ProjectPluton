@@ -14,7 +14,8 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { deleteDoc } from "firebase/firestore";
+import { deleteDoc,getDocs,query,collection,where } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function AddUserAdmin() {
   const user = useAuth();
@@ -31,6 +32,30 @@ export default function AddUserAdmin() {
   const inputaddref = useRef();
   const [opendialog, setdialog] = useState(false);
   const [token, setToken] = useState("");
+  const [isadmin, setisadmin] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      let flag = false;
+      getDocs(
+        query(collection(db, "user")),
+        where("email", "==", user.email)
+      ).then((snapshot) => {
+        snapshot.forEach((u) => {
+          if (u.data().email === user.email) {
+            setisadmin(u.data().isadmin);
+            flag = u.data().isadmin;
+          }
+        });
+        if (flag === false) {
+          navigate('/pagenotfound')
+        }
+      });
+    }
+  },[user]);
+
+
 
   useEffect(() => {
     if (user) {
@@ -44,6 +69,15 @@ export default function AddUserAdmin() {
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href ="https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/template.csv?alt=media&token=b04e33b3-2c2c-4540-adaa-da5cb68ae57a";
+    link.download = "template.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const manageusers = async (parsedData, operation) => {
     if (token) {
@@ -183,6 +217,7 @@ export default function AddUserAdmin() {
               <div>To {add} users upload the an CSV file in given template</div>
               <div className="self-center">
                 <Button
+                onClick={handleDownload}
                   variant="contained"
                   color="primary"
                   sx={{

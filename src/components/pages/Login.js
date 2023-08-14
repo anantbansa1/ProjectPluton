@@ -11,20 +11,23 @@ function Login() {
   const [Password, setPass] = useState("");
   const [helperText, setHelperText] = useState("");
   const [error, setError] = useState(false);
-
+  const [helper, sethelper] = useState(false);
   const [Loading, setLoading] = useState(false);
   const user = useAuth();
   const navigate = useNavigate();
 
   const animation = useRef(null);
 
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   async function handleLogin() {
     setLoading(true);
     try {
       await signIn(Email, Password);
       console.log(user?.email);
-      redirectIn();
+      navigate('/home')
     } catch {
       setPass("");
       setEmail("");
@@ -34,25 +37,20 @@ function Login() {
     setLoading(false);
   }
 
-  function redirectIn() {
-    if (user) {
-      // console.log("hello2");
-      navigate("/home");
-    }
-  }
-
-  useEffect(()=>{
-    setLoading(true);
-  },[])
 
   useEffect(() => {
     setLoading(true);
-    if (user) {
-      console.log("hello2");
+    sleep(1000).then(()=>{
+      console.log("hello1");
+      if (user) {
+        console.log("hello2");
+        setLoading(false);
+        navigate("/home");
+      }
       setLoading(false);
-      navigate("/home");
-    }
-    setLoading(false);
+
+    })
+
 
   }, [user])
 
