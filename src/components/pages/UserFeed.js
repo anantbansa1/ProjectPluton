@@ -397,7 +397,7 @@ export default function UserFeed() {
       </div>
 
       {post === "post" && (
-        <div className="-ml-[12vw] max-[769px]:m-0 flex flex-col">
+        <div className="-ml-[12vw] max-[769px]:m-0">
           {filterposts.map((post) => {
             // console.log("heeeee", roles[post.clubname], post.clubname);
             if (

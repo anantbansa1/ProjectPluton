@@ -123,7 +123,7 @@ export default function Navbar(props) {
           <Link
             to="/home"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${props.selected === "home" ? " bg-opacity-10  bg-white" : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-xl`}
+              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-base`}
           >
             {" "}
             <HomeIcon className=" scale-[120%]"></HomeIcon>
@@ -135,7 +135,7 @@ export default function Navbar(props) {
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "leaderboard"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
+              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
           >
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
@@ -146,7 +146,7 @@ export default function Navbar(props) {
               className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "manageusers"
                   ? " bg-opacity-10  bg-white  border-[#323232]"
                   : ""
-                } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
+                } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
             >
               <ManageAccountsIcon className=" scale-[120%]"></ManageAccountsIcon>
               <button className="max-lg:hidden">&nbsp;&nbsp;Manage </button>
@@ -158,7 +158,7 @@ export default function Navbar(props) {
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${props.selected === "faq"
                 ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-xl`}
+              } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-base`}
           >
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
@@ -170,7 +170,7 @@ export default function Navbar(props) {
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "ourteam"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-xl`}
+              } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-base`}
           >
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Our Team</button>
@@ -178,11 +178,11 @@ export default function Navbar(props) {
           <Link
             to="/userprofile"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
-              } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-xl`}
+              } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-base`}
           >
             {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
             <button
-              className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-xl  `}
+              className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-base  `}
             >
               <img
                 src={profileimage}
@@ -200,7 +200,7 @@ export default function Navbar(props) {
           onClick={() => {
             setOpen(true);
           }}
-          className="flex  max-lg:text-center  items-center  text-[#E73A37]  text-xl max-lg:justify-center justify-start max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  hover:bg-white hover:bg-opacity-10 rounded-full "
+          className="flex  max-lg:text-center  items-center  text-[#E73A37]  text-base max-lg:justify-center justify-start max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  hover:bg-white hover:bg-opacity-10 rounded-full "
         >
           <PowerSettingsNewIcon />
           <div className="  max-lg:hidden">&nbsp;&nbsp;Logout</div>

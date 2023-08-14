@@ -59,10 +59,10 @@ function Post(props) {
 
   return (
     <div>
-      <div className="ml-[20vw] max-md:ml-[18vw] flex  my-10  max-sm:mr-0">
+      <div className="ml-[20vw] max-md:ml-[18vw] flex my-10 max-sm:mr-0">
         <div
-          className={`flex items-center flex-col mx-auto ${props.image !== "" ? "w-fit h-fit" : "w-[100%] md:w-[45vw]   h-fit"
-            } max-sm:pb-5 bg-[#130f22] shadow-xl rounded-md max-md:py-4 py-8 max-sm:px-0 px-10  shadow-black text-white`}
+          className={`flex items-center flex-col mx-auto ${props.image !== "" ? "w-fit h-fit" : "w-[100%] md:w-[35vw]   h-fit"
+            } max-sm:pb-5 bg-[#130f22] shadow-lg rounded-md max-md:py-4 py-8 max-sm:px-0 px-10  shadow-black text-white`}
         >
           <div className="flex justify-between font-semibold items-center self-start w-full">
             <Link
@@ -130,7 +130,7 @@ function Post(props) {
               } space-y-5 w-full`}
           >
             {props.image !== "" && (
-              <div className="mt-5 sm:mx-auto  w-[40vw]  max-md:w-[100%] ">
+              <div className="mt-5 sm:mx-auto  w-[30vw]  max-md:w-[100%] ">
                 <img
                   src={props.image}
                   className="object-cover h-[100%] w-[100%] max-md:w-[100%] max-md:h-[100%] rounded-md"

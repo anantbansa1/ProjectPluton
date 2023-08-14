@@ -636,6 +636,7 @@ function ClubProfile(props) {
         });
       }
       setRole("pending");
+      navigate(0);
     } catch (error) {
       console.log("firebase error");
     }
@@ -670,6 +671,7 @@ function ClubProfile(props) {
           await deleteDoc(docrefa);
         });
       }
+      navigate(0);
       setleavedialog(false);
     } catch (error) {
       console.log("firebase error");
@@ -745,15 +747,15 @@ function ClubProfile(props) {
               {currentClub.name}{" "}
             </div>
           </div>
-          <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
+          <div className="max-sm:col-start-3 sm:w-[50vw] row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
             {currentClub.desc}
           </div>
           {role === "visitor" && (
-            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-self-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+            <div className="row-start-6 max-sm:hidden max-sm:col-start-3  max-sm:col-span-1  max-sm:justify-self-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 onClick={handleapply}
-                className={`px-4 py-2 max-sm:mt-2  max-sm:w-[25vw] lg:text-lg text-xs text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+                className={`px-4 py-2 max-sm:mt-2  max-sm:w-[30vw] lg:text-lg text-xs text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
                 Apply
@@ -761,9 +763,9 @@ function ClubProfile(props) {
             </div>
           )}
           {role === "pending" && (
-            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+            <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <div
-                className={`px-4 py-2 max-sm:pr-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10  bg-white rounded-full  text-white`}
+                className={`px-4 py-2 max-sm:pr-2  max-sm:mt-2 max-sm:w-[30vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10  bg-white rounded-full  text-white`}
               >
                 {" "}
                 &nbsp; <div>Applied</div> &nbsp;
@@ -771,24 +773,24 @@ function ClubProfile(props) {
             </div>
           )}
           {role === "member" && (
-            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+            <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 onClick={handleleave}
-                className={`px-4 py-2 max-sm:pr-2 max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+                className={`px-4 py-2 max-sm:pr-2 max-lg:py-1 max-sm:w-[30vw]  max-sm:mt-2  justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
-                {" "}
-                <LogoutIcon className="scale-[80%] max-sm:scale-[65%]" />
+              
+              <div className="h-fit" >  <LogoutIcon className="scale-[80%] max-sm:scale-[65%]" /></div>
                 &nbsp; <div>Leave </div> &nbsp;
               </button>
             </div>
           )}
           {role === "admin" && (
-            <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+            <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 onClick={() => {
                   setpending(true);
                 }}
-                className={`px-4 py-2  max-sm:py-1 max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+                className={`px-4 py-2 max-sm:hidden  max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
                 &nbsp; <div>Pending</div> &nbsp;
@@ -799,13 +801,70 @@ function ClubProfile(props) {
             onClick={() => {
               setmemberdialog(true);
             }}
-            className="row-start-6 max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white"
+            className="row-start-6 max-sm:hidden max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white"
           >
-            <button className="pr-4 pl-4 max-sm:mt-2 max-sm:w-[30vw]  lg:text-lg text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
+            <button className="px-4 max-sm:mt-2 max-sm:w-[30vw] whitespace-nowrap lg:text-lg text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
               {memberscount} members
             </button>
           </div>
           <div className="row-start-6 col-start-7"></div>
+        </div>
+        <div className="flex sm:hidden space-x-6 mt-5">
+          {role === "visitor" && (
+            <div className="  text-center w-full ">
+              <button
+                onClick={handleapply}
+                className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                Apply
+              </button>
+            </div>
+          )}
+          {role === "pending" && (
+            <div className=" text-center w-full">
+              <div
+                className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                &nbsp; <div>Applied</div> &nbsp;
+              </div>
+            </div>
+          )}
+          {role === "member" && (
+            <div className="text-center w-full">
+              <button
+                onClick={handleleave}
+                className={`p-1 h-fit flex justify-center items-center text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+
+                <div className="h-fit" >  <LogoutIcon className="scale-[60%]" /></div>
+                &nbsp; <div>Leave </div> &nbsp;
+              </button>
+            </div>
+          )}
+          {role === "admin" && (
+            <div className=" text-center w-full">
+              <button
+                onClick={() => {
+                  setpending(true);
+                }}
+                className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                <div>Pending</div>
+              </button>
+            </div>
+          )}
+          <div
+            onClick={() => {
+              setmemberdialog(true);
+            }}
+            className=" text-center text-white w-full"
+          >
+            <button className="whitespace-nowrap p-2 w-full text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white text-center">
+              {memberscount} members
+            </button>
+          </div>
         </div>
         {role === "member" ? (
           <div className="flex max-sm:mt-5  items-center ">
@@ -1005,7 +1064,7 @@ function ClubProfile(props) {
 
       {(role === "admin" || role === "core") && (
         <div className="ml-[20vw] max-md:ml-[15vw] my-10">
-          <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
+          <div className=" mx-auto w-[35vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
             <div className="flex font-semibold items-center space-x-5">
               <img
                 src={ClubImage}
@@ -1095,132 +1154,6 @@ function ClubProfile(props) {
           )}
         </>
       )}
-      {/* {underline === "post" && (
-        <Post
-          name={props.name}
-          ClubImage={ClubImage}
-          image={tanjiro}
-          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Post>
-      )}
-      {underline === "post" && (
-        <Post
-          name={props.name}
-          ClubImage={ClubImage}
-          image={tanjiro}
-          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Post>
-      )}
-      {underline === "post" && (
-        <Post
-          name={props.name}
-          ClubImage={ClubImage}
-          image={Zoro}
-          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Post>
-      )}
-      {underline === "post" && (
-        <Post
-          name={props.name}
-          ClubImage={ClubImage}
-          image={Zoro}
-          text="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, ea. Excepturi blanditiis aut impedit culpa officia consectetur quos eos alias sunt. Ipsam dolores perferendis tempora non sequi, odio amet sint recusandae, sapiente at velit eligendi?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Post>
-      )}
-
-      {underline === "poll" && (
-        <Poll
-          name={props.name}
-          option1="Option 1"
-          votes1={6}
-          votes2={9}
-          votes3={4}
-          votes4={2}
-          option2="Option 2"
-          option3="Option 3"
-          option4="Option 4"
-          ClubImage={ClubImage}
-          question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Poll>
-      )}
-      {underline === "poll" && (
-        <Poll
-          name={props.name}
-          option1="Option 1"
-          votes1={6}
-          votes2={9}
-          votes3={4}
-          votes4={2}
-          option2="Option 2"
-          option3="Option 3"
-          option4="Option 4"
-          ClubImage={ClubImage}
-          question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Poll>
-      )}
-      {underline === "poll" && (
-        <Poll
-          name={props.name}
-          option1="Option 1"
-          votes1={6}
-          votes2={9}
-          votes3={4}
-          votes4={2}
-          option2="Option 2"
-          option3="Option 3"
-          option4="Option 4"
-          ClubImage={ClubImage}
-          question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Poll>
-      )}
-      {underline === "poll" && (
-        <Poll
-          name={props.name}
-          option1="Option 1"
-          votes1={6}
-          votes2={9}
-          votes3={4}
-          votes4={2}
-          option2="Option 2"
-          option3="Option 3"
-          option4="Option 4"
-          ClubImage={ClubImage}
-          question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Poll>
-      )}
-      {underline === "poll" && (
-        <Poll
-          name={props.name}
-          option1="Option 1"
-          votes1={6}
-          votes2={9}
-          votes3={4}
-          votes4={2}
-          option2="Option 2"
-          option3="Option 3"
-          option4="Option 4"
-          ClubImage={ClubImage}
-          question="Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aut iure ipsa, dolorem consequatur mollitia?"
-          date="7/29/2023"
-          time="10:24 PM"
-        ></Poll> */}
-      {/* )} */}
       <Dialog
         open={open}
         onClose={handleClose}

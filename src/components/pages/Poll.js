@@ -169,7 +169,7 @@ function Poll(props) {
   return (
     <div>
       <div className="ml-[20vw] max-md:ml-[15vw] my-10">
-        <div className=" mx-auto w-[50vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
+        <div className=" mx-auto w-[35vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-lg rounded-md max-md:py-4 py-8 px-4 shadow-black text-white">
           <div className="flex justify-between font-semibold items-center ">
             <Link
               to={`/club/${props.name}`}
