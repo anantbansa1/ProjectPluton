@@ -515,10 +515,8 @@ export default function UserFeed() {
           <GroupsIcon></GroupsIcon> Clubs
         </div>
       </button>
-      {club === false ? (
-        ""
-      ) : (
-        <div className=" min-[769px]:hidden scrollbar-hide  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 right-1 rounded-[10px] overflow-scroll">
+
+        <div className={`} min-[769px]:hidden scrollbar-hide duration-300 transition-all  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 ${club?'right-1':'right-[-25vw]'} rounded-[10px] overflow-scroll`}>
           {allclubs?.map((club) => {
             return (
               <Link
@@ -551,7 +549,7 @@ export default function UserFeed() {
             </Tooltip>
           </Link>
         </div>
-      )}
+
       <Backdrop
         sx={{
           color: "#fff",
