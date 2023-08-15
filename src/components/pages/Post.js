@@ -14,7 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { db } from "../../firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { getStorage, ref  , deleteObject } from "firebase/storage";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 const storage = getStorage();
 
@@ -35,7 +35,7 @@ function Post(props) {
   const handleNo = () => {
     setOpen(false);
   };
-  
+
   const handleYes = () => {
     setOpen(false);
     setloading(true);
@@ -61,96 +61,166 @@ function Post(props) {
     <div>
       <div className="ml-[20vw] max-md:ml-[18vw] flex my-10 max-sm:mr-0">
         <div
-          className={`flex items-center flex-col mx-auto ${props.image !== "" ? "w-fit h-fit" : "w-[100%] md:w-[35vw]   h-fit"
-            } max-sm:pb-5 bg-[#130f22] shadow-lg rounded-md max-md:py-4 py-8 max-sm:px-0 px-10  shadow-black text-white`}
+          className={`flex items-center flex-col mx-auto ${props.image !== "" ? "w-fit h-fit " : "max-sm:w-[100%] max-lg:w-[70%] lg:w-[40vw]   h-fit"
+            } max-sm:pb-5 bg-[#130f22] max-lg:w-[70%] max-sm:w-full  shadow-lg rounded-md max-md:py-4 py-4 max-lg:px-0  shadow-black text-white`}
         >
-          <div className="flex justify-between font-semibold items-center self-start w-full">
-            <Link
-              to={`/club/${props.name}`}
-              className="flex items-center max-sm:space-x-2 space-x-5"
-            >
-              <img
-                src={props.ClubImage}
-                alt=""
-                className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px] max-sm:m-2"
-              />
-              <div className="max-md:text-sm ">{props.name}</div>
-            </Link>
-            {props.role === "admin" && (
-              <div>
-                <button
-                  className="text-slate-200  hover:text-slate-300 px-4"
-                  aria-controls={openmenu ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={openmenu ? "true" : undefined}
-                  onClick={handleClick}
-                >
-                  <MoreHorizIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
-                </button>
-                <div className="">
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={openmenu}
-                    onClose={handleClose}
-                    sx={{
-                      "& .MuiPaper-root": {
-                        bgcolor: "#17132b",
-                        color: "#fff",
-                        margin: 1,
-                        borderRadius: 2,
-                      },
-                    }}
-                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                    transformOrigin={{ vertical: "top", horizontal: "center" }}
-                    MenuListProps={{
-                      "aria-labelledby": "basic-button",
-                    }}
-                  >
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        setOpen(true);
-                      }}
-                      sx={{ borderRadius: 2 }}
-                    >
-                      {" "}
-                      <span className="text-red-700 font-semibold">
-                        {" "}
-                        Delete post
-                      </span>
-                    </MenuItem>
-                  </Menu>
-                </div>
-              </div>
-            )}
-          </div>
           <div
-            className={`flex  flex-col ${props.image !== "" ? "items-center" : "items-start"
+            className={`flex   flex-col ${props.image !== "" ? "items-center" : "items-start"
               } space-y-5 w-full`}
           >
             {props.image !== "" && (
-              <div className="mt-5 sm:mx-auto  w-[30vw]  max-md:w-[100%] ">
+              <div className="  w-[40vw] max-lg:w-[100%] ">
+                <div className="flex mb-5 justify-between self-start w-full">
+                  <div className="flex px-0 justify-between font-semibold items-center self-start w-[90%]">
+                    <Link
+                      to={`/club/${props.name}`}
+                      className="flex items-center  max-sm:space-x-2 space-x-5"
+                    >
+                      <img
+                        src={props.ClubImage}
+                        alt=""
+                        className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px] max-sm:m-2"
+                      />
+                      <div className="max-md:text-sm ]">{props.name}</div>
+                    </Link>
+
+                  </div>
+                  {(props.isadmin === true || props.role === "admin" || props.role === "admin" )&& (
+                    <div>
+                      <button
+                        className="text-slate-200  hover:text-slate-300 px-4"
+                        aria-controls={openmenu ? "basic-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={openmenu ? "true" : undefined}
+                        onClick={handleClick}
+                      >
+                        <MoreHorizIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
+                      </button>
+                      <div className="">
+                        <Menu
+                          id="basic-menu"
+                          anchorEl={anchorEl}
+                          open={openmenu}
+                          onClose={handleClose}
+                          sx={{
+                            "& .MuiPaper-root": {
+                              bgcolor: "#17132b",
+                              color: "#fff",
+                              margin: 1,
+                              borderRadius: 2,
+                            },
+                          }}
+                          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                          transformOrigin={{ vertical: "top", horizontal: "center" }}
+                          MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                          }}
+                        >
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              setOpen(true);
+                            }}
+                            sx={{ borderRadius: 2 }}
+                          >
+                            {" "}
+                            <span className="text-red-700 font-semibold">
+                              {" "}
+                              Delete post
+                            </span>
+                          </MenuItem>
+                        </Menu>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <img
                   src={props.image}
-                  className="object-cover h-[100%] w-[100%] max-md:w-[100%] max-md:h-[100%] rounded-md"
+                  className="object-cover h-[100%] w-[100%] max-md:w-[100%]  max-md:h-[100%] rounded-md"
                   alt=""
                 />
                 <div className="text-lg my-5 max-sm:my-2 max-md:text-sm text-[#dddbdb] ">
-                  {props.text !== "" && (
-                    <span className="font-bold text-white">{props.name} </span>
-                  )}{" "}
-                  <span className="text-justify"> {props.text}</span>
+                  <div className="px-2">
+                    {props.text !== "" && (
+                      <span className="font-bold  text-white">{props.name} </span>
+                    )}{" "}
+                    <span className="text-justify "> {props.text}</span>
+                  </div>
                 </div>
               </div>
             )}
             {props.image === "" && (
-              <div className="self-start text-lg mt-5 max-md:text-sm max-sm:px-0 text-[#dddbdb] w-[100%]">
-                <span className="font-bold text-white ">{props.name} </span>
+              
+              <div className="self-start text-lg mt-5 max-md:text-sm  px-2 text-[#dddbdb] w-[100%]">
+                <div className="flex mb-5 justify-between self-start w-full">
+                  <div className="flex justify-between font-semibold items-center self-start w-[90%]">
+                    <Link
+                      to={`/club/${props.name}`}
+                      className="flex items-center  max-sm:space-x-2 space-x-5"
+                    >
+                      <img
+                        src={props.ClubImage}
+                        alt=""
+                        className=" rounded-[50%] object-cover border-2 border-white h-[2.5vw] w-[2.5vw] min-w-[30px] min-h-[30px] max-sm:m-2"
+                      />
+                      <div className="max-md:text-sm ]">{props.name}</div>
+                    </Link>
+
+                  </div>
+                  {(props.isadmin === true || props.role === "admin" || props.role === "core") && (
+                    <div>
+                      <button
+                        className="text-slate-200  hover:text-slate-300 px-4"
+                        aria-controls={openmenu ? "basic-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={openmenu ? "true" : undefined}
+                        onClick={handleClick}
+                      >
+                        <MoreHorizIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
+                      </button>
+                      <div className="">
+                        <Menu
+                          id="basic-menu"
+                          anchorEl={anchorEl}
+                          open={openmenu}
+                          onClose={handleClose}
+                          sx={{
+                            "& .MuiPaper-root": {
+                              bgcolor: "#17132b",
+                              color: "#fff",
+                              margin: 1,
+                              borderRadius: 2,
+                            },
+                          }}
+                          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                          transformOrigin={{ vertical: "top", horizontal: "center" }}
+                          MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                          }}
+                        >
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              setOpen(true);
+                            }}
+                            sx={{ borderRadius: 2 }}
+                          >
+                            {" "}
+                            <span className="text-red-700 font-semibold">
+                              {" "}
+                              Delete post
+                            </span>
+                          </MenuItem>
+                        </Menu>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {/* <span className="font-bold  text-white ">{props.name} </span> */}
                 {props.text}
               </div>
             )}
-            <div className="flex justify-between w-full">
+            <div className="flex justify-between w-full px-2">
               <div className="text-md max-md:text-xs  text-[#c5c2c2]">
                 {date.toLocaleDateString()}
               </div>

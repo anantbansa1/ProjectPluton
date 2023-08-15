@@ -47,6 +47,7 @@ export default function UserFeed() {
   const [filterposts, setfilterposts] = useState(posts);
   const [filterpolls, setfilterpolls] = useState(polls);
   const [selected, setSelected] = useState("Filter");
+  const [isadmin, setisadmin] = useState(false);
   // const [checkclubs, setcheckclubs] = useState(false);
   // const [checkfeed, setcheckfeed] = useState(false);
   function sleep(ms) {
@@ -99,6 +100,7 @@ export default function UserFeed() {
     setfeedCount(0);
     filterposts.map((filterpost) => {
       if (
+        isadmin === true ||
         filterpost.visibility === "Public" ||
         roles[filterpost.clubname] === "admin" ||
         roles[filterpost.clubname] === "core" ||
@@ -113,6 +115,7 @@ export default function UserFeed() {
     setpollcount(0);
     filterpolls.map((filterpoll) => {
       if (
+        isadmin === true ||
         filterpoll.visibility === "Public" ||
         roles[filterpoll.clubname] === "admin" ||
         roles[filterpoll.clubname] === "core" ||
@@ -123,19 +126,20 @@ export default function UserFeed() {
     });
   }, [filterpolls]);
 
-  useEffect(() => {
-    polls.map((poll) => {
-      if (
-        poll.visibility === "Public" ||
-        roles[poll.clubname] === "admin" ||
-        roles[poll.clubname] === "core" ||
-        roles[poll.clubname] === "member"
-      ) {
-        setpollcount(pollcount + 1);
-      }
-    });
-    console.log("poll: ", pollcount);
-  }, [polls]);
+  // useEffect(() => {
+  //   polls.map((poll) => {
+  //     if (
+  //       isadmin === true ||
+  //       poll.visibility === "Public" ||
+  //       roles[poll.clubname] === "admin" ||
+  //       roles[poll.clubname] === "core" ||
+  //       roles[poll.clubname] === "member"
+  //     ) {
+  //       setpollcount(pollcount + 1);
+  //     }
+  //   });
+  //   console.log("poll: ", pollcount);
+  // }, [polls]);
 
   useEffect(() => {
     if (user) {
@@ -148,6 +152,8 @@ export default function UserFeed() {
             if (userData.data()) {
               console.log("rollno ", userData.id);
               setuserid(userData.id);
+              setisadmin(userData.data().isadmin)
+              console.log("isadmin ", user)
             }
           });
         }
@@ -401,6 +407,7 @@ export default function UserFeed() {
           {filterposts.map((post) => {
             // console.log("heeeee", roles[post.clubname], post.clubname);
             if (
+              isadmin === true ||
               post.visibility === "Public" ||
               roles[post.clubname] === "admin" ||
               roles[post.clubname] === "core" ||
@@ -417,6 +424,7 @@ export default function UserFeed() {
                   timestamp={post.timestamp}
                   role={roles[post.clubname]}
                   postid={post.id}
+                  isadmin={isadmin}
                 ></Post>
               );
             }
@@ -436,6 +444,7 @@ export default function UserFeed() {
           {filterpolls.map((poll) => {
             // console.log("poll", poll.id);
             if (
+              isadmin === true ||
               poll.visibility === "Public" ||
               roles[poll.clubname] === "admin" ||
               roles[poll.clubname] === "core" ||
@@ -452,6 +461,7 @@ export default function UserFeed() {
                   option3={poll.option3}
                   option4={poll.option4}
                   timestamp={poll.timestamp}
+                  isadmin={isadmin}
                   votes1={poll.votes1}
                   votes2={poll.votes2}
                   votes3={poll.votes3}

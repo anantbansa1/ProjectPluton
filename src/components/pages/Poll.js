@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -169,8 +170,8 @@ function Poll(props) {
   return (
     <div>
       <div className="ml-[20vw] max-md:ml-[15vw] my-10">
-        <div className=" mx-auto w-[35vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-lg rounded-md max-md:py-4 py-8 px-4 shadow-black text-white">
-          <div className="flex justify-between font-semibold items-center ">
+        <div className=" mx-auto w-[40vw] max-lg:w-[70%] max-md:w-[75vw] h-fit bg-[#130f22] shadow-lg rounded-md max-md:py-4 py-4 px-2 shadow-black text-white">
+          <div className="flex px-2 justify-between font-semibold items-center ">
             <Link
               to={`/club/${props.name}`}
               className="flex items-center space-x-5"
@@ -182,7 +183,7 @@ function Poll(props) {
               />
               <div className="max-md:text-sm">{props.name}</div>
             </Link>
-            {(props.role === 'admin' || props.role === 'core') && (
+            {(props.isadmin === true || props.role === 'admin' || props.role === 'core') && (
               <div>
               <button
                 className="text-slate-200  hover:text-slate-300 px-4"
@@ -223,7 +224,7 @@ function Poll(props) {
                     {" "}
                     <span className="text-red-700 font-semibold">
                       {" "}
-                      Delete post
+                      Delete poll
                     </span>
                   </MenuItem>
                 </Menu>
@@ -233,7 +234,7 @@ function Poll(props) {
           </div>
           <div className="my-3"></div>
           <div className="text-lg max-md:text-sm text-[#dddbdb] ">
-            <span className="font-bold  text-white">{props.name}</span>{" "}
+            {/* <span className="font-bold  text-[#c9c6c6]">{props.name}</span>{" "} */}
             {props.question}
             <div className="flex mt-2 flex-col space-y-2">
               {props.option1 && (
@@ -385,7 +386,7 @@ function Poll(props) {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
-          <div className="">{"Delete post"}</div>
+          <div className="">{"Delete Poll"}</div>
         </DialogTitle>
         <DialogContent>
           <div className="text-[#e4e2e2] text-lg">

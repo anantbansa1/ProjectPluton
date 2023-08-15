@@ -39,8 +39,7 @@ export default function Navbar(props) {
   useEffect(() => {
     if (user) {
       getDocs(
-        query(collection(db, "user")),
-        where("email", "==", user.email)
+        query(collection(db, "user"))
       ).then((snapshot) => {
         snapshot.forEach((u) => {
           if (u.data().email === user.email) {

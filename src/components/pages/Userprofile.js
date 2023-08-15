@@ -38,11 +38,11 @@ function ClubProfile(props) {
 
   const query = collection(db, "user/41521005/clubs");
   const [docs, loading, error] = useCollectionData(query);
-  console.log(docs);
+  console.log("docs",docs);
 
   const query2 = collection(db, "user");
   const [docs2, loading2, error2] = useCollectionData(query2);
-  console.log(docs2);
+  console.log("docs2",docs2);
 
   // function handleChange(e) {
   //   if (e.target.files[0]) {
@@ -297,12 +297,12 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-7 "></div>
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            {docs2?.map((doc) => (
+       
               <div className="text-[2.25rem]  max-lg:text-2xl text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
                 {" "}
-                {doc.username}{" "}
+                {props.name}{" "}
               </div>
-            ))}
+    
           </div>
           <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             {" "}
