@@ -22,7 +22,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import tanjiro from "../Images/Tanjiro.jpg";
 import { Link, useFetcher } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
+import { Hidden, TextField } from "@mui/material";
 import minion from "../Images/Minions.jpg";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -40,8 +40,11 @@ import {
 } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 
-import { doc, updateDoc } from "firebase/firestore";
+
+import { doc, updateDoc , setDoc , deleteDoc} from "firebase/firestore";
 import { collection, collectionGroup, where, query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
@@ -51,7 +54,22 @@ import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { onSnapshot } from "firebase/firestore";
 import { type } from "@testing-library/user-event/dist/type";
 
+
+
 function ClubProfile(props) {
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenAlert(false);
+  };
+  const [etype, setetype] = useState("success");
+  const [message, setmessage] = useState("Successfully Added!");
+  const [openAlert, setOpenAlert] = useState(false);
   const navigate = useNavigate();
   const clubName = useParams().clubID;
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -108,6 +126,9 @@ const [final_array, setfinal_array] = useState([]);
   const [menuState, setMenuState] = useState(
     []
   );
+
+const [points_state , setpoints_state] = useState([]);
+
   
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,6 +250,9 @@ const [final_array, setfinal_array] = useState([]);
   useEffect(() => {
     setMenuState(final_array.map(() => ({ anchorEl: null, open: false })));
     console.log(final_array);
+
+    setpoints_state(final_array.map(() => (0)));
+    console.log(final_array);
   },[final_array])
 
 
@@ -254,13 +278,60 @@ useEffect(() => {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  async function handleRemove(roll_no){
-
+  const handlePromote = async (id) =>  {
+    // console.log("Promoted")
+    const docref = doc(db,`user/${id}/clubs/${clubName}`)
+    const payload = {role : "core"};
+    await updateDoc(docref,payload);
+    navigate(0);
   }
-  async function handlePromote(roll_no){
-
+  const handleDemote = async ( id) =>  {
+    // console.log("Demoted")
+    const docref = doc(db,`user/${id}/clubs/${clubName}`)
+    const payload = {role : "member"};
+    await updateDoc(docref,payload);
+    navigate(0);
   }
+  const handleRemove = async (id) =>  {
+    // console.log("Removed")
+    const docref = doc(db,`user/${id}/clubs/${clubName}`)
+    await deleteDoc(docref);
 
+    const docref2 = doc(db,`clubs/${club_id}/Members/${id}`)
+    await deleteDoc(docref2);
+
+    navigate(0);
+  }
+  
+  const handlepoints = (event, index) => {
+    const newPointState = [...points_state];
+    newPointState[index] = event.target.value;
+    setpoints_state(newPointState);
+  };
+
+  const handleClubPoints = async (newpoints, id) => {
+    let a = points-newpoints;
+    if(a >= 0){
+      const docref3 = doc(db,`clubs/${club_id}`);
+      const payload = {points : a};
+      await updateDoc(docref3,payload);
+
+      const docref4 = doc(db,`user/${id}/clubs/${clubName}`)
+      const temp = await getDoc(docref4);
+      let b = parseInt(temp.data().points) + parseInt(newpoints);
+      const payload2 = {points : b}
+      await updateDoc(docref4,payload2);
+
+      console.log("Points updated", typeof(b) );
+      navigate(0);
+      // console.log(typeof(b));
+    }
+    else{
+      setOpenAlert(true)
+      setmessage("Insufficient Points")
+      setetype("error")
+    }
+  }
 
 
   const handleoption = (event, index) => {
@@ -313,7 +384,7 @@ useEffect(() => {
         <div className="flex justify-between">
           <div>Members</div>
           <div className="max-sm:hidden">
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               sx={{
@@ -329,7 +400,7 @@ useEffect(() => {
               }}
             >
               save changes{" "}
-            </Button>
+            </Button> */}
           </div>
         </div>
 
@@ -349,79 +420,40 @@ useEffect(() => {
             return (
               <React.Fragment key={index}>
                 <div className={`row-start-${index + 2}   p-4 col-start-1`}>
-                  {d.name}
+                  {d.name} <span className="text-[#ffec3d]">({d.role})</span>
                 </div>
-                <div className={`row-start-${index + 2}  p-4 col-start-2`}>
+                <div
+                onChange = {(event) => {
+                  handlepoints(event, index);
+          
+                }}
+                className={`row-start-${index + 2}  p-4 col-start-2`}>
                   {" "}
-                  <TextField
-                    label="Points"
-                    variant="outlined"
-                    color="grey"
-                    sx={{
-                      "& input::placeholder": {
-                        fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1rem" },
-                      },
-                      "& .MuiInputBase-root": { color: "#DFE2E8" },
-                      "& .MuiFormLabel-root": { color: "#AEB1B5" },
-                      "& .MuiFormLabel-root.Mui-focused": { color: "#AEB1B5" },
-                      ".MuiInputBase-input": { background: "transparent" },
-                      ".MuiTextField-root": { background: "transparent" },
-                    }}
-                    InputProps={{ style: { backgroundColor: "inherit" } }}
-                  />{" "}
-                </div>
-                {/* <div className={`row-start-${index + 2}  p-4 col-start-3`}>
-                  {" "}
-                  <Button
-                    aria-controls={menuState[index].open ? "basic-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={menuState[index].open ? "true" : undefined}
-                    sx={{ color: "#fff", borderRadius: 50 }}
-                    onClick={(event) => {
-                      handleoption(event, index, d.name);
-                    }}
-                  >
-                    <MoreVert />
-                  </Button>
-                  <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    sx={{
-                      "& .MuiPaper-root": {
-                        bgcolor: "#130f22",
-                        color: "#fff",
-                        margin: 2,
-                      },
-                    }}
-                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                    transformOrigin={{ vertical: "top", horizontal: "center" }}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                      "aria-labelledby": "basic-button",
-                    }}
-                  >
-                {    console.log(d.role)}
-                    
-                    <MenuItem sx={{ padding: 2 }}
-                    onClick={() => {
-                      handleClose();
-                      // handlePromote(d.roll_no);
-                    }} 
-                    >
-                      {d.name}
-                    </MenuItem>
-                    <MenuItem
-                      sx={{ padding: 2, color: "#b91c1c" }}
-                      onClick={() => {
-                        handleClose();
-                        // handleRemove(d.roll_no);
+                    {d.role === "member" && (
+                      <TextField
+                      label="Points"
+                      variant="outlined"
+                      color="grey"
+                      sx={{
+                        "& input::placeholder": {
+                          fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1rem" },
+                        },
+                        "& .MuiInputBase-root": { color: "#DFE2E8" },
+                        "& .MuiFormLabel-root": { color: "#AEB1B5" },
+                        "& .MuiFormLabel-root.Mui-focused": { color: "#AEB1B5" },
+                        ".MuiInputBase-input": { background: "transparent" },
+                        ".MuiTextField-root": { background: "transparent" },
                       }}
-                    >
-                      Remove
-                    </MenuItem>
-                  </Menu>{" "}
-                </div> */}
+                      InputProps={{ style: { backgroundColor: "inherit" } }}
+                    />
+                  )}
+                  {d.role !== "member" && (
+                    <div className="text-[#AEB1B5] px-2">
+                      NA
+                    </div>
+                  )}
+                </div>
+                
                 <div className={`row-start-${index + 2}  p-4 col-start-3`}>
               {" "}
               <Button
@@ -457,20 +489,33 @@ useEffect(() => {
                   sx={{ padding: 2 }}
                   onClick={() => {
                     handleClose(index);
-                    // handlePromote(d.roll_no);
+                    {d.role === "core" ? handleDemote(d.roll_no) : handlePromote(d.roll_no)}
                   }}
                 >
-                  {d.role === "admin" ? "Demote" : "Promote"}
+                  {d.role === "core" ? "Demote" : "Promote"}
+                  {/* {d.role} */}
+                </MenuItem>
+                <MenuItem
+                  sx={{ padding: 2 }}
+                  onClick={() => {
+                    handleClose(index);
+                    console.log(points_state[index]);
+                    handleClubPoints(points_state[index], d.roll_no);
+                  }}
+                >
+                  Update Points
                 </MenuItem>
                 <MenuItem
                   sx={{ padding: 2, color: "#b91c1c" }}
                   onClick={() => {
                     handleClose(index);
+                    handleRemove(d.roll_no);
                     // handleRemove(d.roll_no);
                   }}
                 >
                   Remove
                 </MenuItem>
+                
               </Menu>{" "}
             </div>
               </React.Fragment>
@@ -478,28 +523,17 @@ useEffect(() => {
           })}
 
           <div className="sm:hidden ">
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                background: "#15803d",
-                color: "white",
-                background: "#090811",
-                borderColor: "#090811",
-                "&:hover": {
-                  background: "#090811",
-                  borderColor: "#090811",
-                  color: "white",
-                },
-              }}
-            >
-              save changes{" "}
-            </Button>
           </div>
         </div>
 
         <div></div>
       </div>
+      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity={etype} sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      </Snackbar>
+
     </div>
   );
 }
