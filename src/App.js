@@ -27,7 +27,7 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<UserFeed />} />
         <Route
-          path="/userprofile"
+          path="/user/:email"
           element={
             <UserProfile
               name="John Doe"
