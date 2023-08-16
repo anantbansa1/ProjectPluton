@@ -16,7 +16,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Button } from "@mui/material"
 import Backdrop from "@mui/material/Backdrop";
-import anant from "../Images/Anant.jpg";
 import CircularProgress from "@mui/material/CircularProgress";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
@@ -37,9 +36,6 @@ export default function Addnewclub(props) {
   const [open, setOpen] = React.useState(false);
   const [ClubImage, setclubimage] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/Screenshot%202023-08-14%20at%203.02.08%20PM.png?alt=media&token=dfd92663-aaa6-4068-93b7-1735b1569339');
   const [upImg, setUpImg] = useState(ClubImage);
-  // const [imageError, setimageerror] = useState('');
-  // const [successMessage, setSuccessMessage] = useState('')
-  // const [uploadError, setuploadError] = useState('');
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [crop, setCrop] = useState({ aspect: 1, height: 500 });
@@ -50,7 +46,6 @@ export default function Addnewclub(props) {
   const [Presidentrollno, setpresidentrollno] = useState('')
   const profileinput = React.useRef();
   const [Loading, setLoading] = useState(false);
-  //const [imageurl, setimageurl] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/Screenshot%202023-08-14%20at%203.02.08%20PM.png?alt=media&token=dfd92663-aaa6-4068-93b7-1735b1569339');
   const [canvasref, setcanvasref] = useState()
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
@@ -186,7 +181,7 @@ export default function Addnewclub(props) {
             lowercasename: clubName.toLowerCase()
           };
           addDoc(collectionRef, payload).then((docref) => {
-            const collectionRef = doc(db, "clubs", `${docref.id}`, "members", `${Presidentrollno}`)
+            const collectionRef = doc(db, "clubs", `${docref.id}`, "Members", `${Presidentrollno}`)
             const payload = {
             }
             setDoc(collectionRef, payload)
