@@ -134,7 +134,7 @@ export default function Navbar(props) {
             <button className="max-lg:hidden">&nbsp;&nbsp;Our Team</button>
           </Link>
           <Link
-            to="/userprofile"
+            to={`/user/${user?.email}`}
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
             } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-xl`}

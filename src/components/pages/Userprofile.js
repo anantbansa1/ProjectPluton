@@ -16,6 +16,7 @@ import ReactCrop from "react-image-crop";
 import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
 import { doc, updateDoc } from "firebase/firestore";
+import { useParams } from "react-router";
 
 import Rank1 from "../Images/rank1.png";
 import Rank2 from "../Images/rank2.png";
@@ -103,8 +104,9 @@ function ClubProfile(props) {
 
   const user = useAuth();
   const [id, setid] = useState();
+  const email = useParams().email;
   async function fetch_data() {
-    const q = query(collection(db, "user"), where("email", "==", user?.email));
+    const q = query(collection(db, "user"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     if (querySnapshot) {
       querySnapshot.forEach(async (doc) => {
@@ -215,7 +217,7 @@ function ClubProfile(props) {
     const storage = getStorage();
     const canvas = previewCanvasRef.current;
     canvas.toBlob((blob) => {
-      const file = new File([blob], `${user?.email}.png`, {
+      const file = new File([blob], `${email}.png`, {
         type: "image/png",
       });
       const storageRef = ref(storage, `images/${file.name}`);
@@ -246,7 +248,7 @@ function ClubProfile(props) {
     const storage = getStorage();
     const canvas = previewCanvasRefCover.current;
     canvas?.toBlob((blob) => {
-      const file = new File([blob], `${user?.email}_1.png`, {
+      const file = new File([blob], `${email}_1.png`, {
         type: "image/png",
       });
       const storageRef = ref(storage, `images/${file.name}`);
@@ -460,24 +462,34 @@ async function SaveChanges(canvas, crop) {
 
   // console.log(clubimg);
 
-  const result = [];
-  for (let i = 0; i < type2?.length; i++) {
-    result.push({ key: type2[i], value: clubimg[i] });
-  }
+  // const result = [];
+  const [result,setresult] = useState();
+  useEffect(() => {
+    let array=[];
+    for (let i = 0; i < type2?.length; i++) {
+      array.push({ key: type2[i], value: clubimg[i] });
+    }
+    setresult(array);
+  },[type2])
   useEffect(() => {
     // console.log(result);
   }, [clubimg]);
 
-  const res = [];
-  for (let i = 0; i < id2?.length; i++) {
-    res.push({ key: id2[i], value: result[i] });
-  }
+  // const res = [];
+  const [res,setres] = useState();
+  useEffect(() => {
+    let array = [];
+    for (let i = 0; i < id2?.length; i++) {
+      array.push({ key: id2[i], value: result[i] });
+    }
+    setres(array);
+  },[id2])
 
   useEffect(() => {
-    res.forEach((d) => {
+    // res.forEach((d) => {
       // console.log(d.key);
       // console.log(d.value.key);
-    });
+    // });
   }, [result]);
 
   ///////////////////////////////////////////////////////////////Reference-Badge Data for Clubs Joined Button////////////////////////////////////////////////
@@ -581,31 +593,40 @@ async function SaveChanges(canvas, crop) {
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  let final_array = [];
-  for (let i = 0; i < club_logo?.length; i++) {
-    const obj = {
-      name: user_clubs[i],
-      type: user_badges[i],
-      logo: club_logo[i],
-      points : club_points[i],
-    };
-    final_array.push(obj);
-  }
+  // let final_array = [];
+  const [final_array , setfinal_array] = useState([]);
+  useEffect(() => {
+    let array = [];
+    for (let i = 0; i < club_points?.length; i++) {
+      let obj = {
+        name: user_clubs[i],
+        type: user_badges[i],
+        logo: club_logo[i],
+        points : club_points[i],
+      };
+      array.push(obj);
+    }
+    setfinal_array(array);
+  },[club_points])
 
   useEffect(() => {
-    // console.log(final_array)
+    console.log(final_array)
     // final_array.forEach((d) => {
     //   // console.log(d.type);
     // });
   }, [final_array]);
 
-  const sortedData = [...final_array].sort((a, b) => a.points - b.points);
+  const [sortedData , setsortedData] = useState([]);
   useEffect(() => {
-    console.log(sortedData);
-  },[sortedData])
+    const sorted_data = [...final_array].sort((a, b) => a.points - b.points);
+    const reversedData = [...sorted_data].reverse();
+    setsortedData(reversedData);
+  },[final_array])
 
-  const reversedData = [...sortedData].reverse();
-  final_array = reversedData
+
+  useEffect(() => {
+    console.log(sortedData)
+  },[sortedData])
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -622,7 +643,9 @@ async function SaveChanges(canvas, crop) {
       <Navbar selected="profile"></Navbar>
       <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
-          <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+          {user?.email === email && (
+            <>
+            <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
             <img
               src={url1}
               key={id}
@@ -652,7 +675,25 @@ async function SaveChanges(canvas, crop) {
           >
             Edit Cover Photo
           </button>
-          <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 max-[375px]:mx-[-5vw] col-start-2 col-span-1 w-fit ">
+            </>
+          )}
+
+          {user?.email !== email && (
+            <>
+            <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+            <img
+              src={url1}
+              key={id}
+              alt=""
+              className="object-cover rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
+              
+            />
+          </div>
+          
+            </>
+          )}
+          {user?.email === email && (
+            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 max-[375px]:mx-[-5vw] col-start-2 col-span-1 w-fit ">
             <div className=" ">
               <button
                 onClick={handleClickOpen}
@@ -681,6 +722,21 @@ async function SaveChanges(canvas, crop) {
               </button>
             </div>
           </div>
+          )}
+
+          {user?.email !== email && (
+            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 max-[375px]:mx-[-5vw] col-start-2 col-span-1 w-fit ">
+            <div className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] ">
+              
+                  <img
+                    src={url}
+                    key={id}
+                    alt=""
+                    className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
+                  ></img>
+            </div>
+          </div>
+          )} 
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-4 "></div>
           <div className="max-sm:col-start-3 max-sm:mx-[9vw]  max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
@@ -710,7 +766,7 @@ async function SaveChanges(canvas, crop) {
               className={`px-4 lg:py-2 py-[0.65rem] max-[375px]:mx-[-20vw] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               {" "}
-              &nbsp; <div> {final_array.length} Clubs Joined</div>
+              &nbsp; <div> {sortedData?.length} Clubs Joined</div>
             </button>
           </div>
 
@@ -1073,7 +1129,7 @@ async function SaveChanges(canvas, crop) {
         >
           {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            {final_array?.map((d) => {
+            {sortedData?.map((d) => {
               const b = badgetype[d.type];
               return (
                 <div className=" flex justify-between">
