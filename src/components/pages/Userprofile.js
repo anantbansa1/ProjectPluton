@@ -116,6 +116,7 @@ function ClubProfile(props) {
         setUrl(docdata["profileimage"]);
         setUrl1(docdata["coverimage"]);
         setdes(docdata["email"]);
+        setrank(docdata["rank"]);
         // setcov(docdata["coverimage"])
         // setprof(docdata["profileimage"])
 
@@ -144,6 +145,7 @@ function ClubProfile(props) {
 
   const t = collection(db, `user/${id}/medals`);
 
+  const [rank , setrank] = useState();
   const [name, setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -151,12 +153,12 @@ function ClubProfile(props) {
   const [CoverImage, setcoverimage] = useState(props.coverimage);
   const [open, setOpen] = React.useState(false);
   const [openCover, setOpenCover] = React.useState(false);
-  const [upImg, setUpImg] = useState(ClubImage);
+  const [upImg, setUpImg] = useState();
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [crop, setCrop] = useState({ aspect: 1, height: 500 });
   const [changeCover, setChangeCover] = useState(false);
-  const [upImgCover, setUpImgCover] = useState(CoverImage);
+  const [upImgCover, setUpImgCover] = useState();
   const imgRefCover = useRef(null);
   const previewCanvasRefCover = useRef(null);
   const [cropCover, setCropCover] = useState({ aspect: 3.8, height: 500 });
@@ -288,6 +290,7 @@ async function SaveChanges(canvas, crop) {
         const Imageuse = canvas.toDataURL("image/png");
         setclubimage(Imageuse);
       }, "image/png");
+      handleSubmit(url);
     }
     console.log(url);
     // console.log(upImg);
@@ -353,6 +356,7 @@ async function SaveChanges(canvas, crop) {
         const Imageuse = canvas.toDataURL("image/png");
         setcoverimage(Imageuse);
       }, "image/png");
+      handleSubmit1(url1);
     }
   }
   function setCanvasImageCover(image, canvas, crop) {
@@ -796,7 +800,7 @@ async function SaveChanges(canvas, crop) {
               className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center"
             >
               <Leaderboard className="scale-[80%]"></Leaderboard>{" "}
-              <div>&nbsp;3 Rank</div>
+              <div>&nbsp;{rank} Rank</div>
             </Link>
           </div>
           <div className="row-start-6 col-start-7"></div>
@@ -1001,7 +1005,7 @@ async function SaveChanges(canvas, crop) {
             }}
             onClick={() => {
               SaveChanges(previewCanvasRef.current, completedCrop);
-              handleSubmit(url);
+              
             }}
           >
             save changes{" "}
@@ -1101,7 +1105,7 @@ async function SaveChanges(canvas, crop) {
                 previewCanvasRefCover.current,
                 completedCropCover
               );
-              handleSubmit1(url1);
+              
             }}
           >
             save changes{" "}
