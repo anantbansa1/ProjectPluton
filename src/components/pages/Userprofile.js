@@ -10,10 +10,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Bronzebadge from "../Images/badge_bronze.png";
 import Silverbadge from "../Images/badge_silver.png";
 import Goldbadge from "../Images/badge_golden.png";
-import corebadge from "../Images/badge_core.png";
 import React, { useCallback, useRef, useEffect } from "react";
 import ReactCrop from "react-image-crop";
-import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
 import { doc, updateDoc } from "firebase/firestore";
 import { useParams } from "react-router";
@@ -43,15 +41,46 @@ import Rank20p from "../Images/rank20p.png";
 import { Leaderboard } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import minion from "../Images/Minions.jpg";
-import Tanjiro from "../Images/Tanjiro.jpg";
 
 import { collection, collectionGroup, where, query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
+import { useAuth, upload } from "../../firebase";
+import { getDocs } from "firebase/firestore";
+import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 function ClubProfile(props) {
-
+  const medal_data = [
+    Rank1,
+    Rank2,
+    Rank3,
+    Rank4,
+    Rank5,
+    Rank6,
+    Rank7,
+    Rank8,
+    Rank9,
+    Rank10,
+    Rank11,
+    Rank12,
+    Rank13,
+    Rank14,
+    Rank15,
+    Rank16,
+    Rank17,
+    Rank18,
+    Rank19,
+    Rank20,
+    Rank20p,
+  ];
+  // const [prof, setprof] = useState({minion})
+  // const [cov, setcov] = useState({Zoro})
+  // const currentUser = useAuth();
+  // // const [photo, setPhoto] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [photoURL, setPhotoURL] = useState(
+  //   "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
+  // );
 
   // function handleClick() {
   //   upload(photo, currentUser, setLoading);
@@ -132,6 +161,11 @@ function ClubProfile(props) {
   const [clubs, setclubs] = useState(false);
   const profileinput = React.useRef();
   const Coverinput = React.useRef();
+  const [img, setimg] = useState("");
+  const [url, setUrl] = useState("");
+  const [img1, setimg1] = useState("");
+  const [url1, setUrl1] = useState("");
+  const [des, setdes] = useState("");
 
   const image =
     props.clubpoint < props.tbronze
@@ -252,6 +286,11 @@ function ClubProfile(props) {
       }, "image/png");
       handleSubmit(url);
     }
+    console.log(url);
+    // console.log(upImg);
+    // console.log(user);
+    // console.log(setLoading);
+    // await upload(upImg, user, setLoading);
   }
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
@@ -279,11 +318,8 @@ function ClubProfile(props) {
   }
 
   const onSelectFile = (e) => {
-    
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
-      // console.log("HELLO ",typeof(e.target.files[0]))
-      // handleSubmit(e.target.files[0]);
       reader.addEventListener("load", () => setUpImg(reader.result));
       reader.readAsDataURL(e.target.files[0]);
       console.log("idarbeta");
@@ -302,11 +338,6 @@ function ClubProfile(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  useEffect(() => {
-    if (currentUser?.photoURL) {
-      setPhotoURL(currentUser.photoURL);
-    }
-  }, [currentUser])
 
   function SaveChangesCover(canvas, crop) {
     if (!crop || !canvas) {
@@ -630,63 +661,99 @@ function ClubProfile(props) {
       <Navbar selected="profile"></Navbar>
       <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
-          <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
-            <img
-              src={CoverImage}
-              alt=""
-              className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
-              onClick={handleClickOpenCover}
-              onMouseOver={(e) => {
-                setChangeCover(true);
-              }}
-              onMouseOut={(e) => {
-                setChangeCover(false);
-              }}
-            />
-          </div>
-          <button
-            onMouseOver={(e) => {
-              setChangeCover(true);
-            }}
-            // onClick={handleClickOpen}
-            onClick={handleClickOpenCover}
-            onMouseOut={(e) => {
-              setChangeCover(false);
-            }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
-          >
-            Edit Cover Photo
-          </button>
-          <div className="max-sm:mx-auto max-sm:col-start-4 items-center row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
-            <div className=" ">
+          {user?.email === email && (
+            <>
+              <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+                <img
+                  src={url1}
+                  key={id}
+                  alt=""
+                  className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
+                  onClick={handleClickOpenCover}
+                  onMouseOver={(e) => {
+                    setChangeCover(true);
+                  }}
+                  onMouseOut={(e) => {
+                    setChangeCover(false);
+                  }}
+                />
+              </div>
               <button
-                onClick={handleClickOpen}
-                onMouseOut={(e) => {
-                  setprofile(true);
-                }}
                 onMouseOver={(e) => {
-                  setprofile(false);
+                  setChangeCover(true);
                 }}
-                className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
+                // onClick={handleClickOpen}
+                onClick={handleClickOpenCover}
+                onMouseOut={(e) => {
+                  setChangeCover(false);
+                }}
+                className={`${changeCover ? "" : "hidden"
+                  } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
               >
-                {profile === false ? (
-                  <img
-                    src={SirfPencil}
-                    alt=""
-                    className="object-cover rounded-[50%]"
-                  />
-                ) : (
-                  <img
-                    src={ClubImage}
-                    alt=""
-                    className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
-                  />
-                )}
+                Edit Cover Photo
               </button>
+            </>
+          )}
+
+          {user?.email !== email && (
+            <>
+              <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+                <img
+                  src={url1}
+                  key={id}
+                  alt=""
+                  className="object-cover rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
+
+                />
+              </div>
+
+            </>
+          )}
+          {user?.email === email && (
+            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
+              <div className=" ">
+                <button
+                  onClick={handleClickOpen}
+                  onMouseOut={(e) => {
+                    setprofile(true);
+                  }}
+                  onMouseOver={(e) => {
+                    setprofile(false);
+                  }}
+                  className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
+                >
+                  {profile === false ? (
+                    <img
+                      src={SirfPencil}
+                      alt=""
+                      className="object-cover rounded-[50%]"
+                    />
+                  ) : (
+                    <img
+                      src={url}
+                      key={id}
+                      alt=""
+                      className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
+                    />
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
+
+          {user?.email !== email && (
+            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 col-start-2 col-span-1 w-fit ">
+              <div className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] ">
+
+                <img
+                  src={url}
+                  key={id}
+                  alt=""
+                  className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
+                ></img>
+              </div>
+            </div>
+          )}
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-4 "></div>
           <div className="max-sm:col-start-3  max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-1">
@@ -786,9 +853,10 @@ function ClubProfile(props) {
               const b = badgetype[d.type];
               return (
                 <img
+                  style={{ borderColor: b }}
                   src={d.logo}
                   alt=""
-                  className={`mx-auto my-1 border-[5px] border-[${b}] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
+                  className={`mx-auto my-1 border-[5px] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
                 />
               );
             })}
@@ -817,29 +885,30 @@ function ClubProfile(props) {
           </div>
           {medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
-              {docs
-                ? docs.map((d) => {
-                  return (
-                    <img
-                      src={medal_data[Math.min(20, d.rank - 1)]}
-                      alt={Rank20p}
-                      className="p-4 w-[130px] object-cover"
-                    />
-                  );
-                  // console.log("hello")
-                })
-                : ""}
+              {docs?.map((d) => {
+                return (
+                  <img
+                    src={medal_data[Math.min(20, d.rank - 1)]}
+                    alt={Rank20p}
+                    className="p-4 w-[130px] object-cover"
+                  />
+                );
+                // console.log("hello")
+              })
+              }
+
             </div>
           )}
           {!medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
-              {result?.map((d) => {
-                const b = badgetype[d.key];
+              {badge_array?.map((d) => {
+                const b = badgetype[d.type];
                 return (
                   <img
-                    src={d.value}
+                    style={{ borderColor: b }}
+                    src={d.logo}
                     alt=""
-                    className={` border-[5px] border-[${b}] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
+                    className={` border-[5px] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
                   />
                 );
               })}
