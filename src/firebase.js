@@ -20,7 +20,7 @@ const firebaseConfig = {
   storageBucket: "pluton-684e6.appspot.com",
   messagingSenderId: "162229444799",
   appId: "1:162229444799:web:07e24c65acc101f75ba60a",
-  measurementId: "G-B9FQKHTNDZ",
+  measurementId: "G-B9FQKHTNDZ"
 };
 
 const app = initializeApp(firebaseConfig);

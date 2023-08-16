@@ -1,4 +1,4 @@
-const admin = require("../firebase-config");
+const {admin} = require("../firebase-config");
 
 class Middleware {
   async decodeToken(req, res, next) {
@@ -7,7 +7,9 @@ class Middleware {
       console.log("type ", req.headers.type);
       if (req.headers.type === "remove") {
         try {
+
           const decodeValue = await admin.auth().verifyIdToken(token);
+    x
           req.user = decodeValue;
           //   console.log(decodeValue);
           if (decodeValue) {
@@ -53,7 +55,9 @@ class Middleware {
         }
       } else {
         try {
+          console.log('here')
           const decodeValue = await admin.auth().verifyIdToken(token);
+          console.log('here1')
           if (decodeValue) {
             req.user = decodeValue;
             const parsedDataString = req.query.parsedData;
