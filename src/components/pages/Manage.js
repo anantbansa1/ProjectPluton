@@ -43,21 +43,17 @@ import { useNavigate } from "react-router-dom";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
-
-import { doc, updateDoc , setDoc , deleteDoc} from "firebase/firestore";
+import { doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
 import { collection, collectionGroup, where, query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
 import { useAuth, upload } from "../../firebase";
-import { getDocs , getDoc } from "firebase/firestore";
+import { getDocs, getDoc } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { onSnapshot } from "firebase/firestore";
 import { type } from "@testing-library/user-event/dist/type";
 
-
-
 function ClubProfile(props) {
-
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -75,7 +71,7 @@ function ClubProfile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const names = ["Anant", "Deepanshu", "Samrath", "Madhav", "Duke"];
-  
+
   const user = useAuth();
   async function checkClub() {
     if (user) {
@@ -92,22 +88,27 @@ function ClubProfile(props) {
           query(collection(db, "user"), where("email", "==", email))
         );
         currentuser.forEach(async (u) => {
-        //   console.log("user   s", u.data());
-          const id = u.id;
-          const getuser = await getDoc(doc(db, "user", id, "clubs", clubName));
-          if (getuser) {
-            if (getuser.data()) {
-              const role = getuser.data().role;
+          //   console.log("user   s", u.data());
+          console.log("hemlo")
+          if(!u.data().isadmin){
+            console.log("byelo")
+            const id = u.id;
+            const getuser = await getDoc(doc(db, "user", id, "clubs", clubName));
+            if (getuser) {
+              if (getuser.data()) {
+                const role = getuser.data().role;
 
-              if (role !== "admin") {
+                if (role !== "admin") {
+                  navigate("/pagenotfound");
+                }
+              } else {
                 navigate("/pagenotfound");
               }
             } else {
               navigate("/pagenotfound");
             }
-          } else {
-            navigate("/pagenotfound");
           }
+          
         });
       } catch (error) {
         console.log("firebase error");
@@ -116,22 +117,17 @@ function ClubProfile(props) {
   }
   useEffect(() => {
     checkClub();
-  },[user])
+  }, [user]);
 
-// console.log(clubName);
+  // console.log(clubName);
 
+  const [final_array, setfinal_array] = useState([]);
 
-const [final_array, setfinal_array] = useState([]);
+  const [menuState, setMenuState] = useState([]);
 
-  const [menuState, setMenuState] = useState(
-    []
-  );
+  const [points_state, setpoints_state] = useState([]);
 
-const [points_state , setpoints_state] = useState([]);
-
-  
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [club_id, setclub_id] = useState();
   async function fetch_data() {
@@ -146,163 +142,197 @@ const [points_state , setpoints_state] = useState([]);
   }
   useEffect(() => {
     fetch_data();
-    if(club_id){
-        // console.log(club_id);
+    if (club_id) {
+      // console.log(club_id);
     }
-  },[club_id]);
+  }, [club_id]);
 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [member_id, setmembers] = useState();  
+  const [member_id, setmembers] = useState();
   useEffect(() => {
-    const collectionref = collection(db,`clubs/${club_id}/Members`);
+    const collectionref = collection(db, `clubs/${club_id}/Members`);
     let array = [];
-    getDocs(collectionref).then((d) =>{
-        if(d){
-            d.forEach((dd) => {
-                array.push(dd.id);
-            })
-        }
-        setmembers(array);
-    })
-  },[club_id])
+    getDocs(collectionref).then((d) => {
+      if (d) {
+        d.forEach((dd) => {
+          array.push(dd.id);
+        });
+      }
+      setmembers(array);
+    });
+  }, [club_id]);
 
   useEffect(() => {
     //  console.log(member_id)
-  },[member_id])
-  
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+  }, [member_id]);
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [member_name, setmember_name] = useState();
   useEffect(() => {
-    const collectionref2 = collection(db,`user`);
+    const collectionref2 = collection(db, `user`);
     let array = [];
     getDocs(collectionref2).then((d) => {
-        if(d){
-            member_id?.forEach((dd) => {
-                d.forEach((search) => {
-                    if(search.id === dd){
-                        array.push(search.data().name);
-                    }
-                })
-            })
-        }
-        setmember_name(array);
-    })
-  },[member_id]);
+      if (d) {
+        member_id?.forEach((dd) => {
+          d.forEach((search) => {
+            if (search.id === dd) {
+              array.push(search.data().name);
+            }
+          });
+        });
+      }
+      setmember_name(array);
+    });
+  }, [member_id]);
 
   useEffect(() => {
     // console.log(member_name);
-  },[member_name]);
+  }, [member_name]);
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const [member_points , setmember_points] = useState([]);
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [member_points, setmember_points] = useState([]);
   useEffect(() => {
     let memberpoints = [];
-    for(let i=0;i<member_name?.length;i++){
+    for (let i = 0; i < member_name?.length; i++) {
       memberpoints.push(0);
     }
     setmember_points(memberpoints);
-  },[member_name])
+  }, [member_name]);
 
   useEffect(() => {
     // console.log(member_points);
-  },[member_name])
+  }, [member_name]);
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [member_role, setmember_role] = useState();
   useEffect(() => {
     let array = [];
     member_id?.forEach((member) => {
-        const docRef = doc(db,`user/${member}/clubs/${clubName}`);
-        getDoc(docRef).then((d) => {
-            array.push(d.data().role);
-        })
-        
-    })
+      const docRef = doc(db, `user/${member}/clubs/${clubName}`);
+      getDoc(docRef).then((d) => {
+        array.push(d.data().role);
+      });
+    });
     setmember_role(array);
-  },[member_id]); 
+  }, [member_id]);
 
   useEffect(() => {
     // console.log(member_role);
-  },[member_role]);
+  }, [member_role]);
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  
   useEffect(() => {
-    if(member_role && member_id && member_name && member_points){
+    if (member_role && member_id && member_name && member_points) {
       let finalarray = [];
-      for(let i=0;i<member_points?.length;i++){
+      for (let i = 0; i < member_points?.length; i++) {
         let obj = {
-            roll_no: member_id[i],
-            name: member_name[i],
-            points: member_points[i],
-            role: member_role[i],
-        }
+          roll_no: member_id[i],
+          name: member_name[i],
+          points: member_points[i],
+          role: member_role[i],
+        };
         finalarray.push(obj);
       }
       setfinal_array(finalarray);
     }
-  },[member_role, member_name, member_points, member_id])
+  }, [member_role, member_name, member_points, member_id]);
   useEffect(() => {
     setMenuState(final_array.map(() => ({ anchorEl: null, open: false })));
     console.log(final_array);
 
-    setpoints_state(final_array.map(() => (0)));
+    setpoints_state(final_array.map(() => 0));
     console.log(final_array);
-  },[final_array])
+  }, [final_array]);
 
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const [points,setpoints] = useState();
-useEffect(() => {
-    const collectionref5 = collection(db,`clubs`)
+  const [points, setpoints] = useState();
+  useEffect(() => {
+    const collectionref5 = collection(db, `clubs`);
     getDocs(collectionref5).then((d) => {
-        if(d){
-            d.forEach((dd) => {
-                if(dd.id === club_id){
-                    setpoints(dd.data().points);
-                }
-            })
-        }
-    })
-},[member_name]);
+      if (d) {
+        d.forEach((dd) => {
+          if (dd.id === club_id) {
+            setpoints(dd.data().points);
+          }
+        });
+      }
+    });
+  }, [member_name]);
 
-useEffect(() => {
+  useEffect(() => {
     console.log(points);
-},[points]);
+  }, [points]);
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const handlePromote = async (id) =>  {
-    // console.log("Promoted")
-    const docref = doc(db,`user/${id}/clubs/${clubName}`)
-    const payload = {role : "core"};
-    await updateDoc(docref,payload);
+  const handlePromote = async (id, role) => {
+    if(role === "member"){
+      const docref = doc(db, `user/${id}/clubs/${clubName}`);
+      const payload = { role: "core" };
+      await updateDoc(docref, payload);
+      const docref9 = doc(db, `user/${id}/badges/${clubName}`);
+      const payload2 = { type: "core" };
+      await setDoc(docref9, payload2);
+    }
+    else if(role === "core"){
+      for(let i=0;i<final_array?.length;i++){
+        console.log("kiya",final_array[i].role)
+        if(final_array[i].role === "admin"){
+          console.log("nahi kiya");
+          const docref = doc(db, `user/${final_array[i].roll_no}/clubs/${clubName}`);
+          const payload = { role: "core" };
+          await updateDoc(docref, payload);
+          const docref9 = doc(db, `user/${final_array[i].roll_no}/badges/${clubName}`);
+          const payload2 = { type: "core" };
+          await setDoc(docref9, payload2);
+        }
+      }
+      const docref = doc(db, `user/${id}/clubs/${clubName}`);
+      const payload = { role: "admin" };
+      await updateDoc(docref, payload);
+      const docref9 = doc(db, `user/${id}/badges/${clubName}`);
+      const payload2 = { type: "core" };
+      await setDoc(docref9, payload2);
+    }
+
     navigate(0);
-  }
-  const handleDemote = async ( id) =>  {
+  };
+  const handleDemote = async (id, role) => {
     // console.log("Demoted")
-    const docref = doc(db,`user/${id}/clubs/${clubName}`)
-    const payload = {role : "member"};
-    await updateDoc(docref,payload);
+    if(role === "core"){
+      const docref = doc(db, `user/${id}/clubs/${clubName}`);
+      const payload = { role: "member" };
+      await updateDoc(docref, payload);
+      const docref9 = doc(db, `user/${id}/badges/${clubName}`);
+      const payload2 = { type: "none" };
+      await setDoc(docref9, payload2);
+      handleBadges(0,id,"member");
+    }
+    else if(role === "admin"){
+      const docref = doc(db, `user/${id}/clubs/${clubName}`);
+      const payload = { role: "core" };
+      await updateDoc(docref, payload);
+      const docref9 = doc(db, `user/${id}/badges/${clubName}`);
+      const payload2 = { type: "core" };
+      await setDoc(docref9, payload2);
+    }
     navigate(0);
-  }
-  const handleRemove = async (id) =>  {
-    // console.log("Removed")
-    const docref = doc(db,`user/${id}/clubs/${clubName}`)
+  };
+  const handleRemove = async (id) => {
+    const docref = doc(db, `user/${id}/clubs/${clubName}`);
     await deleteDoc(docref);
 
-    const docref2 = doc(db,`clubs/${club_id}/Members/${id}`)
+    const docref2 = doc(db, `clubs/${club_id}/Members/${id}`);
     await deleteDoc(docref2);
 
     navigate(0);
-  }
-  
+  };
+
   const handlepoints = (event, index) => {
     const newPointState = [...points_state];
     newPointState[index] = event.target.value;
@@ -310,29 +340,62 @@ useEffect(() => {
   };
 
   const handleClubPoints = async (newpoints, id) => {
-    let a = points-newpoints;
-    if(a >= 0){
-      const docref3 = doc(db,`clubs/${club_id}`);
-      const payload = {points : a};
-      await updateDoc(docref3,payload);
+    let a = points - newpoints;
+    if (a >= 0) {
+      const docref3 = doc(db, `clubs/${club_id}`);
+      const payload = { points: a };
+      await updateDoc(docref3, payload);
 
-      const docref4 = doc(db,`user/${id}/clubs/${clubName}`)
+      const docref4 = doc(db, `user/${id}/clubs/${clubName}`);
       const temp = await getDoc(docref4);
       let b = parseInt(temp.data().points) + parseInt(newpoints);
-      const payload2 = {points : b}
-      await updateDoc(docref4,payload2);
+      const payload2 = { points: b };
+      await updateDoc(docref4, payload2);
 
-      console.log("Points updated", typeof(b) );
-      navigate(0);
+      console.log("Points updated", typeof b);
+      setOpenAlert(true);
+      setmessage("Points added successfully");
+      setetype("success");
+
+      // navigate(0);
       // console.log(typeof(b));
+    } else {
+      setOpenAlert(true);
+      setmessage("Insufficient Points");
+      setetype("error");
     }
-    else{
-      setOpenAlert(true)
-      setmessage("Insufficient Points")
-      setetype("error")
-    }
-  }
+  };
 
+
+  const handleBadges = async (newpoints, id, role) => {
+    if (role !== "core") {
+      const docref5 = doc(db, `user/${id}/clubs/${clubName}`);
+      const temp = await getDoc(docref5);
+      const a = temp.data().points;
+      const finalPoints = parseInt(newpoints) + parseInt(a);
+      const docref6 = doc(db, `clubs/${club_id}`);
+      const temp2 = await getDoc(docref6);
+      let bronze_range = temp2.data().bronze;
+      let silver_range = temp2.data().silver;
+      let gold_range = temp2.data().gold;
+      console.log(finalPoints);
+
+      const docref7 = doc(db, `user/${id}/badges/${clubName}`);
+      if (finalPoints >= gold_range) {
+        const payload = { type: "gold" };
+        await setDoc(docref7, payload);
+      } else if (finalPoints < gold_range && finalPoints >= silver_range) {
+        const payload = { type: "silver" };
+        await setDoc(docref7, payload);
+      } else if (finalPoints < silver_range && finalPoints >= bronze_range) {
+        const payload = { type: "bronze" };
+        await setDoc(docref7, payload);
+      } else {
+        const payload = { type: "none" };
+        await setDoc(docref7, payload);
+      }
+    }
+  };
 
   const handleoption = (event, index) => {
     const newMenuState = [...menuState];
@@ -346,11 +409,10 @@ useEffect(() => {
     setMenuState(newMenuState);
   };
 
-
   // clubName -> club ka naam
   // club_id -> club ka id
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div className="">
       <Navbar selected="profile"></Navbar>
@@ -414,126 +476,212 @@ useEffect(() => {
               <MoreVert />
             </button>
           </div>
-          
+
           {final_array?.map((d, index) => {
-            if(menuState.length)
-            return (
-              <React.Fragment key={index}>
-                <div className={`row-start-${index + 2}   p-4 col-start-1`}>
-                  {d.name} <span className="text-[#ffec3d]">({d.role})</span>
-                </div>
-                <div
-                onChange = {(event) => {
-                  handlepoints(event, index);
-          
-                }}
-                className={`row-start-${index + 2}  p-4 col-start-2`}>
-                  {" "}
+            if (menuState.length)
+              return (
+                <React.Fragment key={index}>
+                  <div className={`row-start-${index + 2}   p-4 col-start-1`}>
+                    {d.name} <span className="text-[#ffec3d]"><i>({d.role})</i></span>
+                  </div>
+                  <div
+                    onChange={(event) => {
+                      handlepoints(event, index);
+                    }}
+                    className={`row-start-${index + 2}  p-4 col-start-2`}
+                  >
+                    {" "}
                     {d.role === "member" && (
-                      <TextField
-                      label="Points"
-                      variant="outlined"
-                      color="grey"
+                      <>
+                        <TextField
+                          label="Points"
+                          variant="outlined"
+                          color="grey"
+                          value={points_state[index]}
+                          sx={{
+                            "& input::placeholder": {
+                              fontSize: {
+                                xs: "0.75rem",
+                                sm: "0.875rem",
+                                md: "1rem",
+                              },
+                            },
+                            "& .MuiInputBase-root": { color: "#DFE2E8" },
+                            "& .MuiFormLabel-root": { color: "#AEB1B5" },
+                            "& .MuiFormLabel-root.Mui-focused": {
+                              color: "#AEB1B5",
+                            },
+                            ".MuiInputBase-input": {
+                              background: "transparent",
+                            },
+                            ".MuiTextField-root": { background: "transparent" },
+                          }}
+                          InputProps={{ style: { backgroundColor: "inherit" } }}
+                        />
+                        
+                        <Button
+                            onClick={() => {
+                              // handleClose(index);
+                              if(points_state[index]){
+                                let array = [...points_state];
+                                array[index] = 0;
+                                console.log(points_state[index]);
+                                handleClubPoints(points_state[index], d.roll_no);
+                                handleBadges(points_state[index], d.roll_no, d.role);
+                                setpoints(points - points_state[index]);
+                                setpoints_state(array);
+                              }
+                              else{
+                                setOpenAlert(true);
+                                setmessage("Points field can't be empty");
+                                setetype("error");
+                              }
+                            }}
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                              background: "#15803d",
+                              color: "white",
+                              margin: {
+                                xs:"10px",
+                                md:"0px",
+                              },
+                              marginLeft: {
+                                md:"5px",
+                              },
+                              background: "#090811",
+                              borderColor: "#090811",
+                              "&:hover": {
+                                background: "#090811",
+                                borderColor: "#090811",
+                                color: "white",
+                              },
+                              fontSize: {
+                                xs: '0.7rem',
+                                sm: '0.86rem',
+                                md: '1rem',
+                              },
+                            }}
+                          >
+                            Assign{" "}
+                          </Button>
+                        
+                      </>
+                    )}
+                    {d.role !== "member" && (
+                      <div className="text-[#AEB1B5] px-2">NA</div>
+                    )}
+                  </div>
+
+                  <div className={`row-start-${index + 2}  p-4 col-start-3`}>
+                    {" "}
+                    {d.role !== "admin" && (
+                      <Button
+                        aria-controls={
+                          menuState[index].open ? "basic-menu" : undefined
+                        }
+                        aria-haspopup="true"
+                        aria-expanded={menuState[index].open ? "true" : undefined}
+                        sx={{ color: "#fff", borderRadius: 50 }}
+                        onClick={(event) => {
+                          handleoption(event, index);
+                        }}
+                      >
+                        <MoreVert />
+                      </Button>
+                    )}
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={menuState[index].anchorEl}
                       sx={{
-                        "& input::placeholder": {
-                          fontSize: { xs: "0.75rem", sm: "0.875rem", md: "1rem" },
+                        "& .MuiPaper-root": {
+                          bgcolor: "#130f22",
+                          color: "#fff",
+                          margin: 2,
                         },
-                        "& .MuiInputBase-root": { color: "#DFE2E8" },
-                        "& .MuiFormLabel-root": { color: "#AEB1B5" },
-                        "& .MuiFormLabel-root.Mui-focused": { color: "#AEB1B5" },
-                        ".MuiInputBase-input": { background: "transparent" },
-                        ".MuiTextField-root": { background: "transparent" },
                       }}
-                      InputProps={{ style: { backgroundColor: "inherit" } }}
-                    />
-                  )}
-                  {d.role !== "member" && (
-                    <div className="text-[#AEB1B5] px-2">
-                      NA
-                    </div>
-                  )}
-                </div>
-                
-                <div className={`row-start-${index + 2}  p-4 col-start-3`}>
-              {" "}
-              <Button
-                aria-controls={menuState[index].open ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={menuState[index].open ? "true" : undefined}
-                sx={{ color: "#fff", borderRadius: 50 }}
-                onClick={(event) => {
-                  handleoption(event, index);
-                }}
-              >
-                <MoreVert />
-              </Button>
-              <Menu
-                id="basic-menu"
-                anchorEl={menuState[index].anchorEl}
-                sx={{
-                  "& .MuiPaper-root": {
-                    bgcolor: "#130f22",
-                    color: "#fff",
-                    margin: 2,
-                  },
-                }}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                transformOrigin={{ vertical: "top", horizontal: "center" }}
-                open={menuState[index].open}
-                onClose={() => handleClose(index)}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem
-                  sx={{ padding: 2 }}
-                  onClick={() => {
-                    handleClose(index);
-                    {d.role === "core" ? handleDemote(d.roll_no) : handlePromote(d.roll_no)}
-                  }}
-                >
-                  {d.role === "core" ? "Demote" : "Promote"}
-                  {/* {d.role} */}
-                </MenuItem>
-                <MenuItem
-                  sx={{ padding: 2 }}
-                  onClick={() => {
-                    handleClose(index);
-                    console.log(points_state[index]);
-                    handleClubPoints(points_state[index], d.roll_no);
-                  }}
-                >
-                  Update Points
-                </MenuItem>
-                <MenuItem
-                  sx={{ padding: 2, color: "#b91c1c" }}
-                  onClick={() => {
-                    handleClose(index);
-                    handleRemove(d.roll_no);
-                    // handleRemove(d.roll_no);
-                  }}
-                >
-                  Remove
-                </MenuItem>
-                
-              </Menu>{" "}
-            </div>
-              </React.Fragment>
-            );
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                      open={menuState[index].open}
+                      onClose={() => handleClose(index)}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      {d.role !== "admin" && (
+                        <MenuItem
+                        sx={{ padding: 2 }}
+                        onClick={() => {
+                          handleClose(index);
+                          {
+                            // d.role === "core"
+                            //   ? handleDemote(d.roll_no)
+                            //   : handlePromote(d.roll_no);
+                            handlePromote(d.roll_no, d.role);
+                          }
+                        }}
+                      >
+                        Promote
+                      </MenuItem>
+                      )}
+                      {d.role !== "member" && (
+                        <MenuItem
+                        sx={{ padding: 2 }}
+                        onClick={() => {
+                          handleClose(index);
+                          {
+                            // d.role === "core"
+                            //   ? handleDemote(d.roll_no)
+                            //   : handlePromote(d.roll_no);
+                            handleDemote(d.roll_no, d.role);
+                          }
+                        }}
+                      >
+                        {/* {d.role === "core" ? "Demote" : "Promote"} */}
+                        Demote
+                      </MenuItem>
+                      )}
+                      {d.role !== "admin" && (
+                        <MenuItem
+                        sx={{ padding: 2, color: "#b91c1c" }}
+                        onClick={() => {
+                          handleClose(index);
+                          handleRemove(d.roll_no);
+                        }}
+                      >
+                        Remove
+                      </MenuItem>
+                      )}
+                    </Menu>{" "}
+                  </div>
+                </React.Fragment>
+              );
           })}
 
-          <div className="sm:hidden ">
-          </div>
+          <div className="sm:hidden "></div>
         </div>
 
         <div></div>
       </div>
-      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity={etype} sx={{ width: "100%" }}>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity={etype}
+          sx={{ width: "100%" }}
+        >
           {message}
         </Alert>
       </Snackbar>
-
     </div>
   );
 }

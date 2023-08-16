@@ -16,9 +16,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { getDocs, query, collection, where } from "firebase/firestore";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { db } from "../firebase";
 // bg-[#1c1733]
 export default function Navbar(props) {
@@ -29,19 +30,45 @@ export default function Navbar(props) {
   const navigate = useNavigate();
   const [Loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [profileimage, setprofileimage] = useState("https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg")
+  const [profileimage, setprofileimage] = useState(
+    "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg"
+  );
   const user = useAuth();
+  const [helper, sethelper] = useState(false);
+  const [isadmin, setisadmin] = useState(false);
 
   useEffect(() => {
     if (user) {
-      getDocs(query(collection(db, 'user')), where('email', '==', user.email)).then((snapshot) => {
+      getDocs(query(collection(db, "user"))).then((snapshot) => {
         snapshot.forEach((u) => {
-          setprofileimage(u.data().profileimage);
-        })
-      })
+          if (u.data().email === user.email) {
+            setprofileimage(u.data().profileimage);
+            console.log("email: ", u.data());
+            setisadmin(u.data().isadmin);
+            console.log("admin: ", u.data().isadmin);
+          }
+        });
+      });
     }
+  }, [user]);
 
-  }, [user])
+  useEffect(() => {
+    setLoading(true);
+    sleep(2000).then(() => {
+      setLoading(false);
+      sethelper(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (helper) {
+      if (user) {
+        // console.log(user?.email);
+      } else {
+        navigate("/login");
+      }
+    }
+  }, [helper]);
 
   const handleNo = () => {
     setOpen(false);
@@ -52,7 +79,6 @@ export default function Navbar(props) {
     handleLogOut();
   };
 
-
   const Title = ({ children }) => <div className="title">{children}</div>;
 
   async function handleLogOut() {
@@ -61,27 +87,23 @@ export default function Navbar(props) {
     try {
       await logOut();
       // setTimeout(1000);
-      redirectIn();
+      navigate("/login");
+      // redirectIn();
     } catch {
       alert("Something went wrong! Please try again later.");
     }
     setLoading(false);
   }
 
-  function redirectIn() {
-    if (user) {
-      // console.log(user?.email);
-    } else {
-      navigate("/login");
-    }
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   return (
     <div className="">
-      {redirectIn()}
       <div className="flex-col shadow-2xl shadow-black bg-white bg-opacity-5 backdrop-blur-2xl backdrop-filter text-white  font-semibold flex  fixed left-0 top-0 h-full w-[15vw] md:w-[20vw]  place-content-around">
         <Link
-          to="/"
+          to="/home"
           className="flex items-center flex-col font-bold italic text-3xl mx-2 "
         >
           <img src={Pluton} alt="" className=" justify-center md:h-[80px] " />
@@ -92,9 +114,10 @@ export default function Navbar(props) {
         </Link>
         <div className="flex flex-col space-y-[1.5vw]">
           <Link
-            to="/"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${props.selected === "home" ? " bg-opacity-10  bg-white" : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-xl`}
+            to="/home"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${
+              props.selected === "home" ? " bg-opacity-10  bg-white" : ""
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-base`}
           >
             {" "}
             <HomeIcon className=" scale-[120%]"></HomeIcon>
@@ -103,30 +126,36 @@ export default function Navbar(props) {
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/leaderboard"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "leaderboard"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "leaderboard"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
           >
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
           </Link>
-          <Link
-            to="/adduser"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "manageusers"
-                ? " bg-opacity-10  bg-white  border-[#323232]"
-                : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-xl`}
-          >
-            <ManageAccountsIcon className=" scale-[120%]"></ManageAccountsIcon>
-            <button className="max-lg:hidden">&nbsp;&nbsp;Manage </button>
-          </Link>
+          {isadmin && (
+            <Link
+              to="/adduser"
+              className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+                props.selected === "manageusers"
+                  ? " bg-opacity-10  bg-white  border-[#323232]"
+                  : ""
+              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
+            >
+              <ManageAccountsIcon className=" scale-[120%]"></ManageAccountsIcon>
+              <button className="max-lg:hidden">&nbsp;&nbsp;Manage </button>
+            </Link>
+          )}
+
           <Link
             to="/faq"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${props.selected === "faq"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${
+              props.selected === "faq"
                 ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-xl`}
+            } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-base`}
           >
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
@@ -135,28 +164,31 @@ export default function Navbar(props) {
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/ourteam"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "ourteam"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "ourteam"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-xl`}
+            } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-base`}
           >
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Our Team</button>
           </Link>
           <Link
-            to="/userprofile"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
-              } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-xl`}
+            to={`/user/${user?.email}`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
+            } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-base`}
           >
             {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
             <button
-              className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-xl  `}
+              className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-base  `}
             >
-              <img
+              {/* <img
                 src={profileimage}
                 alt=""
                 className="h-[26px] w-[26px] rounded-[100%] "
-              />
+              /> */}
+              <AccountCircleIcon className=" scale-[120%]" />
               &nbsp;&nbsp;
               {/* <button>Anant</button> */}
             </button>
@@ -168,7 +200,7 @@ export default function Navbar(props) {
           onClick={() => {
             setOpen(true);
           }}
-          className="flex  max-lg:text-center  items-center  text-[#E73A37]  text-xl max-lg:justify-center justify-start max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  hover:bg-white hover:bg-opacity-10 rounded-full "
+          className="flex  max-lg:text-center  items-center  text-[#E73A37]  text-base max-lg:justify-center justify-start max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  hover:bg-white hover:bg-opacity-10 rounded-full "
         >
           <PowerSettingsNewIcon />
           <div className="  max-lg:hidden">&nbsp;&nbsp;Logout</div>
