@@ -126,7 +126,7 @@ function ClubProfile(props) {
       });
     }
   }
-////////////////////////////////////////// Medal Data Fetch /////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////// Medal Data Fetch /////////////////////////////////////////////////////////////////////////////////////////
   const s = collection(db, `user/${id}/medals`);
   const [docs, loadin, error] = useCollectionData(s);
   useEffect(() => {
@@ -145,7 +145,7 @@ function ClubProfile(props) {
 
   const t = collection(db, `user/${id}/medals`);
 
-  const [rank , setrank] = useState();
+  const [rank, setrank] = useState();
   const [name, setname] = useState("");
   const [medal, setmedal] = useState(true);
   const [profile, setprofile] = useState(true);
@@ -177,8 +177,8 @@ function ClubProfile(props) {
     props.clubpoint < props.tbronze
       ? Bronzebadge
       : props.clubpoint <= props.tsilver
-      ? Silverbadge
-      : Goldbadge;
+        ? Silverbadge
+        : Goldbadge;
 
   // function handleChange(e) {
   //   if (e.target.files[0]) {
@@ -277,9 +277,9 @@ function ClubProfile(props) {
   // getDocs(collectionGroup(db, "badges")).then((querySnapshot) => {
   //   console.log(querySnapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
   // });
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-async function SaveChanges(canvas, crop) {
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
       return;
     }
@@ -411,7 +411,7 @@ async function SaveChanges(canvas, crop) {
   };
 
 
-//////////////////////////////////////////////////User-Badge Id (db:document name) and type Data fetch////////////////////////////////////////////////////  
+  //////////////////////////////////////////////////User-Badge Id (db:document name) and type Data fetch////////////////////////////////////////////////////  
   const collectionRef = collection(db, `user/${id}/badges`);
 
   const [type2, settype2] = useState();
@@ -467,32 +467,32 @@ async function SaveChanges(canvas, crop) {
   // console.log(clubimg);
 
   // const result = [];
-  const [result,setresult] = useState();
+  const [result, setresult] = useState();
   useEffect(() => {
-    let array=[];
+    let array = [];
     for (let i = 0; i < type2?.length; i++) {
       array.push({ key: type2[i], value: clubimg[i] });
     }
     setresult(array);
-  },[type2])
+  }, [type2])
   useEffect(() => {
     // console.log(result);
   }, [clubimg]);
 
   // const res = [];
-  const [res,setres] = useState();
+  const [res, setres] = useState();
   useEffect(() => {
     let array = [];
     for (let i = 0; i < id2?.length; i++) {
       array.push({ key: id2[i], value: result[i] });
     }
     setres(array);
-  },[id2])
+  }, [id2])
 
   useEffect(() => {
     // res.forEach((d) => {
-      // console.log(d.key);
-      // console.log(d.value.key);
+    // console.log(d.key);
+    // console.log(d.value.key);
     // });
   }, [result]);
 
@@ -572,7 +572,7 @@ async function SaveChanges(canvas, crop) {
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const [club_points , setclub_points] = useState();
+  const [club_points, setclub_points] = useState();
   useEffect(() => {
     const collectionref6 = collection(db, `user/${id}/clubs`);
     let array = [];
@@ -598,7 +598,7 @@ async function SaveChanges(canvas, crop) {
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
   // let final_array = [];
-  const [final_array , setfinal_array] = useState([]);
+  const [final_array, setfinal_array] = useState([]);
   useEffect(() => {
     let array = [];
     for (let i = 0; i < club_points?.length; i++) {
@@ -606,12 +606,12 @@ async function SaveChanges(canvas, crop) {
         name: user_clubs[i],
         type: user_badges[i],
         logo: club_logo[i],
-        points : club_points[i],
+        points: club_points[i],
       };
       array.push(obj);
     }
     setfinal_array(array);
-  },[club_points])
+  }, [club_points])
 
   useEffect(() => {
     console.log(final_array)
@@ -620,38 +620,38 @@ async function SaveChanges(canvas, crop) {
     // });
   }, [final_array]);
 
-  const [sortedData , setsortedData] = useState([]);
+  const [sortedData, setsortedData] = useState([]);
   useEffect(() => {
     const sorted_data = [...final_array].sort((a, b) => a.points - b.points);
     const reversedData = [...sorted_data].reverse();
     setsortedData(reversedData);
-  },[final_array])
+  }, [final_array])
 
 
   useEffect(() => {
     // console.log(sortedData)
-  },[sortedData])
+  }, [sortedData])
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
-  const [badge_array , setbadge_array] = useState();
+  const [badge_array, setbadge_array] = useState();
   useEffect(() => {
     let array = [];
-    for(let i=0;i<final_array?.length;i++){
-      if(final_array[i].type != null){
+    for (let i = 0; i < final_array?.length; i++) {
+      if (final_array[i].type != null) {
         let obj = {
-          logo : final_array[i].logo,
-          type : final_array[i].type,
+          logo: final_array[i].logo,
+          type: final_array[i].type,
         }
         array.push(obj);
       }
     }
     setbadge_array(array);
-  },[final_array])
+  }, [final_array])
 
   useEffect(() => {
     console.log(badge_array);
-  },[badge_array])
+  }, [badge_array])
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   const badgetype = {
@@ -669,141 +669,147 @@ async function SaveChanges(canvas, crop) {
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
           {user?.email === email && (
             <>
-            <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
-            <img
-              src={url1}
-              key={id}
-              alt=""
-              className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
-              onClick={handleClickOpenCover}
-              onMouseOver={(e) => {
-                setChangeCover(true);
-              }}
-              onMouseOut={(e) => {
-                setChangeCover(false);
-              }}
-            />
-          </div>
-          <button
-            onMouseOver={(e) => {
-              setChangeCover(true);
-            }}
-            // onClick={handleClickOpen}
-            onClick={handleClickOpenCover}
-            onMouseOut={(e) => {
-              setChangeCover(false);
-            }}
-            className={`${
-              changeCover ? "" : "hidden"
-            } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
-          >
-            Edit Cover Photo
-          </button>
+              <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+                <img
+                  src={url1}
+                  key={id}
+                  alt=""
+                  className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
+                  onClick={handleClickOpenCover}
+                  onMouseOver={(e) => {
+                    setChangeCover(true);
+                  }}
+                  onMouseOut={(e) => {
+                    setChangeCover(false);
+                  }}
+                />
+              </div>
+              <button
+                onMouseOver={(e) => {
+                  setChangeCover(true);
+                }}
+                // onClick={handleClickOpen}
+                onClick={handleClickOpenCover}
+                onMouseOut={(e) => {
+                  setChangeCover(false);
+                }}
+                className={`${changeCover ? "" : "hidden"
+                  } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+              >
+                Edit Cover Photo
+              </button>
             </>
           )}
 
           {user?.email !== email && (
             <>
-            <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
-            <img
-              src={url1}
-              key={id}
-              alt=""
-              className="object-cover rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
-              
-            />
-          </div>
-          
+              <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+                <img
+                  src={url1}
+                  key={id}
+                  alt=""
+                  className="object-cover rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
+
+                />
+              </div>
+
             </>
           )}
           {user?.email === email && (
-            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 max-[375px]:mx-[-5vw] col-start-2 col-span-1 w-fit ">
-            <div className=" ">
-              <button
-                onClick={handleClickOpen}
-                onMouseOut={(e) => {
-                  setprofile(true);
-                }}
-                onMouseOver={(e) => {
-                  setprofile(false);
-                }}
-                className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
-              >
-                {profile === false ? (
-                  <img
-                    src={SirfPencil}
-                    alt=""
-                    className="object-cover rounded-[50%]"
-                  />
-                ) : (
-                  <img
-                    src={url}
-                    key={id}
-                    alt=""
-                    className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
-                  />
-                )}
-              </button>
+            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
+              <div className=" ">
+                <button
+                  onClick={handleClickOpen}
+                  onMouseOut={(e) => {
+                    setprofile(true);
+                  }}
+                  onMouseOver={(e) => {
+                    setprofile(false);
+                  }}
+                  className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
+                >
+                  {profile === false ? (
+                    <img
+                      src={SirfPencil}
+                      alt=""
+                      className="object-cover rounded-[50%]"
+                    />
+                  ) : (
+                    <img
+                      src={url}
+                      key={id}
+                      alt=""
+                      className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
+                    />
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
           )}
 
           {user?.email !== email && (
-            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 max-[375px]:mx-[-5vw] col-start-2 col-span-1 w-fit ">
-            <div className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] ">
-              
-                  <img
-                    src={url}
-                    key={id}
-                    alt=""
-                    className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
-                  ></img>
+            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 col-start-2 col-span-1 w-fit ">
+              <div className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] ">
+
+                <img
+                  src={url}
+                  key={id}
+                  alt=""
+                  className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
+                ></img>
+              </div>
             </div>
-          </div>
-          )} 
+          )}
           <div className="row-start-6 col-start-1 "></div>
           <div className="row-start-6 col-start-4 "></div>
-          <div className="max-sm:col-start-3 max-sm:mx-[9vw]  max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
-            <div className="text-[2.25rem] ml-[-9vw] max-lg:text-2xl max-sm:ml-[-21vw] text-center max-sm:text-xl text-white font-semibold mix-blend-difference">
-              
+          <div className="max-sm:col-start-3  max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-1">
+            <div className="text-2xl whitespace-nowrap  max-sm:text-xl text-white  font-semibold ">
+
               {name}
             </div>
           </div>
-          {/* <div className="max-sm:col-start-3 row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
-            {" "}
-            {id}
-          </div> */}
           <div className="flex flex-col h-fit max-sm:col-start-3 row-start-8 col-start-2 row-span-1 col-span-2 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
-            <div className="max-sm:mx-[5vw] max-[375px]:mx-[10vw]">
-                {id}
-              <div className="max-sm:mx-[-5vw] max-[375px]:mx-[-3vw] ">
-                  {des}
-             </div>
+            <div className="">
+              {id}
+              <div className=" ">
+                {des}
+              </div>
             </div>
           </div>
 
-          <div className="row-start-6 max-sm:col-start-2  max-sm:col-span-1 max-[375px]:m-0  max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+          <div className="max-sm:hidden row-start-6 max-sm:col-start-2  max-sm:col-span-1   max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
             <button
               onClick={() => {
                 setclubs(true);
               }}
-              className={`px-4 lg:py-2 py-[0.65rem] max-[375px]:mx-[-20vw] max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs max-[375px]:px-2  flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              className={`px-4 py-2  max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs  items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
-              {" "}
-              &nbsp; <div> {sortedData?.length} Clubs Joined</div>
+              <div> {sortedData?.length} Clubs Joined</div>
             </button>
           </div>
 
-          <div className="row-start-6 max-sm:mx-[40vw] max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
+          <div className="max-sm:hidden row-start-6 w-fit max-sm:col-start-5 max-sm:col-span-1 justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
             <Link
               to="/leaderboard"
-              className="  flex items-center px-4 max-sm:mt-2 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center"
-            >
-              <Leaderboard className="scale-[80%]"></Leaderboard>{" "}
-              <div>&nbsp;{rank} Rank</div>
+              className="  flex items-center px-4 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center"
+            > <Leaderboard className="scale-[80%] max-lg:scale-[60%]"></Leaderboard>{rank} Rank
             </Link>
           </div>
           <div className="row-start-6 col-start-7"></div>
+        </div>
+        <div className="flex sm:hidden text-sm md:text-md lg:text-xl items-center text-center space-x-5 text-white">
+          <div className="bg-opacity-10 hover:bg-opacity-20 text-center rounded-full px-4 py-2 w-full bg-white">
+            {sortedData?.length} Clubs Joined
+          </div>
+
+          <div className="w-full text-center justify-center">
+            <Link
+              to="/leaderboard"
+              className="  flex justify-center items-center px-4  whitespace-nowrap text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-[0.35rem] text-white text-center"
+            > <Leaderboard className="scale-[60%]"></Leaderboard>{rank} Rank
+            </Link>
+          </div>
+
         </div>
       </div>
 
@@ -819,15 +825,15 @@ async function SaveChanges(canvas, crop) {
           <div className="flex  justify-start flex-wrap">
             {docs
               ? docs.map((d) => {
-                  return (
-                    <img
-                      src={medal_data[Math.min(20, d.rank - 1)]}
-                      alt={Rank20p}
-                      className="p-4 w-[150px] object-cover"
-                    />
-                  );
-                  // console.log("hello")
-                })
+                return (
+                  <img
+                    src={medal_data[Math.min(20, d.rank - 1)]}
+                    alt={Rank20p}
+                    className="p-4 w-[150px] object-cover"
+                  />
+                );
+                // console.log("hello")
+              })
               : ""}
             {/* <img src={Rank1} alt="" className="p-4 w-[150px]" />
             <img src={Rank2} alt="" className="p-4 w-[150px]" />
@@ -886,30 +892,30 @@ async function SaveChanges(canvas, crop) {
             <div className="flex mt-5 justify-center  flex-wrap">
               {docs
                 ? docs.map((d) => {
-                    return (
-                      <img
-                        src={medal_data[Math.min(20, d.rank - 1)]}
-                        alt={Rank20p}
-                        className="p-4 w-[130px] object-cover"
-                      />
-                    );
-                    // console.log("hello")
-                  })
+                  return (
+                    <img
+                      src={medal_data[Math.min(20, d.rank - 1)]}
+                      alt={Rank20p}
+                      className="p-4 w-[130px] object-cover"
+                    />
+                  );
+                  // console.log("hello")
+                })
                 : ""}
             </div>
           )}
           {!medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
               {result?.map((d) => {
-              const b = badgetype[d.key];
-              return (
-                <img
-                  src={d.value}
-                  alt=""
-                  className={` border-[5px] border-[${b}] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
-                />
-              );
-            })}
+                const b = badgetype[d.key];
+                return (
+                  <img
+                    src={d.value}
+                    alt=""
+                    className={` border-[5px] border-[${b}] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
+                  />
+                );
+              })}
             </div>
           )}
         </div>
@@ -1005,7 +1011,7 @@ async function SaveChanges(canvas, crop) {
             }}
             onClick={() => {
               SaveChanges(previewCanvasRef.current, completedCrop);
-              
+
             }}
           >
             save changes{" "}
@@ -1105,7 +1111,7 @@ async function SaveChanges(canvas, crop) {
                 previewCanvasRefCover.current,
                 completedCropCover
               );
-              
+
             }}
           >
             save changes{" "}
@@ -1163,28 +1169,28 @@ async function SaveChanges(canvas, crop) {
                         src={d.logo}
                         alt=""
                         className="mx-auto  h-[50px] w-[50px] rounded-full min-w-[50px] min-h-[50px]  object-cover "
-                    />
+                      />
                     </div>
 
                     {/* <div className="font-semibold">{d.name}</div> */}
                     <div>
-                    <Link
-                      to={`/club/${d.name}`}
-                      params={d.name}
-                      state={d}
-                      className="font-semibold"
-                    >
-                      <Tooltip title={d.name}>
-                        {" "}
-                        <span>{d.name}</span>
-                      </Tooltip>
-                    </Link>
+                      <Link
+                        to={`/club/${d.name}`}
+                        params={d.name}
+                        state={d}
+                        className="font-semibold"
+                      >
+                        <Tooltip title={d.name}>
+                          {" "}
+                          <span>{d.name}</span>
+                        </Tooltip>
+                      </Link>
                     </div>
                   </div>
                   {d.type && (
                     <div className="min-w-[50px] min-h-[50px]">
                       <img
-                        style={{borderColor:b}}
+                        style={{ borderColor: b }}
                         src={d.logo}
                         alt=""
                         className={`row-start-1 col-start-1 mx-auto border-4 min-w-[50px] min-h-[50px] h-[50px] w-[50px] rounded-full  object-cover`}
