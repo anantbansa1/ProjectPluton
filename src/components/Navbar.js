@@ -19,6 +19,7 @@ import Slide from "@mui/material/Slide";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { getDocs, query, collection, where } from "firebase/firestore";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { db } from "../firebase";
 // bg-[#1c1733]
 export default function Navbar(props) {
@@ -183,11 +184,12 @@ export default function Navbar(props) {
             <button
               className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-base  `}
             >
-              <img
+              {/* <img
                 src={profileimage}
                 alt=""
                 className="h-[26px] w-[26px] rounded-[100%] "
-              />
+              /> */}
+              <AccountCircleIcon className=" scale-[120%]"/>
               &nbsp;&nbsp;
               {/* <button>Anant</button> */}
             </button>
