@@ -563,7 +563,7 @@ async function SaveChanges(canvas, crop) {
   }, [user_clubs]);
 
   useEffect(() => {
-    // console.log(club_logo)
+    console.log(club_logo)
   }, [club_logo]);
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -625,11 +625,31 @@ async function SaveChanges(canvas, crop) {
 
 
   useEffect(() => {
-    console.log(sortedData)
+    // console.log(sortedData)
   },[sortedData])
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
 
+  const [badge_array , setbadge_array] = useState();
+  useEffect(() => {
+    let array = [];
+    for(let i=0;i<final_array?.length;i++){
+      if(final_array[i].type != null){
+        let obj = {
+          logo : final_array[i].logo,
+          type : final_array[i].type,
+        }
+        array.push(obj);
+      }
+    }
+    setbadge_array(array);
+  },[final_array])
+
+  useEffect(() => {
+    console.log(badge_array);
+  },[badge_array])
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -820,16 +840,16 @@ async function SaveChanges(canvas, crop) {
             Badges &nbsp;
             <span className="text-green-500 font-semibold">
               {" "}
-              {id2?.length}{" "}
+              {badge_array?.length}{" "}
             </span>
           </div>
           <div className="flex max-[1300px]:justify-around flex-wrap">
             {/* <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1"> */}
-            {result?.map((d) => {
-              const b = badgetype[d.key];
+            {badge_array?.map((d) => {
+              const b = badgetype[d.type];
               return (
                 <img
-                  src={d.value}
+                  src={d.logo}
                   alt=""
                   className={`mx-auto my-1 border-[5px] border-[${b}] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
                 />
@@ -1134,13 +1154,16 @@ async function SaveChanges(canvas, crop) {
               return (
                 <div className=" flex justify-between">
                   <div className="flex items-center space-x-2 ">
-                    <img
-                      src={d.logo}
-                      alt=""
-                      className="row-start-1 col-start-1 mx-auto  h-[50px] w-[50px] rounded-full  object-cover "
+                    <div className="h-[50px] w-[50px] min-w-[50px] min-h-[50px]">
+                      <img
+                        src={d.logo}
+                        alt=""
+                        className="mx-auto  h-[50px] w-[50px] rounded-full min-w-[50px] min-h-[50px]  object-cover "
                     />
+                    </div>
 
                     {/* <div className="font-semibold">{d.name}</div> */}
+                    <div>
                     <Link
                       to={`/club/${d.name}`}
                       params={d.name}
@@ -1149,16 +1172,18 @@ async function SaveChanges(canvas, crop) {
                     >
                       <Tooltip title={d.name}>
                         {" "}
-                        <div className="justify-center">{d.name}</div>
+                        <span>{d.name}</span>
                       </Tooltip>
                     </Link>
+                    </div>
                   </div>
                   {d.type && (
-                    <div className="grid grid-rows-1 items-center grid-cols-1">
+                    <div className="min-w-[50px] min-h-[50px]">
                       <img
+                        style={{borderColor:b}}
                         src={d.logo}
                         alt=""
-                        className={`row-start-1 col-start-1 mx-auto border-4 border-[${b}] h-[50px] w-[50px] rounded-full  object-cover`}
+                        className={`row-start-1 col-start-1 mx-auto border-4 min-w-[50px] min-h-[50px] h-[50px] w-[50px] rounded-full  object-cover`}
                       />
                     </div>
                   )}
