@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../Navbar";
 import Accordion from "../acc";
 
 export default function FAQ() {

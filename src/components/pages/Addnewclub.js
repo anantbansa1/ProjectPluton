@@ -1,8 +1,6 @@
 import React from "react";
-import Navbar from "../Navbar";
 import { TextField } from "@mui/material";
 import { createTheme } from "@mui/material";
-import { ThemeProvider } from "@mui/material";
 import { useState, useCallback, useRef, useEffect } from "react";
 import SirfPencil from "../Images/SirfPencil.jpg";
 import { db } from "../../firebase";

@@ -1,6 +1,5 @@
 import "./App.css";
-import React, { Component } from "react";
-import Navbar from "./components/Navbar";
+import React from "react";
 import AddUserAdmin from "./components/pages/AddUserAdmin";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import UserFeed from "./components/pages/UserFeed";

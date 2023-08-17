@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../Navbar";
-import Minions from "../Images/Minions.jpg";
 import Post from "./Post";
 import Poll from "./Poll";
 import Tooltip from "@mui/material/Tooltip";

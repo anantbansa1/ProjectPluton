@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../Navbar";
 import Row from "./Row";
 import "@fontsource/press-start-2p";
 import rank1 from "../Images/rank1.png";
