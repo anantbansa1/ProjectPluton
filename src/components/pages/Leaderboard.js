@@ -5,6 +5,7 @@ import zoro from "../Images/zoro.jpg";
 import "@fontsource/press-start-2p";
 import rank1 from "../Images/rank1.png";
 import rank2 from "../Images/rank2.png";
+import { Link } from 'react-router-dom'
 import rank3 from "../Images/rank3.png";
 import rank4 from "../Images/rank4.png";
 import rank5 from "../Images/rank5.png";
@@ -129,8 +130,9 @@ export default function Leaderboard(props) {
         </div>
 
         <div className="flex max-md:flex-col max-md:space-y-5  max-md:mx-0 max-xl:text-base items-end  mt-5 mb-10 w-[80vw] md:w-[78vw] space-x-2   ">
-          <div className="w-[33%] max-md:w-[100%] max-md:order-2 max-md:h-[200px] h-[250px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]">
+          <Link className="w-[33%] max-md:w-[100%] max-md:order-2 max-md:h-[200px] h-[250px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]" to= {`/user/${users[1]?.email}`}>
             <div className="flex flex-col shadow-[#39495f] bg-[#130f22] max-md:h-[180px] h-[230px] shadow-md rounded-lg row-start-2 col-start-1 row-span-4 col-span-3"></div>
+            
             <img
               src={rank2}
               className="row-start-1 row-span-2 mx-auto col-start-1 col-span-3 h-[80px]"
@@ -160,8 +162,8 @@ export default function Leaderboard(props) {
             <div className=" px-4 self-center row-start-5 col-start-1  max-md:text-sm text-[#fee101]">
               {users[1]?.points}
             </div>
-          </div>
-          <div className="w-[33%]  max-md:w-[100%] max-md:order-1 max-md:h-[200px] h-[300px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]">
+          </Link>
+          <Link className="w-[33%]  max-md:w-[100%] max-md:order-1 max-md:h-[200px] h-[300px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]" to= {`/user/${users[0]?.email}`}>
             <div className="flex flex-col shadow-[#39495f] bg-[#130f22] max-md:h-[180px] h-[280px] shadow-md rounded-lg row-start-2 col-start-1 row-span-4 col-span-3"></div>
             <img
               src={rank1}
@@ -193,8 +195,8 @@ export default function Leaderboard(props) {
             <div className=" px-4 self-center row-start-5 font-bold text-transparent max-md:text-sm bg-clip-text  bg-gradient-to-r from-red-400  to-yellow-500 col-start-1 text-[#fee101]">
               {users[0]?.points}
             </div>
-          </div>
-          <div className="w-[33%]  max-md:w-[100%] max-md:order-3 max-md:h-[200px] h-[250px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]">
+          </Link>
+          <Link className="w-[33%]  max-md:w-[100%] max-md:order-3 max-md:h-[200px] h-[250px] grid grid-rows-[repeat(5,minmax(40px,auto))] grid-cols-[2fr_1fr_2fr]" to= {`/user/${users[2]?.email}`}>
             <div className="flex flex-col shadow-[#39495f] bg-[#130f22] max-md:h-[180px] h-[230px] shadow-md rounded-lg row-start-2 col-start-1 row-span-4 col-span-3"></div>
             <img
               src={rank3}
@@ -207,7 +209,7 @@ export default function Leaderboard(props) {
                 className=" w-[30px] h-[30px] rounded-full border-white"
                 alt=""
               />
-              <span className="text-lg font-semibold text-[#fee101] max-md:text-sm  ">
+              <span className="text-lg font-semibold text-[#fee101] max-md:text-sm  " to= {`/user/${users[2]?.email}`}>
                 {users[2]?.name}
               </span>
             </div>
@@ -231,7 +233,7 @@ export default function Leaderboard(props) {
             <div className=" px-4 self-center row-start-5 max-md:text-sm col-start-1 text-[#fee101]">
               {users[2]?.points}
             </div>
-          </div>
+          </Link>
         </div>
         <div className="w-[82vw] md:w-[78vw] pl-2 max-sm:p-0">
           <div className="bg-[#0b0914] py-6 max-sm:text-xs max-sm:gap-1  rounded-lg max-sm:p-0 grid  grid-cols-[10%_10%_35%_22.5%_22.5%]  max-md:text-base text-xl max-sm:mr-0  text-white">
@@ -245,6 +247,7 @@ export default function Leaderboard(props) {
           </div>
           <div className="">
             {users.slice(3).map((userobj,index)=>(
+              <Link to={`/user/${userobj?.email}`}>
               <Row
               rank={images[index]}
               rankno={userobj?.rank}
@@ -252,6 +255,7 @@ export default function Leaderboard(props) {
               rollno={userobj?.id}
               points={userobj?.points}
             ></Row>
+            </Link>
             ))}
             
             {/* <Row
