@@ -38,7 +38,6 @@ import Menu from "@mui/material/Menu";
 import TextField from "@mui/material/TextField";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-
 export default function Text() {
   const [option, setoption] = useState("text");
   const [event, setevent] = useState("");
@@ -76,7 +75,6 @@ export default function Text() {
   };
   const handleCloseVisibility = (vis) => {
     setvisibility(vis);
-    console.log("visibility:", vis);
     setAnchorEl(null);
   };
 
@@ -127,21 +125,27 @@ export default function Text() {
         try {
           await addDoc(docref, payload);
           navigate(`/club/${clubName}`);
-        } catch (error) {
-          console.log("firebase error ", error);
-        }
+        } catch (error) {}
       }
     } else if (option === "post") {
       handleSubmit();
-    } else if (option === 'poll') {
-      const collref = collection(db, 'polls');
-      const payload = { clubname: clubName, option1: polloption1, option2: polloption2, option3: polloption3, option4: polloption4, tag: tags[selected], visibility: visibility, text: text, timestamp: serverTimestamp() }
+    } else if (option === "poll") {
+      const collref = collection(db, "polls");
+      const payload = {
+        clubname: clubName,
+        option1: polloption1,
+        option2: polloption2,
+        option3: polloption3,
+        option4: polloption4,
+        tag: tags[selected],
+        visibility: visibility,
+        text: text,
+        timestamp: serverTimestamp(),
+      };
       try {
         await addDoc(collref, payload);
         navigate(`/club/${clubName}`);
-      } catch(error) {
-        console.log("firebase error ", error);
-      }
+      } catch (error) {}
     }
   }
 
@@ -160,7 +164,6 @@ export default function Text() {
           query(collection(db, "user"), where("email", "==", email))
         );
         currentuser.forEach(async (u) => {
-          console.log("user   s", u.data());
           const id = u.id;
           const getuser = await getDoc(doc(db, "user", id, "clubs", clubName));
           if (getuser) {
@@ -177,9 +180,7 @@ export default function Text() {
             navigate("/pagenotfound");
           }
         });
-      } catch (error) {
-        console.log("firebase error");
-      }
+      } catch (error) {}
     }
   }
 
@@ -190,7 +191,6 @@ export default function Text() {
       return;
     }
     setOpenCover(false);
-    console.log("hahahah");
     if (crop.width && crop.height) {
       canvas.toBlob((blob) => {
         const Imageuse = canvas.toDataURL("image/png");
@@ -229,7 +229,6 @@ export default function Text() {
       const reader = new FileReader();
       reader.addEventListener("load", () => setUpImgCover(reader.result));
       reader.readAsDataURL(e.target.files[0]);
-      console.log("idarbeta");
     }
   };
   const onLoadCover = useCallback((img) => {
@@ -261,12 +260,10 @@ export default function Text() {
         const file = new File([blob], `${clubName}.png`, {
           type: "image/png",
         });
-        // to generate uniquename
         const n = file.lastModified.toString();
         const storageRef = ref(storage, `posts/${clubName}${n}.png`);
         uploadBytes(storageRef, file)
           .then((snapshot) => {
-            // console.log("Uploaded a blob or file!");
             getDownloadURL(storageRef)
               .then((u) => {
                 const payload = {
@@ -279,17 +276,12 @@ export default function Text() {
                 };
                 const collref = collection(db, "posts");
                 addDoc(collref, payload).then(() => {
-                  console.log("picture uploaded sucessfully");
                   navigate(`/club/${clubName}`);
                 });
               })
-              .catch((error) => {
-                console.log(error.message, "error getting the image url");
-              });
+              .catch((error) => {});
           })
-          .catch((error) => {
-            console.log(error.message);
-          });
+          .catch((error) => {});
       }, "image/png");
     } else {
       setOpen(true);
@@ -298,18 +290,16 @@ export default function Text() {
   };
   return (
     <div className="">
-      {console.log(clubName)}
-      <Navbar></Navbar>
       <div className="flex-col max-md:ml-[20vw] max-md:w-[75vw] ml-[28vw] w-[64vw]">
-        {/* <div className="text-center">add new post</div> */}
         <div className="   max-md:text-xl  flex items-center mt-[5vh] text-3xl justify-around">
           <div className="flex-col">
             <button
               onClick={(e) => {
                 setoption("text");
               }}
-              className={`p-[1vh] px-[3vh] border-white ${option === "text" ? "border-b text-white" : "text-slate-300"
-                }`}
+              className={`p-[1vh] px-[3vh] border-white ${
+                option === "text" ? "border-b text-white" : "text-slate-300"
+              }`}
             >
               Text
             </button>
@@ -319,8 +309,9 @@ export default function Text() {
               onClick={(e) => {
                 setoption("post");
               }}
-              className={`p-[1vh] px-[3vh] border-white ${option === "post" ? "border-b text-white" : "text-slate-300"
-                }`}
+              className={`p-[1vh] px-[3vh] border-white ${
+                option === "post" ? "border-b text-white" : "text-slate-300"
+              }`}
             >
               Image
             </button>
@@ -330,8 +321,9 @@ export default function Text() {
               onClick={(e) => {
                 setoption("poll");
               }}
-              className={`p-[1vh] px-[3vh] border-white ${option === "poll" ? "border-b text-white" : "text-slate-300"
-                }`}
+              className={`p-[1vh] px-[3vh] border-white ${
+                option === "poll" ? "border-b text-white" : "text-slate-300"
+              }`}
             >
               Poll
             </button>
@@ -340,14 +332,6 @@ export default function Text() {
         <div className="flex flex-col w-[50vw] max-sm:w-[75vw] max-lg:w-[65vw] mx-auto">
           {option === "text" && (
             <div className="flex text-center mx-auto bg-[#130f22] w-[100%] justify-center my-10">
-              {/* <textarea
-              onChange={(e) => {
-                settext(e.target.value);
-              }}
-              className="p-[1vw] max-sm:h-[70vw] max-md:h-[40vw] outline-none border-none max-md:w-[75vw] text-white text-xl bg-[#130f22] h-[50vh] w-[64vw] mt-[3vw] shadow-lg shadow-black rounded-lg"
-              placeholder="Enter your Text"
-            ></textarea> */}
-
               <TextField
                 onChange={(e) => {
                   settext(e.target.value);
@@ -394,7 +378,6 @@ export default function Text() {
           )}
           {option === "post" && (
             <div className="">
-              {/* <Addimage></Addimage> */}
               <div className="flex justify-center align-middle ">
                 <div className="flex flex-col items-center  my-10 ">
                   <div className="mb flex flex-col items-center">
@@ -427,26 +410,18 @@ export default function Text() {
                             setChangeCover(true);
                           }}
                           useRef={uploadRef}
-                          // onClick={handleClickOpen}
                           onClick={handleClickOpenCover}
                           onMouseOut={(e) => {
                             setChangeCover(false);
                           }}
-                          className={`${changeCover ? "" : "hidden"
-                            } px-4 py-2 shadow-inner  shadow-black z-10  row-start-1  w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] lg:w-[30vw] lg:h-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-2xl`}
+                          className={`${
+                            changeCover ? "" : "hidden"
+                          } px-4 py-2 shadow-inner  shadow-black z-10  row-start-1  w-[80vw] h-[80vw] md:w-[50vw] md:h-[50vw] lg:w-[30vw] lg:h-[30vw] col-start-1 text-white text-3xl bg-black bg-opacity-10 rounded-2xl`}
                         >
                           Change Image
                         </button>
                       </div>
                     </div>
-                    {/* <textarea
-                    onChange={(e) => {
-                      settext(e.target.value);
-                    }}
-                    className="p-[1vw] max-[768px]:ml-0 text-base  max-[768px]:w-[50vw] w-[30vw] outline-none border-none  max-md:h-[10vw] max-md:w-[40vw] text-white  bg-[#130f22] h-[7vw]  mt-[1vw] shadow-lg shadow-black rounded-lg"
-                    placeholder="Enter caption"
-                  >
-                  </textarea> */}
                     <div className="bg-[#130f22] my-5 w-[100%]">
                       <TextField
                         onChange={(e) => {
@@ -478,9 +453,9 @@ export default function Text() {
                             borderColor: "#475569 !important",
                           },
                           "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                          {
-                            borderColor: "#475569 !important",
-                          },
+                            {
+                              borderColor: "#475569 !important",
+                            },
                         }}
                         multiline
                         fullWidth
@@ -490,11 +465,6 @@ export default function Text() {
                         label="Caption (optional)"
                         variant="outlined"
                         color="grey"
-                      // inputProps={{
-                      //   style: {
-                      //     width: "30vw",
-                      //   },
-                      // }}
                       />
                     </div>
                   </div>
@@ -503,7 +473,6 @@ export default function Text() {
             </div>
           )}
           {option === "poll" && (
-            // <Addpoll></Addpoll>
             <div className="flex flex-col ">
               <div className=" bg-none  max-md:text-xl  flex items-center  text-3xl justify-between"></div>
               <div className="ml-[2vw] max-md:ml-[0vw] my-10">
@@ -537,9 +506,9 @@ export default function Text() {
                           borderColor: "#475569 !important",
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                        {
-                          borderColor: "#475569 !important",
-                        },
+                          {
+                            borderColor: "#475569 !important",
+                          },
                       }}
                       multiline
                       value={text}
@@ -556,7 +525,7 @@ export default function Text() {
                     />
                     <TextField
                       onChange={(e) => {
-                        setpolloption1(e.target.value)
+                        setpolloption1(e.target.value);
                       }}
                       sx={{
                         "& .MuiInputBase-root": {
@@ -584,9 +553,9 @@ export default function Text() {
                           borderColor: "#475569 !important",
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                        {
-                          borderColor: "#475569 !important",
-                        },
+                          {
+                            borderColor: "#475569 !important",
+                          },
                       }}
                       value={polloption1}
                       id="myfilled-name"
@@ -601,7 +570,7 @@ export default function Text() {
                     />
                     <TextField
                       onChange={(e) => {
-                        setpolloption2(e.target.value)
+                        setpolloption2(e.target.value);
                       }}
                       sx={{
                         "& .MuiInputBase-root": {
@@ -629,9 +598,9 @@ export default function Text() {
                           borderColor: "#475569 !important",
                         },
                         "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                        {
-                          borderColor: "#475569 !important",
-                        },
+                          {
+                            borderColor: "#475569 !important",
+                          },
                       }}
                       id="myfilled-name"
                       label="Option 2"
@@ -647,7 +616,7 @@ export default function Text() {
                     {optionno >= 3 && (
                       <TextField
                         onChange={(e) => {
-                          setpolloption3(e.target.value)
+                          setpolloption3(e.target.value);
                         }}
                         sx={{
                           "& .MuiInputBase-root": {
@@ -675,9 +644,9 @@ export default function Text() {
                             borderColor: "#475569 !important",
                           },
                           "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                          {
-                            borderColor: "#475569 !important",
-                          },
+                            {
+                              borderColor: "#475569 !important",
+                            },
                         }}
                         id="myfilled-name"
                         label="Option 3"
@@ -694,7 +663,7 @@ export default function Text() {
                     {optionno > 3 && (
                       <TextField
                         onChange={(e) => {
-                          setpolloption4(e.target.value)
+                          setpolloption4(e.target.value);
                         }}
                         sx={{
                           "& .MuiInputBase-root": {
@@ -722,9 +691,9 @@ export default function Text() {
                             borderColor: "#475569 !important",
                           },
                           "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                          {
-                            borderColor: "#475569 !important",
-                          },
+                            {
+                              borderColor: "#475569 !important",
+                            },
                         }}
                         id="myfilled-name"
                         label="Option 4"
@@ -771,11 +740,9 @@ export default function Text() {
                           onClick={() => {
                             if (optionno > 2) {
                               if (optionno === 3) setpolloption3("");
-                              else if (optionno === 4) setpolloption4("")
+                              else if (optionno === 4) setpolloption4("");
                               setoptionno(optionno - 1);
-
                             }
-                            console.log(optionno + 1);
                           }}
                           sx={{
                             background: "#130f22",
@@ -818,8 +785,9 @@ export default function Text() {
               }}
               label={
                 <div
-                  className={`${selected === 0 ? "text-black" : "text-white"
-                    } hover:text-black flex items-center space-x-2`}
+                  className={`${
+                    selected === 0 ? "text-black" : "text-white"
+                  } hover:text-black flex items-center space-x-2`}
                 >
                   <div className={`${selected === 0 ? "hidden" : ""}`}>
                     <AddIcon />
@@ -848,8 +816,9 @@ export default function Text() {
               }}
               label={
                 <div
-                  className={`${selected === 1 ? "text-black" : "text-white"
-                    } hover:text-black flex items-center space-x-2`}
+                  className={`${
+                    selected === 1 ? "text-black" : "text-white"
+                  } hover:text-black flex items-center space-x-2`}
                 >
                   <div className={`${selected === 1 ? "hidden" : ""}`}>
                     <AddIcon />
@@ -878,8 +847,9 @@ export default function Text() {
               }}
               label={
                 <div
-                  className={`${selected === 2 ? "text-black" : "text-white"
-                    } hover:text-black flex items-center space-x-2`}
+                  className={`${
+                    selected === 2 ? "text-black" : "text-white"
+                  } hover:text-black flex items-center space-x-2`}
                 >
                   <div className={`${selected === 2 ? "hidden" : ""}`}>
                     <AddIcon />

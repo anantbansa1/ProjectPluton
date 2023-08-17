@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Checkbox from "@mui/material/Checkbox";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -15,9 +14,9 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { deleteDoc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { addDoc, doc, updateDo, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -32,6 +31,9 @@ function Poll(props) {
   const [votes2, setvotes2] = useState(props.votes2);
   const [votes3, setvotes3] = useState(props.votes3);
   const [votes4, setvotes4] = useState(props.votes4);
+  const date = new Date(props.timestamp?.seconds * 1000);
+  const options = { hour: "2-digit", minute: "2-digit" };
+  const [uploaded, setuploaded] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,7 +41,7 @@ function Poll(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const [uploaded, setuploaded] = useState(false);
+
   useEffect(() => {
     if (props.user) {
       const docref = doc(db, "polls", props.pollid, "votes", props.user);
@@ -54,9 +56,6 @@ function Poll(props) {
     }
   }, [props.user]);
 
-  const date = new Date(props.timestamp?.seconds * 1000);
-  const options = { hour: "2-digit", minute: "2-digit" };
-
   const handleNo = () => {
     setOpen(false);
   };
@@ -64,17 +63,16 @@ function Poll(props) {
   const handleYes = () => {
     setOpen(false);
     setloading(true);
-    deleteDoc(doc(db, 'polls', props.pollid)).then(() => {
+    deleteDoc(doc(db, "polls", props.pollid)).then(() => {
       setloading(false);
-      navigate(0)
-    })
+      navigate(0);
+    });
   };
 
   useEffect(() => {
     if (uploaded) {
       addvote();
     }
-    // console.log("calls");
   }, [option]);
 
   async function addvote() {
@@ -102,8 +100,6 @@ function Poll(props) {
       setoption(1);
       setvotes1(votes1 + 1);
     }
-    // console.log(votes1);
-    // addvote();
   };
   const handleoption2 = (e) => {
     if (option === 2) {
@@ -122,8 +118,6 @@ function Poll(props) {
       setoption(2);
       setvotes2(votes2 + 1);
     }
-    // console.log(votes2);
-    // addvote();
   };
   const handleoption3 = (e) => {
     if (option === 3) {
@@ -142,8 +136,6 @@ function Poll(props) {
       setoption(3);
       setvotes3(votes3 + 1);
     }
-    // console.log(votes3);
-    // addvote();
   };
   const handleoption4 = (e) => {
     if (option === 4) {
@@ -161,10 +153,7 @@ function Poll(props) {
       }
       setoption(4);
       setvotes4(votes4 + 1);
-      // votes4 = votes4 + 1;
     }
-    console.log(votes4);
-    // addvote();
   };
 
   return (
@@ -183,72 +172,78 @@ function Poll(props) {
               />
               <div className="max-md:text-sm">{props.name}</div>
             </Link>
-            {(props.isadmin === true || props.role === 'admin' || props.role === 'core') && (
+            {(props.isadmin === true ||
+              props.role === "admin" ||
+              props.role === "core") && (
               <div>
-              <button
-                className="text-slate-200  hover:text-slate-300 px-4"
-                aria-controls={openmenu ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={openmenu ? "true" : undefined}
-                onClick={handleClick}
-              >
-                <MoreHorizIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
-              </button>
-              <div className="">
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={openmenu}
-                  onClose={handleClose}
-                  sx={{
-                    "& .MuiPaper-root": {
-                      bgcolor: "#17132b",
-                      color: "#fff",
-                      margin: 1,
-                      borderRadius: 2,
-                    },
-                  }}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                  transformOrigin={{ vertical: "top", horizontal: "center" }}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
+                <button
+                  className="text-slate-200  hover:text-slate-300 px-4"
+                  aria-controls={openmenu ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={openmenu ? "true" : undefined}
+                  onClick={handleClick}
                 >
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      setOpen(true);
+                  <MoreHorizIcon className="max-sm:scale-[80%] lg:scale-[130%]" />
+                </button>
+                <div className="">
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={openmenu}
+                    onClose={handleClose}
+                    sx={{
+                      "& .MuiPaper-root": {
+                        bgcolor: "#17132b",
+                        color: "#fff",
+                        margin: 1,
+                        borderRadius: 2,
+                      },
                     }}
-                    sx={{ borderRadius: 2 }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                    transformOrigin={{ vertical: "top", horizontal: "center" }}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
                   >
-                    {" "}
-                    <span className="text-red-700 font-semibold">
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                        setOpen(true);
+                      }}
+                      sx={{ borderRadius: 2 }}
+                    >
                       {" "}
-                      Delete poll
-                    </span>
-                  </MenuItem>
-                </Menu>
+                      <span className="text-red-700 font-semibold">
+                        {" "}
+                        Delete poll
+                      </span>
+                    </MenuItem>
+                  </Menu>
+                </div>
               </div>
-            </div>
             )}
           </div>
           <div className="my-3"></div>
           <div className="text-lg max-md:text-sm text-[#dddbdb] ">
-            {/* <span className="font-bold  text-[#c9c6c6]">{props.name}</span>{" "} */}
             {props.question}
             <div className="flex mt-2 flex-col space-y-2">
               {props.option1 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center  cursor-pointer " onClick={handleoption1}>
+                  <div
+                    className="flex items-center  cursor-pointer "
+                    onClick={handleoption1}
+                  >
                     <Checkbox
                       checked={option === 1}
-                      // onChange={() => {
-                      //   handleoption1();
-                      //   // addvote();
-                      // }}
                       label={props.option1}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={option===1?<CheckCircleIcon />:<CircleOutlinedIcon />}
+                      icon={
+                        option === 1 ? (
+                          <CheckCircleIcon />
+                        ) : (
+                          <CircleOutlinedIcon />
+                        )
+                      }
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],
@@ -267,16 +262,21 @@ function Poll(props) {
               )}
               {props.option2 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center  cursor-pointer " onClick={handleoption2}>
+                  <div
+                    className="flex items-center  cursor-pointer "
+                    onClick={handleoption2}
+                  >
                     <Checkbox
                       checked={option === 2}
-                      // onChange={() => {
-                      //   handleoption2();
-                      //   // addvote();
-                      // }}
                       label={props.option2}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={option===2?<CheckCircleIcon />:<CircleOutlinedIcon />}
+                      icon={
+                        option === 2 ? (
+                          <CheckCircleIcon />
+                        ) : (
+                          <CircleOutlinedIcon />
+                        )
+                      }
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],
@@ -295,16 +295,21 @@ function Poll(props) {
               )}
               {props.option3 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center  cursor-pointer " onClick={handleoption3}>
+                  <div
+                    className="flex items-center  cursor-pointer "
+                    onClick={handleoption3}
+                  >
                     <Checkbox
                       checked={option === 3}
-                      // onChange={() => {
-                      //   handleoption3();
-                      //   // addvote();
-                      // }}
                       label={props.option3}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={option===3?<CheckCircleIcon />:<CircleOutlinedIcon />}
+                      icon={
+                        option === 3 ? (
+                          <CheckCircleIcon />
+                        ) : (
+                          <CircleOutlinedIcon />
+                        )
+                      }
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],
@@ -318,23 +323,27 @@ function Poll(props) {
 
                   <div className="px-3 max-sm:text-xs text-sm py-1 w-fit ml-5 whitespace-nowrap bg-white bg-opacity-30 rounded-full">
                     {" "}
-                    {/* {console.log(votes3)} */}
                     {votes3} votes
                   </div>
                 </div>
               )}
               {props.option4 && (
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center cursor-pointer " onClick={handleoption4}>
+                  <div
+                    className="flex items-center cursor-pointer "
+                    onClick={handleoption4}
+                  >
                     <Checkbox
                       checked={option === 4}
-                      // onChange={() => {
-                      //   handleoption4();
-                      //   // addvote();
-                      // }}
                       label={props.option4}
                       inputProps={{ "aria-label": "controlled" }}
-                      icon={option===4?<CheckCircleIcon />:<CircleOutlinedIcon />}
+                      icon={
+                        option === 4 ? (
+                          <CheckCircleIcon />
+                        ) : (
+                          <CircleOutlinedIcon />
+                        )
+                      }
                       checkedIcon={<CheckCircleIcon />}
                       sx={{
                         color: grey[500],
@@ -378,7 +387,6 @@ function Poll(props) {
             backdropFilter: "blur(20px)",
           },
         }}
-        // TransitionComponent={Transition}
         fullWidth
         maxWidth="sm"
         keepMounted
@@ -408,7 +416,11 @@ function Poll(props) {
         </DialogActions>
       </Dialog>
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1, backdropFilter: "blur(20px)", }}
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backdropFilter: "blur(20px)",
+        }}
         open={loading}
         close={loading}
       >

@@ -14,7 +14,13 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { deleteDoc, getDocs, query, collection, where } from "firebase/firestore";
+import {
+  deleteDoc,
+  getDocs,
+  query,
+  collection,
+  where,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 export default function AddUserAdmin() {
@@ -49,13 +55,11 @@ export default function AddUserAdmin() {
           }
         });
         if (flag === false) {
-          navigate('/pagenotfound')
+          navigate("/pagenotfound");
         }
       });
     }
   }, [user]);
-
-
 
   useEffect(() => {
     if (user) {
@@ -72,7 +76,8 @@ export default function AddUserAdmin() {
 
   const handleDownload = () => {
     const link = document.createElement("a");
-    link.href = "https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/template.csv?alt=media&token=b04e33b3-2c2c-4540-adaa-da5cb68ae57a";
+    link.href =
+      "https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/template.csv?alt=media&token=b04e33b3-2c2c-4540-adaa-da5cb68ae57a";
     link.download = "template.csv";
     document.body.appendChild(link);
     link.click();
@@ -175,43 +180,41 @@ export default function AddUserAdmin() {
           const data = Object.values(d);
           if (data[0]) {
             const docref = doc(db, "user", data[0]);
-            const collref = collection(db, 'clubs');
-            const collrefpolls = collection(db, 'polls');
+            const collref = collection(db, "clubs");
+            const collrefpolls = collection(db, "polls");
             const allpolls = await getDocs(collrefpolls);
             const clubs = await getDocs(collref);
             if (clubs) {
               clubs.forEach(async (club) => {
-                const docref2 = doc(db, 'clubs', club.id, 'Members', data[0]);
+                const docref2 = doc(db, "clubs", club.id, "Members", data[0]);
                 try {
                   await deleteDoc(docref2);
-                  console.log('user deleted ', data[0])
+                  console.log("user deleted ", data[0]);
                 } catch (error) {
                   console.log("User not found in club ", club.data().name);
                 }
                 try {
-
                 } catch (error) {
-                  console.log('Cant delete user ', data[0]);
+                  console.log("Cant delete user ", data[0]);
                 }
-              })
+              });
             }
             if (allpolls) {
               allpolls.forEach(async (poll) => {
-                const docref2 = doc(db, 'polls', poll.id, 'votes', data[0]);
+                const docref2 = doc(db, "polls", poll.id, "votes", data[0]);
                 try {
                   await deleteDoc(docref2);
-                  console.log('user deleted poll', data[0])
+                  console.log("user deleted poll", data[0]);
                 } catch (error) {
-                  console.log('cant find vote')
+                  console.log("cant find vote");
                 }
-              })
+              });
             }
             try {
               await deleteDoc(docref);
             } catch (error) {
-              console.log('firebase error')
+              console.log("firebase error");
             }
-
           }
         });
       }
@@ -221,7 +224,6 @@ export default function AddUserAdmin() {
 
   return (
     <>
-      <Navbar selected="manageusers"></Navbar>
       <div className=" md:ml-[22vw] flex flex-col space-y-5 max-md:w-[78%] text-white  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="text-3xl max-md:text-xl">Manage Users</div>
         <div className="flex space-x-5 self-center text-2xl max-md:text-lg text-slate-200">
@@ -229,8 +231,9 @@ export default function AddUserAdmin() {
             onClick={() => {
               setadd("Add");
             }}
-            className={`px-6 py-4 ${add === "Add" ? "border-b" : ""
-              } border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "Add" ? "border-b" : ""
+            } border-slate-200`}
           >
             Add Users
           </button>
@@ -238,8 +241,9 @@ export default function AddUserAdmin() {
             onClick={() => {
               setadd("Remove");
             }}
-            className={`px-6 py-4 ${add === "Remove" ? "border-b" : ""
-              }  border-slate-200`}
+            className={`px-6 py-4 ${
+              add === "Remove" ? "border-b" : ""
+            }  border-slate-200`}
           >
             {" "}
             Remove User
@@ -349,26 +353,30 @@ export default function AddUserAdmin() {
             return (
               <>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-1 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {index + 1}
                 </div>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-2 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[0]}
                 </div>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-3 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis rounded-lg text-center`}
                 >
                   {value[1]}
                 </div>
                 <div
-                  className={`row-start-${index + 2
-                    } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
+                  className={`row-start-${
+                    index + 2
+                  } col-start-4 p-2 overflow-hidden w-[100%] whitespace-nowrap  text-ellipsis  rounded-lg text-center`}
                 >
                   {value[2]}
                 </div>

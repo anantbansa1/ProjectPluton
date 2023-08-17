@@ -1,68 +1,23 @@
 import Navbar from "../Navbar";
 import { useState } from "react";
-import SirfPencil from "../Images/pencil_black.jpg";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Bronzebadge from "../Images/badge_bronze.png";
-import Silverbadge from "../Images/badge_silver.png";
-import Goldbadge from "../Images/badge_golden.png";
-import corebadge from "../Images/badge_core.png";
-import React, { useCallback, useRef, useEffect } from "react";
-import ReactCrop from "react-image-crop";
-import Zoro from "../Images/zoro.jpg";
+import React, { useEffect } from "react";
 import "react-image-crop/dist/ReactCrop.css";
-import Post from "./Post";
-import GroupIcon from "@mui/icons-material/Group";
-import Poll from "./Poll";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import tanjiro from "../Images/Tanjiro.jpg";
-import { Link, useFetcher } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { Hidden, TextField } from "@mui/material";
-import minion from "../Images/Minions.jpg";
+import { TextField } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import CampaignIcon from "@mui/icons-material/Campaign";
-import DoneIcon from "@mui/icons-material/Done";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import {
-  Cancel,
-  CheckCircle,
-  ManageAccounts,
-  MoreVert,
-  Settings,
-} from "@mui/icons-material";
+import { MoreVert } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-
 import { doc, updateDoc, setDoc, deleteDoc } from "firebase/firestore";
-import { collection, collectionGroup, where, query } from "@firebase/firestore";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import { collection, where, query } from "@firebase/firestore";
 import { db } from "../../firebase";
-import { useAuth, upload } from "../../firebase";
+import { useAuth } from "../../firebase";
 import { getDocs, getDoc } from "firebase/firestore";
-import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { onSnapshot } from "firebase/firestore";
-import { type } from "@testing-library/user-event/dist/type";
 
 function ClubProfile(props) {
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-  const handleCloseAlert = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenAlert(false);
-  };
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
   const [openAlert, setOpenAlert] = useState(false);
@@ -71,8 +26,28 @@ function ClubProfile(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const names = ["Anant", "Deepanshu", "Samrath", "Madhav", "Duke"];
-
+  const [final_array, setfinal_array] = useState([]);
+  const [menuState, setMenuState] = useState([]);
+  const [points_state, setpoints_state] = useState([]);
+  const [member_id, setmembers] = useState();
+  const [points, setpoints] = useState();
   const user = useAuth();
+  const [member_name, setmember_name] = useState();
+  const [member_points, setmember_points] = useState([]);
+  const [member_role, setmember_role] = useState();
+  const [club_id, setclub_id] = useState();
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenAlert(false);
+  };
+
   async function checkClub() {
     if (user) {
       const email = user.email;
@@ -88,12 +63,11 @@ function ClubProfile(props) {
           query(collection(db, "user"), where("email", "==", email))
         );
         currentuser.forEach(async (u) => {
-          //   console.log("user   s", u.data());
-          console.log("hemlo")
-          if(!u.data().isadmin){
-            console.log("byelo")
+          if (!u.data().isadmin) {
             const id = u.id;
-            const getuser = await getDoc(doc(db, "user", id, "clubs", clubName));
+            const getuser = await getDoc(
+              doc(db, "user", id, "clubs", clubName)
+            );
             if (getuser) {
               if (getuser.data()) {
                 const role = getuser.data().role;
@@ -108,28 +82,15 @@ function ClubProfile(props) {
               navigate("/pagenotfound");
             }
           }
-          
         });
-      } catch (error) {
-        console.log("firebase error");
-      }
+      } catch (error) {}
     }
   }
+
   useEffect(() => {
     checkClub();
   }, [user]);
 
-  // console.log(clubName);
-
-  const [final_array, setfinal_array] = useState([]);
-
-  const [menuState, setMenuState] = useState([]);
-
-  const [points_state, setpoints_state] = useState([]);
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [club_id, setclub_id] = useState();
   async function fetch_data() {
     const q = query(collection(db, "clubs"), where("name", "==", clubName));
     const querySnapshot = await getDocs(q);
@@ -140,16 +101,11 @@ function ClubProfile(props) {
       });
     }
   }
+
   useEffect(() => {
     fetch_data();
-    if (club_id) {
-      // console.log(club_id);
-    }
   }, [club_id]);
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [member_id, setmembers] = useState();
   useEffect(() => {
     const collectionref = collection(db, `clubs/${club_id}/Members`);
     let array = [];
@@ -163,13 +119,6 @@ function ClubProfile(props) {
     });
   }, [club_id]);
 
-  useEffect(() => {
-    //  console.log(member_id)
-  }, [member_id]);
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [member_name, setmember_name] = useState();
   useEffect(() => {
     const collectionref2 = collection(db, `user`);
     let array = [];
@@ -188,12 +137,6 @@ function ClubProfile(props) {
   }, [member_id]);
 
   useEffect(() => {
-    // console.log(member_name);
-  }, [member_name]);
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  const [member_points, setmember_points] = useState([]);
-  useEffect(() => {
     let memberpoints = [];
     for (let i = 0; i < member_name?.length; i++) {
       memberpoints.push(0);
@@ -201,13 +144,6 @@ function ClubProfile(props) {
     setmember_points(memberpoints);
   }, [member_name]);
 
-  useEffect(() => {
-    // console.log(member_points);
-  }, [member_name]);
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [member_role, setmember_role] = useState();
   useEffect(() => {
     let array = [];
     member_id?.forEach((member) => {
@@ -218,12 +154,6 @@ function ClubProfile(props) {
     });
     setmember_role(array);
   }, [member_id]);
-
-  useEffect(() => {
-    // console.log(member_role);
-  }, [member_role]);
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
     if (member_role && member_id && member_name && member_points) {
@@ -240,17 +170,12 @@ function ClubProfile(props) {
       setfinal_array(finalarray);
     }
   }, [member_role, member_name, member_points, member_id]);
+
   useEffect(() => {
     setMenuState(final_array.map(() => ({ anchorEl: null, open: false })));
-    console.log(final_array);
-
     setpoints_state(final_array.map(() => 0));
-    console.log(final_array);
   }, [final_array]);
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [points, setpoints] = useState();
   useEffect(() => {
     const collectionref5 = collection(db, `clubs`);
     getDocs(collectionref5).then((d) => {
@@ -264,30 +189,27 @@ function ClubProfile(props) {
     });
   }, [member_name]);
 
-  useEffect(() => {
-    console.log(points);
-  }, [points]);
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   const handlePromote = async (id, role) => {
-    if(role === "member"){
+    if (role === "member") {
       const docref = doc(db, `user/${id}/clubs/${clubName}`);
       const payload = { role: "core" };
       await updateDoc(docref, payload);
       const docref9 = doc(db, `user/${id}/badges/${clubName}`);
       const payload2 = { type: "core" };
       await setDoc(docref9, payload2);
-    }
-    else if(role === "core"){
-      for(let i=0;i<final_array?.length;i++){
-        console.log("kiya",final_array[i].role)
-        if(final_array[i].role === "admin"){
-          console.log("nahi kiya");
-          const docref = doc(db, `user/${final_array[i].roll_no}/clubs/${clubName}`);
+    } else if (role === "core") {
+      for (let i = 0; i < final_array?.length; i++) {
+        if (final_array[i].role === "admin") {
+          const docref = doc(
+            db,
+            `user/${final_array[i].roll_no}/clubs/${clubName}`
+          );
           const payload = { role: "core" };
           await updateDoc(docref, payload);
-          const docref9 = doc(db, `user/${final_array[i].roll_no}/badges/${clubName}`);
+          const docref9 = doc(
+            db,
+            `user/${final_array[i].roll_no}/badges/${clubName}`
+          );
           const payload2 = { type: "core" };
           await setDoc(docref9, payload2);
         }
@@ -299,21 +221,19 @@ function ClubProfile(props) {
       const payload2 = { type: "core" };
       await setDoc(docref9, payload2);
     }
-
     navigate(0);
   };
+
   const handleDemote = async (id, role) => {
-    // console.log("Demoted")
-    if(role === "core"){
+    if (role === "core") {
       const docref = doc(db, `user/${id}/clubs/${clubName}`);
       const payload = { role: "member" };
       await updateDoc(docref, payload);
       const docref9 = doc(db, `user/${id}/badges/${clubName}`);
       const payload2 = { type: "none" };
       await setDoc(docref9, payload2);
-      handleBadges(0,id,"member");
-    }
-    else if(role === "admin"){
+      handleBadges(0, id, "member");
+    } else if (role === "admin") {
       const docref = doc(db, `user/${id}/clubs/${clubName}`);
       const payload = { role: "core" };
       await updateDoc(docref, payload);
@@ -323,13 +243,12 @@ function ClubProfile(props) {
     }
     navigate(0);
   };
+
   const handleRemove = async (id) => {
     const docref = doc(db, `user/${id}/clubs/${clubName}`);
     await deleteDoc(docref);
-
     const docref2 = doc(db, `clubs/${club_id}/Members/${id}`);
     await deleteDoc(docref2);
-
     navigate(0);
   };
 
@@ -345,27 +264,20 @@ function ClubProfile(props) {
       const docref3 = doc(db, `clubs/${club_id}`);
       const payload = { points: a };
       await updateDoc(docref3, payload);
-
       const docref4 = doc(db, `user/${id}/clubs/${clubName}`);
       const temp = await getDoc(docref4);
       let b = parseInt(temp.data().points) + parseInt(newpoints);
       const payload2 = { points: b };
       await updateDoc(docref4, payload2);
-
-      console.log("Points updated", typeof b);
       setOpenAlert(true);
       setmessage("Points added successfully");
       setetype("success");
-
-      // navigate(0);
-      // console.log(typeof(b));
     } else {
       setOpenAlert(true);
       setmessage("Insufficient Points");
       setetype("error");
     }
   };
-
 
   const handleBadges = async (newpoints, id, role) => {
     if (role !== "core") {
@@ -378,8 +290,6 @@ function ClubProfile(props) {
       let bronze_range = temp2.data().bronze;
       let silver_range = temp2.data().silver;
       let gold_range = temp2.data().gold;
-      console.log(finalPoints);
-
       const docref7 = doc(db, `user/${id}/badges/${clubName}`);
       if (finalPoints >= gold_range) {
         const payload = { type: "gold" };
@@ -409,13 +319,8 @@ function ClubProfile(props) {
     setMenuState(newMenuState);
   };
 
-  // clubName -> club ka naam
-  // club_id -> club ka id
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div className="">
-      <Navbar selected="profile"></Navbar>
       <div className=" md:ml-[22vw]  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="flex items-center justify-between max-sm:flex-col max-sm:space-y-8">
           <div className="max-sm:col-start-3 max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-2">
@@ -424,7 +329,6 @@ function ClubProfile(props) {
               {clubName}{" "}
             </div>
           </div>
-
           <div className="flex">
             <div className="row-start-6 max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-self-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
@@ -433,7 +337,6 @@ function ClubProfile(props) {
                 {points} points left
               </button>
             </div>
-
             <div className="row-start-6 max-sm:col-start-5 max-sm:col-span-1 max-sm:justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
               <button className="pr-4 pl-4 max-sm:mt-2 max-sm:w-[30vw] max-[900px]:w-[15vw] lg:text-lg text-xs  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center">
                 {final_array?.length} members
@@ -445,27 +348,8 @@ function ClubProfile(props) {
       <div className="flex flex-col text-3xl my-10 text-slate-100  md:ml-[22vw]  ml-[18vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl max-sm:px-0 py-8 px-4 shadow-black">
         <div className="flex justify-between">
           <div>Members</div>
-          <div className="max-sm:hidden">
-            {/* <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                background: "#15803d",
-                color: "white",
-                background: "#090811",
-                borderColor: "#090811",
-                "&:hover": {
-                  background: "#090811",
-                  borderColor: "#090811",
-                  color: "white",
-                },
-              }}
-            >
-              save changes{" "}
-            </Button> */}
-          </div>
+          <div className="max-sm:hidden"></div>
         </div>
-
         <div className="grid grid-cols-[35%_55%_10%] max-sm:grid-cols-[35%_35%_30%] gap-y-4  bg-[#130f22]  items-stretch max-sm:px-0 p-4 rounded-lg max-sm:text-base text-lg my-10">
           <div className="row-start-1 bg-[#090811] p-4 col-start-1">Name</div>
           <div className="row-start-1 bg-[#090811] p-4 col-start-2">
@@ -476,13 +360,15 @@ function ClubProfile(props) {
               <MoreVert />
             </button>
           </div>
-
           {final_array?.map((d, index) => {
             if (menuState.length)
               return (
                 <React.Fragment key={index}>
                   <div className={`row-start-${index + 2}   p-4 col-start-1`}>
-                    {d.name} <span className="text-[#ffec3d]"><i>({d.role})</i></span>
+                    {d.name}{" "}
+                    <span className="text-[#ffec3d]">
+                      <i>({d.role})</i>
+                    </span>
                   </div>
                   <div
                     onChange={(event) => {
@@ -518,61 +404,59 @@ function ClubProfile(props) {
                           }}
                           InputProps={{ style: { backgroundColor: "inherit" } }}
                         />
-                        
                         <Button
-                            onClick={() => {
-                              // handleClose(index);
-                              if(points_state[index]){
-                                let array = [...points_state];
-                                array[index] = 0;
-                                console.log(points_state[index]);
-                                handleClubPoints(points_state[index], d.roll_no);
-                                handleBadges(points_state[index], d.roll_no, d.role);
-                                setpoints(points - points_state[index]);
-                                setpoints_state(array);
-                              }
-                              else{
-                                setOpenAlert(true);
-                                setmessage("Points field can't be empty");
-                                setetype("error");
-                              }
-                            }}
-                            variant="contained"
-                            color="primary"
-                            sx={{
-                              background: "#15803d",
-                              color: "white",
-                              margin: {
-                                xs:"10px",
-                                md:"0px",
-                              },
-                              marginLeft: {
-                                md:"5px",
-                              },
+                          onClick={() => {
+                            if (points_state[index]) {
+                              let array = [...points_state];
+                              array[index] = 0;
+                              handleClubPoints(points_state[index], d.roll_no);
+                              handleBadges(
+                                points_state[index],
+                                d.roll_no,
+                                d.role
+                              );
+                              setpoints(points - points_state[index]);
+                              setpoints_state(array);
+                            } else {
+                              setOpenAlert(true);
+                              setmessage("Points field can't be empty");
+                              setetype("error");
+                            }
+                          }}
+                          variant="contained"
+                          color="primary"
+                          sx={{
+                            background: "#15803d",
+                            color: "white",
+                            margin: {
+                              xs: "10px",
+                              md: "0px",
+                            },
+                            marginLeft: {
+                              md: "5px",
+                            },
+                            background: "#090811",
+                            borderColor: "#090811",
+                            "&:hover": {
                               background: "#090811",
                               borderColor: "#090811",
-                              "&:hover": {
-                                background: "#090811",
-                                borderColor: "#090811",
-                                color: "white",
-                              },
-                              fontSize: {
-                                xs: '0.7rem',
-                                sm: '0.86rem',
-                                md: '1rem',
-                              },
-                            }}
-                          >
-                            Assign{" "}
-                          </Button>
-                        
+                              color: "white",
+                            },
+                            fontSize: {
+                              xs: "0.7rem",
+                              sm: "0.86rem",
+                              md: "1rem",
+                            },
+                          }}
+                        >
+                          Assign{" "}
+                        </Button>
                       </>
                     )}
                     {d.role !== "member" && (
                       <div className="text-[#AEB1B5] px-2">NA</div>
                     )}
                   </div>
-
                   <div className={`row-start-${index + 2}  p-4 col-start-3`}>
                     {" "}
                     {d.role !== "admin" && (
@@ -581,7 +465,9 @@ function ClubProfile(props) {
                           menuState[index].open ? "basic-menu" : undefined
                         }
                         aria-haspopup="true"
-                        aria-expanded={menuState[index].open ? "true" : undefined}
+                        aria-expanded={
+                          menuState[index].open ? "true" : undefined
+                        }
                         sx={{ color: "#fff", borderRadius: 50 }}
                         onClick={(event) => {
                           handleoption(event, index);
@@ -616,57 +502,49 @@ function ClubProfile(props) {
                     >
                       {d.role !== "admin" && (
                         <MenuItem
-                        sx={{ padding: 2 }}
-                        onClick={() => {
-                          handleClose(index);
-                          {
-                            // d.role === "core"
-                            //   ? handleDemote(d.roll_no)
-                            //   : handlePromote(d.roll_no);
-                            handlePromote(d.roll_no, d.role);
-                          }
-                        }}
-                      >
-                        Promote
-                      </MenuItem>
+                          sx={{ padding: 2 }}
+                          onClick={() => {
+                            handleClose(index);
+                            {
+                              handlePromote(d.roll_no, d.role);
+                            }
+                          }}
+                        >
+                          Promote
+                        </MenuItem>
                       )}
                       {d.role !== "member" && (
                         <MenuItem
-                        sx={{ padding: 2 }}
-                        onClick={() => {
-                          handleClose(index);
-                          {
-                            // d.role === "core"
-                            //   ? handleDemote(d.roll_no)
-                            //   : handlePromote(d.roll_no);
-                            handleDemote(d.roll_no, d.role);
-                          }
-                        }}
-                      >
-                        {/* {d.role === "core" ? "Demote" : "Promote"} */}
-                        Demote
-                      </MenuItem>
+                          sx={{ padding: 2 }}
+                          onClick={() => {
+                            handleClose(index);
+                            {
+                              handleDemote(d.roll_no, d.role);
+                            }
+                          }}
+                        >
+                          {/* {d.role === "core" ? "Demote" : "Promote"} */}
+                          Demote
+                        </MenuItem>
                       )}
                       {d.role !== "admin" && (
                         <MenuItem
-                        sx={{ padding: 2, color: "#b91c1c" }}
-                        onClick={() => {
-                          handleClose(index);
-                          handleRemove(d.roll_no);
-                        }}
-                      >
-                        Remove
-                      </MenuItem>
+                          sx={{ padding: 2, color: "#b91c1c" }}
+                          onClick={() => {
+                            handleClose(index);
+                            handleRemove(d.roll_no);
+                          }}
+                        >
+                          Remove
+                        </MenuItem>
                       )}
                     </Menu>{" "}
                   </div>
                 </React.Fragment>
               );
           })}
-
           <div className="sm:hidden "></div>
         </div>
-
         <div></div>
       </div>
       <Snackbar

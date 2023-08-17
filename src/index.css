@@ -4,24 +4,17 @@
 
 @layer utilities {
 
-  /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
 
   }
-  
-  /* .striped div:nth-child(6n+1), .striped div:nth-child(6n+2),.striped div:nth-child(6n+3) {
-    @apply bg-[#0b0914]
-  } */
 
   .striped div:nth-child(8n+1), .striped div:nth-child(8n+2),.striped div:nth-child(8n+3),.striped div:nth-child(8n+4) {
     @apply bg-[#0b0914]
   }
     .no-scrollbar {
     -ms-overflow-style: none;
-    /* IE and Edge */
     scrollbar-width: none;
-    /* Firefox */
   }
 }
 
@@ -31,23 +24,10 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  /* background-color: #03001C; */
   -moz-osx-font-smoothing: grayscale;
   background-color: #1c1733;
-  /* background:linear-gradient(-45deg, #00dfed 0%, #001cb0 100%) */
-
-  /* background:  linear-gradient(#174689, #FF82CE); */
 }
 
-/* 
-scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-} */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",

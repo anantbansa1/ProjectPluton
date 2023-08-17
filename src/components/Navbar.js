@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import zoro from "./Images/zoro.jpg";
 import HomeIcon from "@mui/icons-material/Home";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
@@ -16,59 +15,45 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { getDocs, query, collection, where } from "firebase/firestore";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { db } from "../firebase";
-// bg-[#1c1733]
+import { useLocation, useParams } from "react-router-dom";
+
 export default function Navbar(props) {
   const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
   });
-
+  const user = useAuth();
+  const [useremail, setuseremail] = useState();
   const navigate = useNavigate();
+  const location = useLocation();
+  const userid = useParams().email;
+  const path = location.pathname;
+  const regex = /^[\w-.]+@dseu\.ac\.in$/;
+  const email = path.split("/")[2];
+
   const [Loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [profileimage, setprofileimage] = useState(
     "https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature-825x465.jpg"
   );
-  const user = useAuth();
-  const [helper, sethelper] = useState(false);
   const [isadmin, setisadmin] = useState(false);
 
   useEffect(() => {
     if (user) {
+      setuseremail(user.email);
       getDocs(query(collection(db, "user"))).then((snapshot) => {
         snapshot.forEach((u) => {
           if (u.data().email === user.email) {
             setprofileimage(u.data().profileimage);
-            console.log("email: ", u.data());
             setisadmin(u.data().isadmin);
-            console.log("admin: ", u.data().isadmin);
           }
         });
       });
     }
   }, [user]);
-
-  useEffect(() => {
-    setLoading(true);
-    sleep(2000).then(() => {
-      setLoading(false);
-      sethelper(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (helper) {
-      if (user) {
-        // console.log(user?.email);
-      } else {
-        navigate("/login");
-      }
-    }
-  }, [helper]);
 
   const handleNo = () => {
     setOpen(false);
@@ -82,21 +67,14 @@ export default function Navbar(props) {
   const Title = ({ children }) => <div className="title">{children}</div>;
 
   async function handleLogOut() {
-    // navigate("/login")
     setLoading(true);
     try {
       await logOut();
-      // setTimeout(1000);
       navigate("/login");
-      // redirectIn();
     } catch {
       alert("Something went wrong! Please try again later.");
     }
     setLoading(false);
-  }
-
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   return (
@@ -116,18 +94,17 @@ export default function Navbar(props) {
           <Link
             to="/home"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${
-              props.selected === "home" ? " bg-opacity-10  bg-white" : ""
+              path === "/home" ? " bg-opacity-10  bg-white" : ""
             } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-base`}
           >
             {" "}
             <HomeIcon className=" scale-[120%]"></HomeIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Home</button>
           </Link>
-          {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/leaderboard"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
-              props.selected === "leaderboard"
+              path === "/leaderboard"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
             } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
@@ -139,7 +116,7 @@ export default function Navbar(props) {
             <Link
               to="/adduser"
               className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
-                props.selected === "manageusers"
+                path === "/manageusers"
                   ? " bg-opacity-10  bg-white  border-[#323232]"
                   : ""
               } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
@@ -152,7 +129,7 @@ export default function Navbar(props) {
           <Link
             to="/faq"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${
-              props.selected === "faq"
+              path === "/faq"
                 ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
                 : ""
             } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-base`}
@@ -160,12 +137,10 @@ export default function Navbar(props) {
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
           </Link>
-          {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
-          {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/ourteam"
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
-              props.selected === "ourteam"
+              path === "/ourteam"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
             } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-base`}
@@ -175,26 +150,21 @@ export default function Navbar(props) {
           </Link>
           {!isadmin && (
             <Link
-            to={`/user/${user?.email}`}
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
-              props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
-            } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-base`}
-          >
-            {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
-            <button
-              className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-base  `}
+              to={`/user/${useremail}`}
+              className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+                regex.test(userid) && email === useremail
+                  ? " bg-opacity-10  bg-white"
+                  : ""
+              } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-base`}
             >
-              {/* <img
-                src={profileimage}
-                alt=""
-                className="h-[26px] w-[26px] rounded-[100%] "
-              /> */}
-              <AccountCircleIcon className=" scale-[120%]" />
-              &nbsp;&nbsp;
-              {/* <button>Anant</button> */}
-            </button>
-            <button className="max-lg:hidden">&nbsp;&nbsp; Profile </button>
-          </Link>
+              <button
+                className={`flex justify-start  self-start border h-[26px] w-[26px] rounded-[100%] items-center text-base  `}
+              >
+                <AccountCircleIcon className=" scale-[120%]" />
+                &nbsp;&nbsp;
+              </button>
+              <button className="max-lg:hidden">&nbsp;&nbsp; Profile </button>
+            </Link>
           )}
         </div>
 
@@ -223,7 +193,6 @@ export default function Navbar(props) {
             backdropFilter: "blur(20px)",
           },
         }}
-        // TransitionComponent={Transition}
         fullWidth
         maxWidth="sm"
         keepMounted

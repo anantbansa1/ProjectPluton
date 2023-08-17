@@ -1,5 +1,4 @@
 import React from "react";
-import Minions from "../Images/Minions.jpg";
 
 export default function Row(props) {
   return (

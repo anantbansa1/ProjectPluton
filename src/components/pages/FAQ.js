@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "../Navbar";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Accordion from "../acc";
 
 export default function FAQ() {
@@ -36,7 +35,6 @@ export default function FAQ() {
   ];
   return (
     <div>
-      <Navbar selected="faq" ></Navbar>
       <div className="ml-[25vw] mt-[7vw] text-4xl text-white">
         <div className="mb-[4vh]">Frequently Asked Question</div>
         <div className="accordion">

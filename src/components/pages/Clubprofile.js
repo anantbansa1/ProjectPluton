@@ -113,9 +113,11 @@ function ClubProfile(props) {
   const [message, setmessage] = useState("Successfully Added!");
   const [openAlert, setOpenAlert] = useState(false);
   const [isadmin, setisadmin] = useState(false);
-  const [text, settext] = useState("")
+  const [text, settext] = useState("");
   const [opendesc, setOpendesc] = useState(false);
   const [opendeleteclub, setopendeleteclub] = useState(false);
+  const [openenableclub, setopenenableclub] = useState(false);
+  const [isactive, setisactive] = useState();
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -125,10 +127,14 @@ function ClubProfile(props) {
     if (reason === "clickaway") {
       return;
     }
-    console.log('hello alert')
     setOpenAlert(false);
   };
 
+  useEffect(() => {
+    if (isactive === false && isadmin === false) {
+      navigate("/pagenotfound");
+    }
+  }, [isactive]);
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -140,32 +146,31 @@ function ClubProfile(props) {
     points < currentClub.bronze
       ? Bronzebadge
       : points < currentClub.silver
-        ? Silverbadge
-        : Goldbadge;
+      ? Silverbadge
+      : Goldbadge;
 
   const badge =
     points < currentClub.bronze
       ? "bronze"
       : points < currentClub.silver
-        ? "silver"
-        : "gold";
+      ? "silver"
+      : "gold";
 
   const pointleft =
     points < currentClub.bronze
       ? currentClub.bronze - points
       : points < currentClub.silver
-        ? currentClub.silver - points
-        : currentClub.gold - points;
+      ? currentClub.silver - points
+      : currentClub.gold - points;
 
   const color =
     points < currentClub.bronze
       ? "text-[#824a02]"
       : points <= currentClub.silver
-        ? "text-[#d7d7d7]"
-        : "text-[#fee101]";
+      ? "text-[#d7d7d7]"
+      : "text-[#fee101]";
 
   useEffect(() => {
-    console.log(clubName);
     fetchClub();
   }, [clubName]);
 
@@ -190,7 +195,6 @@ function ClubProfile(props) {
 
   async function getmembersdetails() {
     let details = [];
-    console.log("inside member details");
     members?.forEach(async (mem) => {
       try {
         const docref = doc(db, "user", mem);
@@ -216,12 +220,8 @@ function ClubProfile(props) {
           membadge: membadge,
           mememail: mememail,
         });
-        console.log(memname, membadge);
-      } catch (error) {
-        console.log("Firebase error!");
-      }
+      } catch (error) {}
     });
-    console.log("15", details);
     setmemberdetails(details);
   }
 
@@ -232,37 +232,45 @@ function ClubProfile(props) {
   const handleYesdesc = () => {
     if (text !== "") {
       setOpendesc(false);
-      const docref = doc(db, 'clubs', clubId);
+      const docref = doc(db, "clubs", clubId);
       const payload = { desc: text };
       settext("");
       updateDoc(docref, payload).then(() => {
-        console.log("desc updated")
         navigate(0);
-      })
-
+      });
     } else {
-      setOpenAlert(true)
-      setmessage("Description can't be empty ")
-      setetype("error")
+      setOpenAlert(true);
+      setmessage("Description can't be empty ");
+      setetype("error");
     }
-
   };
 
   const handleNodeleteclub = () => {
     setopendeleteclub(false);
   };
-
-  const handleYesdeleteclub = () => {
+  const handleNoEnableclub = () => {
     setopendeleteclub(false);
   };
 
+  async function handleYesdeleteclub() {
+    const docref = doc(db, "clubs", clubId);
+    const payload = { active: false };
+    await updateDoc(docref, payload);
+    setopendeleteclub(false);
+    navigate(0);
+  }
+  async function handleYesenableclub() {
+    const docref = doc(db, "clubs", clubId);
+    const payload = { active: true };
+    await updateDoc(docref, payload);
+    setopenenableclub(false);
+    navigate(0);
+  }
 
   useEffect(() => {
     if (clubId) {
       let applications = [];
       const colRef = collection(db, "clubs", clubId, "Applications");
-
-      // Listen for real-time updates
       try {
         const unsub = onSnapshot(colRef, async (snapshot) => {
           const changes = snapshot.docChanges();
@@ -286,13 +294,10 @@ function ClubProfile(props) {
             setpending(true);
           });
         });
-
         return () => {
           unsub();
         };
-      } catch (error) {
-        console.log("firebase error");
-      }
+      } catch (error) {}
     }
   }, [clubId]);
 
@@ -306,6 +311,7 @@ function ClubProfile(props) {
             const clubid = club.id;
             let memberarray = [];
             setClubId(clubid);
+            setisactive(club.data().active);
             const colRef = collection(db, "clubs", clubid, "Members");
             const unsub = onSnapshot(colRef, (snapshot) => {
               snapshot.docChanges().forEach((change) => {
@@ -320,17 +326,13 @@ function ClubProfile(props) {
               setmember(memberarray);
               setmemberscount(memberarray.length);
             });
-
             return () => {
               unsub();
             };
           });
         }
-      } catch (error) {
-        console.log("firebase error");
-      }
+      } catch (error) {}
     };
-
     fetchMembers();
   }, [clubName]);
 
@@ -357,8 +359,6 @@ function ClubProfile(props) {
         postarray.push(data);
       });
       setposts(postarray);
-      console.log(80, postarray);
-      // setcheckfeed(true);
     }
   }
 
@@ -404,7 +404,6 @@ function ClubProfile(props) {
             });
         })
       ).then(() => {
-        console.log("temppolls ", temppolls);
         setpolls(temppolls);
         setfilterpolls(temppolls);
       });
@@ -417,9 +416,6 @@ function ClubProfile(props) {
     const temppolls = polls.filter(
       (poll) => selected === "Filter" || poll.tag === selected
     );
-
-    console.log("temppost: ", tempposts);
-    console.log("temppolls: ", temppolls);
     setfilterposts(tempposts);
     setfilterpolls(temppolls);
   }, [posts, polls, selected]);
@@ -461,18 +457,12 @@ function ClubProfile(props) {
       querySnapshot.forEach(async (docp) => {
         setUserData(docp.data());
         setisadmin(docp.data().isadmin);
-        console.log("isadmin ", docp.data().isadmin)
         setUserRollNo(docp.id);
-        console.log(docp.id);
         const docref = doc(db, "user", docp.id, "clubs", clubName);
-        console.log("docref ", docref);
         const docSnap = await getDoc(docref);
         setLoading(false);
-        // console.log("docsnap ", docSnap);
-        // console.log('inside get user details', docp.id)
         if (docSnap) {
           if (docSnap.data()) {
-            console.log(docSnap.data());
             setRole(docSnap.data().role);
             setPoints(docSnap.data().points);
           } else {
@@ -482,9 +472,7 @@ function ClubProfile(props) {
           setRole("visitor");
         }
       });
-    } catch (error) {
-      console.log("firebase error!");
-    }
+    } catch (error) {}
   }
 
   async function fetchClub() {
@@ -506,20 +494,17 @@ function ClubProfile(props) {
         });
         if (flag === 0) navigate("/pagenotfound");
       }
-    } catch (error) {
-      console.log("firebase error");
-    }
+    } catch (error) {}
   }
   //////////////////////////////////////////images start////////////////////////////////////////////////////////
   function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
-      setOpenAlert(true)
-      setmessage("Please select an image before uploading")
+      setOpenAlert(true);
+      setmessage("Please select an image before uploading");
       setetype("error");
       return;
     }
     setOpen(false);
-    console.log("hahahah");
     if (crop.width && crop.height) {
       canvas.toBlob((blob) => {
         const Imageuse = canvas.toDataURL("image/png");
@@ -527,8 +512,8 @@ function ClubProfile(props) {
       }, "image/png");
       handleSubmit();
     } else {
-      setOpenAlert(true)
-      setmessage("Please crop the image correctly before uploading")
+      setOpenAlert(true);
+      setmessage("Please crop the image correctly before uploading");
       setetype("error");
     }
   }
@@ -543,19 +528,14 @@ function ClubProfile(props) {
       const storageRef = ref(storage, `images/${file.name}`);
       uploadBytes(storageRef, file)
         .then((snapshot) => {
-          // console.log("Uploaded a blob or file!");
           getDownloadURL(storageRef)
             .then((u) => {
               const docref = doc(db, `clubs`, clubId);
               updateDoc(docref, { logo: u });
             })
-            .catch((error) => {
-              console.log(error.message, "error getting the image url");
-            });
+            .catch((error) => {});
         })
-        .catch((error) => {
-          console.log(error.message);
-        });
+        .catch((error) => {});
     }, "image/png");
   };
 
@@ -563,7 +543,6 @@ function ClubProfile(props) {
     if (!crop || !canvas || !image) {
       return;
     } else {
-      console.log('canvas profile ', crop.width, " ", crop.height)
       const scaleX = image.naturalWidth / image.width;
       const scaleY = image.naturalHeight / image.height;
       const ctx = canvas.getContext("2d");
@@ -595,7 +574,6 @@ function ClubProfile(props) {
       const reader = new FileReader();
       reader.addEventListener("load", () => setUpImg(reader.result));
       reader.readAsDataURL(e.target.files[0]);
-      console.log("idarbeta");
     }
   };
 
@@ -608,7 +586,6 @@ function ClubProfile(props) {
       return;
     }
     setOpenCover(false);
-    console.log("hahahah");
     if (crop.width && crop.height) {
       canvas.toBlob((blob) => {
         const Imageuse = canvas.toDataURL("image/png");
@@ -627,19 +604,14 @@ function ClubProfile(props) {
       const storageRef = ref(storage, `images/${file.name}`);
       uploadBytes(storageRef, file)
         .then((snapshot) => {
-          // console.log("Uploaded a blob or file!");
           getDownloadURL(storageRef)
             .then((u) => {
               const docref = doc(db, `clubs`, clubId);
               updateDoc(docref, { coverimage: u });
             })
-            .catch((error) => {
-              console.log(error.message, "error getting the image url");
-            });
+            .catch((error) => {});
         })
-        .catch((error) => {
-          console.log(error.message);
-        });
+        .catch((error) => {});
     }, "image/png");
   };
 
@@ -673,7 +645,6 @@ function ClubProfile(props) {
       const reader = new FileReader();
       reader.addEventListener("load", () => setUpImgCover(reader.result));
       reader.readAsDataURL(e.target.files[0]);
-      console.log("idarbeta");
     }
   };
   const onLoadCover = useCallback((img) => {
@@ -693,6 +664,7 @@ function ClubProfile(props) {
   const handleCloseCover = () => {
     setOpenCover(false);
   };
+
   //////////////////////////////////////////images end////////////////////////////////////////////////////////
   async function handleapply() {
     const docref = doc(db, "user", userRollNo, "clubs", clubName);
@@ -710,14 +682,10 @@ function ClubProfile(props) {
       }
       setRole("pending");
       navigate(0);
-    } catch (error) {
-      console.log("firebase error");
-    }
+    } catch (error) {}
   }
   async function handleleave() {
     setleavedialog(true);
-
-    console.log("leave");
   }
 
   const handleClickfilter = (event) => {
@@ -725,7 +693,6 @@ function ClubProfile(props) {
   };
 
   const handleClosefilter = (s) => {
-    // console.log("s: ", s, "selcted: ", selected)
     if (s === "close") setselected(selected);
     else if (s === selected) setselected("Filter");
     else setselected(s);
@@ -746,23 +713,23 @@ function ClubProfile(props) {
       }
       navigate(0);
       setleavedialog(false);
-    } catch (error) {
-      console.log("firebase error");
-    }
+    } catch (error) {}
   };
 
   return (
     <div className="">
-      <Navbar selected="none"></Navbar>
       <div className=" md:ml-[22vw]  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
           <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
             <img
               src={CoverImage}
               alt=""
-              className="object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
+              className={`object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full ${
+                isactive === true ? "" : "grayscale"
+              }`}
               onClick={() => {
-                if (isadmin === true || role === 'admin' || role === 'core') handleClickOpenCover();
+                if (isadmin === true || role === "admin" || role === "core")
+                  handleClickOpenCover();
               }}
               onMouseOver={(e) => {
                 setChangeCover(true);
@@ -772,7 +739,7 @@ function ClubProfile(props) {
               }}
             />
           </div>
-          {(isadmin === true || role === 'admin' || role === 'core') && (
+          {(isadmin === true || role === "admin" || role === "core") && (
             <button
               onMouseOver={(e) => {
                 setChangeCover(true);
@@ -781,8 +748,9 @@ function ClubProfile(props) {
               onMouseOut={(e) => {
                 setChangeCover(false);
               }}
-              className={`${changeCover ? "" : "hidden"
-                } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+              className={`${
+                changeCover ? "" : "hidden"
+              } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
             >
               Edit Cover Image
             </button>
@@ -791,7 +759,8 @@ function ClubProfile(props) {
             <div className=" ">
               <button
                 onClick={() => {
-                  if (isadmin === true || role === 'admin' || role === 'core') handleClickOpen();
+                  if (isadmin === true || role === "admin" || role === "core")
+                    handleClickOpen();
                 }}
                 onMouseOut={(e) => {
                   setprofile(true);
@@ -801,19 +770,21 @@ function ClubProfile(props) {
                 }}
                 className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
               >
-                {(isadmin === true || role === 'admin' || role === 'core') ? (
+                {isadmin === true || role === "admin" || role === "core" ? (
                   <>
                     {profile === false ? (
                       <img
                         src={SirfPencil}
                         alt=""
-                        className="object-cover rounded-[50%]"
+                        className="object-cover rounded-[50%] grayscale"
                       />
                     ) : (
                       <img
                         src={ClubImage}
                         alt=""
-                        className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
+                        className={`rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px] ${
+                          isactive === true ? "" : "grayscale"
+                        }`}
                       />
                     )}
                   </>
@@ -821,10 +792,11 @@ function ClubProfile(props) {
                   <img
                     src={ClubImage}
                     alt=""
-                    className=" rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px]"
+                    className={`rounded-[50%] object-cover border-2 border-white h-[10vw] w-[10vw] min-w-[80px] min-h-[80px] ${
+                      isactive === true ? "" : "grayscale"
+                    }`}
                   />
                 )}
-
               </button>
             </div>
           </div>
@@ -836,11 +808,17 @@ function ClubProfile(props) {
               {currentClub.name}{" "}
             </div>
           </div>
-          {isadmin === true || role === 'core' || role === 'admin' ? (
+          {isadmin === true || role === "core" || role === "admin" ? (
             <Tooltip>
               <div className="max-sm:col-start-3 sm:w-[50vw] row-start-7 col-start-2 row-span-2 col-span-3 max-sm:text-center text-xs md:text-md lg:text-xl  text-[#a5a5a5]">
                 {" "}
-                <Tooltip title="Edit description" className="cursor-pointer" onClick={() => { setOpendesc(true) }}>
+                <Tooltip
+                  title="Edit description"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setOpendesc(true);
+                  }}
+                >
                   {currentClub.desc}
                 </Tooltip>
               </div>
@@ -851,7 +829,7 @@ function ClubProfile(props) {
               {currentClub.desc}
             </div>
           )}
-          {(role === "visitor" && isadmin === false) && (
+          {role === "visitor" && isadmin === false && (
             <div className="row-start-6 max-sm:hidden max-sm:col-start-3  max-sm:col-span-1  max-sm:justify-self-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 onClick={handleapply}
@@ -862,7 +840,7 @@ function ClubProfile(props) {
               </button>
             </div>
           )}
-          {(role === "pending" && isadmin === false) && (
+          {role === "pending" && isadmin === false && (
             <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <div
                 className={`px-4 py-2 max-sm:pr-2  max-sm:mt-2 max-sm:w-[30vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10  bg-white rounded-full  text-white`}
@@ -872,19 +850,21 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
-          {(role === "member" && isadmin === false) && (
+          {role === "member" && isadmin === false && (
             <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 onClick={handleleave}
                 className={`px-4 py-2 max-sm:pr-2 max-lg:py-1 max-sm:w-[30vw]  max-sm:mt-2  justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
-
-                <div className="h-fit" >  <LogoutIcon className="scale-[80%] max-sm:scale-[65%]" /></div>
+                <div className="h-fit">
+                  {" "}
+                  <LogoutIcon className="scale-[80%] max-sm:scale-[65%]" />
+                </div>
                 &nbsp; <div>Leave </div> &nbsp;
               </button>
             </div>
           )}
-          {(isadmin === false && role === 'admin' || role === 'core') && (
+          {((isadmin === false && role === "admin") || role === "core") && (
             <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 onClick={() => {
@@ -898,7 +878,7 @@ function ClubProfile(props) {
             </div>
           )}
 
-          {(isadmin === true) && (
+          {isadmin === true && isactive === true && (
             <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
               <button
                 onClick={() => {
@@ -907,7 +887,20 @@ function ClubProfile(props) {
                 className={`px-4 py-2 max-sm:hidden  max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
-                &nbsp; <div>Delete club</div> &nbsp;
+                &nbsp; <div>Disable club</div> &nbsp;
+              </button>
+            </div>
+          )}
+          {isadmin === true && isactive === false && (
+            <div className="row-start-6 max-sm:hidden max-sm:col-start-3 max-sm:col-span-1  max-sm:justify-center max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+              <button
+                onClick={() => {
+                  setopenenableclub(true);
+                }}
+                className={`px-4 py-2 max-sm:hidden  max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                {" "}
+                &nbsp; <div>Enable club</div> &nbsp;
               </button>
             </div>
           )}
@@ -924,7 +917,7 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-7"></div>
         </div>
         <div className="flex sm:hidden space-x-6 mt-5">
-          {(role === "visitor" && isadmin === false) && (
+          {role === "visitor" && isadmin === false && (
             <div className="  text-center w-full ">
               <button
                 onClick={handleapply}
@@ -935,7 +928,7 @@ function ClubProfile(props) {
               </button>
             </div>
           )}
-          {(role === "pending" && isadmin === false) && (
+          {role === "pending" && isadmin === false && (
             <div className=" text-center w-full">
               <div
                 className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
@@ -945,19 +938,21 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
-          {(role === "member" && isadmin === false) && (
+          {role === "member" && isadmin === false && (
             <div className="text-center w-full">
               <button
                 onClick={handleleave}
                 className={`p-1 h-fit flex justify-center items-center text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
-
-                <div className="h-fit" >  <LogoutIcon className="scale-[60%]" /></div>
+                <div className="h-fit">
+                  {" "}
+                  <LogoutIcon className="scale-[60%]" />
+                </div>
                 &nbsp; <div>Leave </div> &nbsp;
               </button>
             </div>
           )}
-          {(role === "admin" && isadmin === false) && (
+          {role === "admin" && isadmin === false && (
             <div className=" text-center w-full">
               <button
                 onClick={() => {
@@ -969,7 +964,7 @@ function ClubProfile(props) {
               </button>
             </div>
           )}
-          {(isadmin === true) && (
+          {isadmin === true && isactive === true && (
             <div className=" text-center w-full">
               <button
                 onClick={() => {
@@ -977,10 +972,23 @@ function ClubProfile(props) {
                 }}
                 className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
-                <div>Delete club</div>
+                <div>Disable club</div>
               </button>
             </div>
           )}
+          {isadmin === true && isactive === false && (
+            <div className=" text-center w-full">
+              <button
+                onClick={() => {
+                  setopenenableclub(true);
+                }}
+                className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              >
+                <div>Enable club</div>
+              </button>
+            </div>
+          )}
+
           <div
             onClick={() => {
               setmemberdialog(true);
@@ -992,37 +1000,42 @@ function ClubProfile(props) {
             </button>
           </div>
         </div>
-        {(isadmin === false && role === "member") ? (
+        {isadmin === false && role === "member" ? (
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "hidden" : ""
-                  } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                  points >= currentClub.gold ? "hidden" : ""
+                } ${color}`}
               >
                 {pointleft} points to {badge}
               </div>
               <div
-                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${points >= currentClub.gold ? "" : "hidden"
-                  } ${color}`}
+                className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
+                  points >= currentClub.gold ? "" : "hidden"
+                } ${color}`}
               >
                 {points} points
               </div>
               <div
-                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
-                  } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
+                className={`row-start-1 ${
+                  points < currentClub.bronze ? "" : "hidden"
+                } rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#824a02] z-10  `}
                 style={{
                   width: ((points / currentClub.bronze) * 100).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${points < currentClub.bronze ? "" : "hidden"
-                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
+                className={`row-start-1 ${
+                  points < currentClub.bronze ? "" : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a77044] `}
               />
               <div
-                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
-                  ? ""
-                  : "hidden"
-                  } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
+                className={`row-start-1 ${
+                  points < currentClub.silver && points >= currentClub.bronze
+                    ? ""
+                    : "hidden"
+                } rounded-full w-[50%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d7d7d7] z-10  `}
                 style={{
                   width:
                     (
@@ -1033,28 +1046,31 @@ function ClubProfile(props) {
                 }}
               />
               <div
-                className={`row-start-1 ${points < currentClub.silver && points >= currentClub.bronze
-                  ? ""
-                  : "hidden"
-                  } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
+                className={`row-start-1 ${
+                  points < currentClub.silver && points >= currentClub.bronze
+                    ? ""
+                    : "hidden"
+                } rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#a7a7ad] `}
               />
               <div
-                className={`row-start-1  ${points >= currentClub.silver ? "" : "hidden"
-                  }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
+                className={`row-start-1  ${
+                  points >= currentClub.silver ? "" : "hidden"
+                }  rounded-full  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#fee101] z-10  `}
                 style={{
                   width:
                     points > currentClub.gold
                       ? "100%"
                       : (
-                        ((points - currentClub.silver) /
-                          (currentClub.gold - currentClub.silver)) *
-                        100
-                      ).toString() + "%",
+                          ((points - currentClub.silver) /
+                            (currentClub.gold - currentClub.silver)) *
+                          100
+                        ).toString() + "%",
                 }}
               />
               <div
-                className={`row-start-1 ${points >= currentClub.silver ? "" : "hidden"
-                  }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
+                className={`row-start-1 ${
+                  points >= currentClub.silver ? "" : "hidden"
+                }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
             <div className="grid grid-rows-1 items-center grid-cols-1">
@@ -1082,8 +1098,9 @@ function ClubProfile(props) {
           <div className=""> </div>
           <div className="flex space-x-[5vw] max-md:space-x-4  ">
             <button
-              className={`${underline === "post" ? "border-b" : ""
-                } border-white py-4  px-8`}
+              className={`${
+                underline === "post" ? "border-b" : ""
+              } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("post");
               }}
@@ -1091,8 +1108,9 @@ function ClubProfile(props) {
               Post
             </button>
             <button
-              className={`${underline === "poll" ? "border-b" : ""
-                } border-white py-4  px-8`}
+              className={`${
+                underline === "poll" ? "border-b" : ""
+              } border-white py-4  px-8`}
               onClick={(e) => {
                 setUnderline("poll");
               }}
@@ -1178,7 +1196,7 @@ function ClubProfile(props) {
         </div>
       </div>
 
-      {(role === "admin" || role === "core") && (
+      {(role === "admin" || role === "core") && isactive && (
         <div className="ml-[20vw] max-md:ml-[15vw] my-10">
           <div className=" mx-auto w-[40vw] max-md:w-[75vw] h-fit bg-[#130f22] shadow-lg max-lg:w-[70%] max-sm:w-[100%] rounded-md max-md:py-4 py-8 px-4 shadow-black text-white">
             <div className="flex font-semibold items-center space-x-5">
@@ -1201,7 +1219,6 @@ function ClubProfile(props) {
       {underline === "post" && (
         <>
           {filterposts.map((post) => {
-            // console.log("heeeee", roles[post.clubname], post.clubname);
             if (
               isadmin === true ||
               post.visibility === "Public" ||
@@ -1223,7 +1240,6 @@ function ClubProfile(props) {
               );
             }
           })}
-          {/* {console.log("feedcount", feedCount)} */}
           {feedCount == 0 && (
             <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">
               Hmm... nothing to show here.
@@ -1234,10 +1250,9 @@ function ClubProfile(props) {
 
       {underline === "poll" && (
         <>
-          {console.log("filterpolls ", filterpolls)}
           {filterpolls.map((poll) => {
-            // console.log("poll", poll.id);
-            if (isadmin === true ||
+            if (
+              isadmin === true ||
               poll.visibility === "Public" ||
               role === "admin" ||
               role === "core" ||
@@ -1487,7 +1502,7 @@ function ClubProfile(props) {
         <DialogTitle>
           <div className="flex justify-between items-center">
             <div>Members</div>
-            {(isadmin === true || role === "admin" || role === "core") ? (
+            {isadmin === true || role === "admin" || role === "core" ? (
               <Link
                 to={`/manage/${clubName}`}
                 className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"
@@ -1513,9 +1528,7 @@ function ClubProfile(props) {
             {memberdetails?.map((element) => {
               return (
                 <>
-                  {/* {console.log('1',badgetype[element.membadge])} */}
                   <div className="flex text-white justify-between">
-
                     <Link to={`/user/${element.mememail}`} className="">
                       <div className="flex items-center space-x-2 ">
                         <img
@@ -1628,18 +1641,14 @@ function ClubProfile(props) {
                               {
                                 role: "member",
                               }
-                            ).then(() => {
-                              console.log("deltedfromuseralso");
-                            });
+                            ).then(() => {});
                           });
-                          // console.log("application deleted");
                         });
                       }}
                       className="text-green-500 hover:text-green-600 cursor-pointer"
                     ></CheckCircle>
                     <Cancel
                       onClick={async (e) => {
-                        console.log("delete");
                         deleteDoc(
                           doc(
                             db,
@@ -1649,15 +1658,12 @@ function ClubProfile(props) {
                             element.rollno
                           )
                         ).then(() => {
-                          console.log("application deleted");
                           updateDoc(
                             doc(db, "user", element.rollno, "clubs", clubName),
                             {
                               role: "visitor",
                             }
-                          ).then(() => {
-                            console.log("deltedfromuseralso");
-                          });
+                          ).then(() => {});
                         });
                       }}
                       className="text-red-600 hover:text-red-700 cursor-pointer"
@@ -1749,7 +1755,6 @@ function ClubProfile(props) {
             backdropFilter: "blur(20px)",
           },
         }}
-        // TransitionComponent={Transition}
         fullWidth
         maxWidth="sm"
         keepMounted
@@ -1791,8 +1796,7 @@ function ClubProfile(props) {
                   "& .MuiOutlinedInput-notchedOutline.Mui-focused": {
                     borderColor: "#475569 !important",
                   },
-                  "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused":
-                  {
+                  "&:hover .MuiOutlinedInput-notchedOutline.Mui-focused": {
                     borderColor: "#475569 !important",
                   },
                 }}
@@ -1804,17 +1808,16 @@ function ClubProfile(props) {
                 label="Description"
                 variant="outlined"
                 color="grey"
-              // inputProps={{
-              //   style: {
-              //     width: "30vw",
-              //   },
-              // }}
               />
             </div>
           </div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={handleNodesc} sx={{ borderRadius: "15px" }}>
+          <Button
+            variant=""
+            onClick={handleNodesc}
+            sx={{ borderRadius: "15px" }}
+          >
             Cancel
           </Button>
           <Button
@@ -1842,7 +1845,6 @@ function ClubProfile(props) {
             backdropFilter: "blur(20px)",
           },
         }}
-        // TransitionComponent={Transition}
         fullWidth
         maxWidth="sm"
         keepMounted
@@ -1850,16 +1852,22 @@ function ClubProfile(props) {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
-          <div className="">{"Are you sure you want to delete club?"}</div>
+          <div className="">{"Are you sure you want to Disable club?"}</div>
         </DialogTitle>
         <DialogContent>
           <div className="text-[#c0bebe] text-lg">
-
-            When a club is deleted, its status will be changed to inactive, resulting in the removal of all associated posts and polls from both user and club feeds. This action is reversible and will not impact members' points and badges.
+            When a club is Disabled, its status will be changed to inactive,
+            resulting in the removal of all associated posts and polls from both
+            user and club feeds. This action is reversible and will not impact
+            members' points and badges.
           </div>
         </DialogContent>
         <DialogActions>
-          <Button variant="" onClick={handleNodeleteclub} sx={{ borderRadius: "15px" }}>
+          <Button
+            variant=""
+            onClick={handleNodeleteclub}
+            sx={{ borderRadius: "15px" }}
+          >
             No
           </Button>
           <Button
@@ -1872,8 +1880,58 @@ function ClubProfile(props) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
-        <Alert onClose={handleCloseAlert} severity={etype} sx={{ width: "100%" }}>
+      <Dialog
+        open={openenableclub}
+        PaperProps={{
+          style: {
+            background: "#1e1936",
+            color: "#fff",
+            borderRadius: 25,
+            padding: "10px",
+          },
+        }}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
+        fullWidth
+        maxWidth="sm"
+        keepMounted
+        onClose={handleNoEnableclub}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <div className="">{"Are you sure you want to Enable club?"}</div>
+        </DialogTitle>
+        <DialogActions>
+          <Button
+            variant=""
+            onClick={handleNoEnableclub}
+            sx={{ borderRadius: "15px" }}
+          >
+            No
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: "15px" }}
+            onClick={handleYesenableclub}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity={etype}
+          sx={{ width: "100%" }}
+        >
           {message}
         </Alert>
       </Snackbar>

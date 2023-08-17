@@ -11,23 +11,19 @@ function Login() {
   const [Password, setPass] = useState("");
   const [helperText, setHelperText] = useState("");
   const [error, setError] = useState(false);
-  const [helper, sethelper] = useState(false);
   const [Loading, setLoading] = useState(false);
   const user = useAuth();
   const navigate = useNavigate();
 
-  const animation = useRef(null);
-
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-
   async function handleLogin() {
     setLoading(true);
     try {
       await signIn(Email, Password);
       console.log(user?.email);
-      navigate('/home')
+      navigate("/home");
     } catch {
       setPass("");
       setEmail("");
@@ -37,10 +33,9 @@ function Login() {
     setLoading(false);
   }
 
-
   useEffect(() => {
     setLoading(true);
-    sleep(1000).then(()=>{
+    sleep(1000).then(() => {
       console.log("hello1");
       if (user) {
         console.log("hello2");
@@ -48,26 +43,12 @@ function Login() {
         navigate("/home");
       }
       setLoading(false);
-
-    })
-
-
-  }, [user])
-
-  function handlePass(e) {
-    setPass(e.target.value);
-    setHelperText("");
-    setError(false);
-  }
+    });
+  }, [user]);
 
   return (
     <div className="  ">
-      {/* {redirectIn()} */}
       <div className="flex justify-center h-[100vh] bg-white bg-[url('https://upload.wikimedia.org/wikipedia/commons/3/33/Microsoft_login_screen.svg')] items-center">
-        {/* <div className="flex flex-row w-[60vw] h-[100vh] ">
-
-           <div className="animation " ref={animation}></div> 
-        </div> */}
         <div className="flex flex-col bg-white rounded-3xl shadow-2xl shadow-slate-300 p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 max-[450px]:w-[100%] max-[450px]:h-[100%] w-[450px] xl:w-[25vw] ">
           <span className="text-4xl font-semibold">Login</span>
           <div className="mt-1 w-[100%]">
@@ -103,15 +84,7 @@ function Login() {
                 "&:before, &:after": {
                   borderRadius: "50px",
                 },
-                // boxShadow: 10
               }}
-              // InputProps={{
-              //   startAdornment: (
-              //     <InputAdornment position="start">
-              //       <EmailIcon/>
-              //     </InputAdornment>
-              //   ),
-              // }}
               InputProps={{
                 style: {
                   borderRadius: "50px",
@@ -155,13 +128,6 @@ function Login() {
                   borderColor: "#000",
                 },
               }}
-              // InputProps={{
-              //   startAdornment: (
-              //     <InputAdornment position="start">
-              //       <HttpsIcon/>
-              //     </InputAdornment>
-              //   ),
-              // }}
               InputProps={{
                 style: {
                   borderRadius: "50px",
@@ -174,83 +140,20 @@ function Login() {
               fullWidth
             />
           </div>
-          {/* <div> */}
-          {/* <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#111",
-              height: '50px',
-              color: "white",
-              "&:hover": {
-                backgroundColor: "#000",
-              },
-            }}
-            fullWidth
-          >
-            Sign In
-          </Button> */}
-
           <button className="btn-grad font-semibold" onClick={handleLogin}>
             Sign In
           </button>
           <Link to="/getemail" className="self-end text-[#232323] ">
             Forgot Password?
           </Link>
-          {/* </div> */}
         </div>
       </div>
-
-      {/* <div className="sm:bg-[#a7c7e7] sm:h-[100vh] lg:flex lg:justify-between overflow-hidden max-[640px]: bg-[#232323] max-[640px]: h-[500vh]">
-        <div className="bg-[#232323] h-[100vh] z-0 scale-150 w-[39%] rotate-[-10deg]"></div>
-        <div className=" max-[1024px]:absolute top-[10%] left-[20%] px-4 items-end bg-white max-[1024px]:w-[40vw] max-[640px]:w-[60vw] lg:w-[28vw] lg:flex-col my-auto mx-auto lg:mr-[8vw] rounded-[10px] shadow-md shadow-black z-2  lg:flex">
-          <div className="mx-auto my-16 text-center font-bold text-3xl">
-            Sign in
-          </div>
-          <div className="mt-1 w-[100%]">
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="Email ID"
-
-              
-              variant="outlined"
-              value={Email}
-              helperText={helperText}
-              error={error}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setHelperText("");
-                setError(false);
-              }}
-            />
-          </div>
-          <div className="mt-6 w-[100%]">
-            <TextField
-              helperText={helperText}
-              type="password"
-              fullWidth
-              error={error}
-              id="outlined-basic"
-              label="Password"
-              variant="outlined"
-              value={Password}
-              onChange={handlePass}
-            />
-          </div>
-
-          <button
-            onClick={handleLogin}
-            className="bg-[#232323] p-3 mt-10 w-[100%] mx-auto text-white "
-          >
-            Sign in
-          </button>
-          <Link to="/getemail" className="p-2 pt-4 mt- w-auto  text-[#232323] hover:underline">
-            Forgot Password?
-          </Link>
-        </div>
-      </div> */}
       <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1, backdropFilter: "blur(20px)", }}
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backdropFilter: "blur(20px)",
+        }}
         open={Loading}
         close={Loading}
       >

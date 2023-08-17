@@ -6,14 +6,13 @@ import Deadpool from "../Images/Deadpool.jpg";
 import Sasuke from "../Images/Sasuke.jpg";
 import Temp from "../Images/Temp.jpg";
 import Beetles from "../Images/Beetles.jpg";
-import Madhav from "../Images/Madhav.jpg"
-import Anant from "../Images/Anant.jpg"
-import Deepanshu from "../Images/Deepanshu.jpg"
+import Madhav from "../Images/Madhav.jpg";
+import Anant from "../Images/Anant.jpg";
+import Deepanshu from "../Images/Deepanshu.jpg";
 
 export default function AboutUs() {
   return (
     <div className="ml-[22vw]">
-      <Navbar selected="ourteam"></Navbar>
       <div className="text-white text-3xl items-center  mt-[2vw] text-center font-semibold">
         Our Team
       </div>

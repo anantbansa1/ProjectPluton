@@ -48,8 +48,7 @@ export default function UserFeed() {
   const [filterpolls, setfilterpolls] = useState(polls);
   const [selected, setSelected] = useState("Filter");
   const [isadmin, setisadmin] = useState(false);
-  // const [checkclubs, setcheckclubs] = useState(false);
-  // const [checkfeed, setcheckfeed] = useState(false);
+  const [clubstatus, setclubstatus] = useState([]);
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -63,13 +62,11 @@ export default function UserFeed() {
   };
 
   const handleClose = (s) => {
-    // console.log("s: ", s, "selcted: ", selected)
     if (s === "close") setSelected(selected);
     else if (s === selected) setSelected("Filter");
     else setSelected(s);
     setAnchorEl(null);
   };
-  
 
   useEffect(() => {
     const tempposts = posts.filter(
@@ -78,9 +75,6 @@ export default function UserFeed() {
     const temppolls = polls.filter(
       (poll) => selected === "Filter" || poll.tag === selected
     );
-
-    console.log("temppost: ", tempposts);
-    console.log("temppolls: ", temppolls);
     setfilterposts(tempposts);
     setfilterpolls(temppolls);
   }, [posts, polls, selected]);
@@ -88,13 +82,7 @@ export default function UserFeed() {
   useEffect(() => {
     setclubimage();
     fetchroles();
-    // setcheckclubs(true);
-    // setLoading(!(checkclubs && checkfeed));
   }, [allclubs]);
-
-  //   useEffect(() => {
-
-  // }, [polls]);
 
   useEffect(() => {
     setfeedCount(0);
@@ -126,21 +114,6 @@ export default function UserFeed() {
     });
   }, [filterpolls]);
 
-  // useEffect(() => {
-  //   polls.map((poll) => {
-  //     if (
-  //       isadmin === true ||
-  //       poll.visibility === "Public" ||
-  //       roles[poll.clubname] === "admin" ||
-  //       roles[poll.clubname] === "core" ||
-  //       roles[poll.clubname] === "member"
-  //     ) {
-  //       setpollcount(pollcount + 1);
-  //     }
-  //   });
-  //   console.log("poll: ", pollcount);
-  // }, [polls]);
-
   useEffect(() => {
     if (user) {
       const email = user.email;
@@ -150,16 +123,13 @@ export default function UserFeed() {
         if (snapshot) {
           snapshot.forEach((userData) => {
             if (userData.data()) {
-              console.log("rollno ", userData.id);
               setuserid(userData.id);
-              setisadmin(userData.data().isadmin)
-              console.log("isadmin ", user)
+              setisadmin(userData.data().isadmin);
             }
           });
         }
       });
     }
-    // setLoading(!(checkclubs && checkfeed));
   }, [user]);
 
   async function fetchpost() {
@@ -169,13 +139,13 @@ export default function UserFeed() {
     const postarray = [];
     if (posts) {
       posts.forEach((post) => {
-        let data = post.data();
-        data.id = post.id;
-        postarray.push(data);
+        if (clubstatus[post.data().clubname] === true) {
+          let data = post.data();
+          data.id = post.id;
+          postarray.push(data);
+        }
       });
       setposts(postarray);
-      console.log(80, postarray);
-      // setcheckfeed(true);
     }
   }
 
@@ -186,9 +156,11 @@ export default function UserFeed() {
     const pollarray = [];
     if (pollDocs) {
       pollDocs.forEach((poll) => {
-        let data = poll.data();
-        data.id = poll.id;
-        pollarray.push(data);
+        if (clubstatus[poll.data().clubname] === true) {
+          let data = poll.data();
+          data.id = poll.id;
+          pollarray.push(data);
+        }
       });
       setpolls(pollarray);
       let temppolls = [];
@@ -217,7 +189,6 @@ export default function UserFeed() {
             });
         })
       ).then(() => {
-        console.log("temppolls ", temppolls);
         setpolls(temppolls);
         setfilterpolls(temppolls);
       });
@@ -226,19 +197,24 @@ export default function UserFeed() {
 
   async function fetchClubs() {
     try {
-      const clubs = await getDocs(query(collection(db, "clubs"), orderBy('name')));
+      const clubs = await getDocs(
+        query(collection(db, "clubs"), orderBy("name"))
+      );
       if (clubs) {
         let clubnames = [];
+        let clubstatus = [];
         clubs.forEach((element) => {
-          const docref = doc(db, "user", userid, "clubs", element.data().name);
-          clubnames.push(element.data());
+          const cname = element.data().name;
+          const status = element.data().active;
+          clubstatus[cname] = status;
+          if (element.data().active === true || isadmin) {
+            clubnames.push(element.data());
+          }
         });
         setallclubs(clubnames);
-        console.log("clubs ", allclubs);
+        setclubstatus(clubstatus);
       }
-    } catch (error) {
-      console.log("firebase error");
-    }
+    } catch (error) {}
   }
 
   async function fetchroles() {
@@ -248,7 +224,6 @@ export default function UserFeed() {
         let clubroles = [];
         let promises = [];
         clubs.forEach((element) => {
-          console.log("inside loop clubs");
           const docref = doc(db, "user", userid, "clubs", element.data().name);
           promises.push(
             getDoc(docref).then((getrole) => {
@@ -266,11 +241,8 @@ export default function UserFeed() {
         });
         await Promise.all(promises);
         setroles(clubroles);
-        console.log("clubroles ", clubroles);
       }
-    } catch (error) {
-      console.log("firebase error");
-    }
+    } catch (error) {}
   }
 
   function setclubimage() {
@@ -284,14 +256,18 @@ export default function UserFeed() {
   useEffect(() => {
     if (userid) {
       fetchClubs();
-      fetchpost();
-      fetchpolls();
     }
   }, [userid]);
 
+  useEffect(() => {
+    if (clubstatus) {
+      fetchpost();
+      fetchpolls();
+    }
+  }, [clubstatus]);
+
   return (
     <div>
-      <Navbar selected="home" />
       <div className="hello">
         <div className=" md:ml-[22vw] ml-[18vw] max-[769px]:mt-[8vh]  my-[2vw] max-[769px]:mr-0 mr-[12vw] max-md:py-0 py-8 px-4  text-white ">
           <div className="flex max-md:text-lg text-3xl items-center justify-between  ">
@@ -304,7 +280,6 @@ export default function UserFeed() {
                 } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("post");
-                  // setcheckfeed(false);
                 }}
               >
                 Post
@@ -315,7 +290,6 @@ export default function UserFeed() {
                 } border-white py-4  px-8`}
                 onClick={(e) => {
                   underline("poll");
-                  // setcheckfeed(true);
                 }}
               >
                 Poll
@@ -405,7 +379,6 @@ export default function UserFeed() {
       {post === "post" && (
         <div className="-ml-[12vw] max-[769px]:m-0">
           {filterposts.map((post) => {
-            // console.log("heeeee", roles[post.clubname], post.clubname);
             if (
               isadmin === true ||
               post.visibility === "Public" ||
@@ -413,7 +386,6 @@ export default function UserFeed() {
               roles[post.clubname] === "core" ||
               roles[post.clubname] === "member"
             ) {
-              // setfeedCount(feedCount+1);
               return (
                 <Post
                   name={post.clubname}
@@ -429,7 +401,6 @@ export default function UserFeed() {
               );
             }
           })}
-          {console.log("feedcount", feedCount)}
           {feedCount == 0 && (
             <div className="text-slate-300 ml-[15vw] md:ml-[20vw] text-center py-5 text-xl max-sm:text-base">
               Hmm... nothing to show here.
@@ -440,9 +411,7 @@ export default function UserFeed() {
 
       {post === "poll" && (
         <div className="-ml-[12vw] max-[769px]:m-0">
-          {console.log("filterpolls ", filterpolls)}
           {filterpolls.map((poll) => {
-            // console.log("poll", poll.id);
             if (
               isadmin === true ||
               poll.visibility === "Public" ||
@@ -491,7 +460,9 @@ export default function UserFeed() {
                 {" "}
                 <img
                   src={club.logo}
-                  className="h-[7vw] w-[7vw] cursor-pointer rounded-full  "
+                  className={`h-[7vw] w-[7vw] cursor-pointer rounded-full  ${
+                    clubstatus[club.name] === true ? "" : "grayscale"
+                  } `}
                   alt=""
                 />
               </Tooltip>
@@ -500,20 +471,20 @@ export default function UserFeed() {
         })}
         {isadmin && (
           <Link
-          to="/addclub"
-          className="h-[7vw] w-[7vw] border-white rounded-full"
-        >
-          <Tooltip title="Add New Club">
-            {" "}
-            <div
-              className="flex items-center justify-center h-[7vw] w-[7vw] cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-full  "
-              alt=""
-            >
+            to="/addclub"
+            className="h-[7vw] w-[7vw] border-white rounded-full"
+          >
+            <Tooltip title="Add New Club">
               {" "}
-              <AddIcon className="text-slate-400 scale-[150%]" />{" "}
-            </div>
-          </Tooltip>
-        </Link>
+              <div
+                className="flex items-center justify-center h-[7vw] w-[7vw] cursor-pointer  bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-filter backdrop-blur-2xl rounded-full  "
+                alt=""
+              >
+                {" "}
+                <AddIcon className="text-slate-400 scale-[150%]" />{" "}
+              </div>
+            </Tooltip>
+          </Link>
         )}
       </div>
 
@@ -528,28 +499,32 @@ export default function UserFeed() {
         </div>
       </button>
 
-        <div className={`} min-[769px]:hidden scrollbar-hide duration-300 transition-all  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 ${club?'right-1':'right-[-25vw]'} rounded-[10px] overflow-scroll`}>
-          {allclubs?.map((club) => {
-            return (
-              <Link
-                to={`/club/${club["name"]}`}
-                params={club["name"]}
-                state={club}
-                className=""
-              >
-                <Tooltip title={club["name"]}>
-                  {" "}
-                  <img
-                    src={club["logo"]}
-                    className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto "
-                    alt=""
-                  />
-                </Tooltip>
-              </Link>
-            );
-          })}
-          {isadmin && (
-            <Link to="/addclub" className="">
+      <div
+        className={`} min-[769px]:hidden scrollbar-hide duration-300 transition-all  shadow-2xl shadow-black space-y-5 bg-white bg-opacity-5 backdrop-blur-2xl flex flex-col backdrop-filter h-[100vh] w-[25vw] fixed top-10 ${
+          club ? "right-1" : "right-[-25vw]"
+        } rounded-[10px] overflow-scroll`}
+      >
+        {allclubs?.map((club) => {
+          return (
+            <Link
+              to={`/club/${club["name"]}`}
+              params={club["name"]}
+              state={club}
+              className=""
+            >
+              <Tooltip title={club["name"]}>
+                {" "}
+                <img
+                  src={club["logo"]}
+                  className="bg-white h-[22vw] w-[22vw] rounded-[50%]  mx-auto "
+                  alt=""
+                />
+              </Tooltip>
+            </Link>
+          );
+        })}
+        {isadmin && (
+          <Link to="/addclub" className="">
             <Tooltip title="Add New Club">
               {" "}
               <div
@@ -561,8 +536,8 @@ export default function UserFeed() {
               </div>
             </Tooltip>
           </Link>
-          )}
-        </div>
+        )}
+      </div>
 
       <Backdrop
         sx={{

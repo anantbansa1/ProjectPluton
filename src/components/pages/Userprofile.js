@@ -7,15 +7,13 @@ import Tooltip from "@mui/material/Tooltip";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Bronzebadge from "../Images/badge_bronze.png";
-import Silverbadge from "../Images/badge_silver.png";
-import Goldbadge from "../Images/badge_golden.png";
 import React, { useCallback, useRef, useEffect } from "react";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import { doc, updateDoc } from "firebase/firestore";
 import { useParams } from "react-router";
-
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import Rank1 from "../Images/rank1.png";
 import Rank2 from "../Images/rank2.png";
 import Rank3 from "../Images/rank3.png";
@@ -37,15 +35,13 @@ import Rank18 from "../Images/rank18.png";
 import Rank19 from "../Images/rank19.png";
 import Rank20 from "../Images/rank20.png";
 import Rank20p from "../Images/rank20p.png";
-
 import { Leaderboard } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-
-import { collection, collectionGroup, where, query } from "@firebase/firestore";
+import { collection, where, query } from "@firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { db } from "../../firebase";
-import { useAuth, upload } from "../../firebase";
+import { useAuth } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
@@ -73,72 +69,16 @@ function ClubProfile(props) {
     Rank20,
     Rank20p,
   ];
-  // const [prof, setprof] = useState({minion})
-  // const [cov, setcov] = useState({Zoro})
-  // const currentUser = useAuth();
-  // // const [photo, setPhoto] = useState(null);
-  // const [loading, setLoading] = useState(false);
-  // const [photoURL, setPhotoURL] = useState(
-  //   "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
-  // );
-
-  // function handleClick() {
-  //   upload(photo, currentUser, setLoading);
-  // }
-
-  // useEffect(() => {
-  //   if (currentUser?.photoURL) {
-  //     setPhotoURL(currentUser.photoURL);
-  //   }
-  // }, [currentUser]);
-
-  // const q2 = collection(db, path);
-  // const [doc2, error] = useCollectionData(query);
-  // {doc2.map((doc) )}
-
+  const [etype, setetype] = useState("error");
+  const [message, setmessage] = useState("error while getting image url");
+  const [openAlert, setOpenAlert] = useState(false);
   const user = useAuth();
   const [id, setid] = useState();
   const email = useParams().email;
-  async function fetch_data() {
-    const q = query(collection(db, "user"), where("email", "==", email));
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot) {
-      querySnapshot.forEach(async (doc) => {
-        const docdata = doc.data();
-        // console.log(doc.id, " => ", doc.data());
-        setname(docdata["name"]);
-        setUrl(docdata["profileimage"]);
-        setUrl1(docdata["coverimage"]);
-        setdes(docdata["email"]);
-        setrank(docdata["rank"]);
-        // setcov(docdata["coverimage"])
-        // setprof(docdata["profileimage"])
-
-        // console.log(doc.data()['profileimage'])
-        // console.log(doc.id);
-        setid(doc.id);
-      });
-    }
-  }
-  ////////////////////////////////////////// Medal Data Fetch /////////////////////////////////////////////////////////////////////////////////////////
   const s = collection(db, `user/${id}/medals`);
   const [docs, loadin, error] = useCollectionData(s);
-  useEffect(() => {
-    if (docs) {
-      docs.map((d) => {
-        // console.log(d.rank);
-      });
-    }
-  }, [docs]);
-
-  useEffect(() => {
-    if (user) {
-      fetch_data();
-    }
-  }, [user]);
-
   const t = collection(db, `user/${id}/medals`);
-
+  const [club_logo, setclub_logo] = useState();
   const [rank, setrank] = useState();
   const [name, setname] = useState("");
   const [medal, setmedal] = useState(true);
@@ -166,49 +106,51 @@ function ClubProfile(props) {
   const [img1, setimg1] = useState("");
   const [url1, setUrl1] = useState("");
   const [des, setdes] = useState("");
+  const collectionRef = collection(db, `user/${id}/badges`);
+  const [type2, settype2] = useState();
+  const [id2, setid2] = useState();
+  const [result, setresult] = useState();
+  const [clubimg, setclubimg] = useState();
+  const [res, setres] = useState();
+  const [user_clubs, setuser_clubs] = useState();
+  const [user_badges, setuser_badges] = useState();
+  const [club_points, setclub_points] = useState();
+  const [final_array, setfinal_array] = useState([]);
+  const [sortedData, setsortedData] = useState([]);
+  const [badge_array, setbadge_array] = useState();
 
-  const image =
-    props.clubpoint < props.tbronze
-      ? Bronzebadge
-      : props.clubpoint <= props.tsilver
-        ? Silverbadge
-        : Goldbadge;
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenAlert(false);
+  };
 
-  // function handleChange(e) {
-  //   if (e.target.files[0]) {
-  //     setimg(e.target.files[0]);
-  //   }
-  // }
+  async function fetch_data() {
+    const q = query(collection(db, "user"), where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot) {
+      querySnapshot.forEach(async (doc) => {
+        const docdata = doc.data();
+        setname(docdata["name"]);
+        setUrl(docdata["profileimage"]);
+        setUrl1(docdata["coverimage"]);
+        setdes(docdata["email"]);
+        setrank(docdata["rank"]);
+        setid(doc.id);
+      });
+    }
+  }
 
-  // const handleSubmit = () => {
-  //   const storage = getStorage();
-  //   const imageRef = ref(storage, "images/image.jpg");
+  useEffect(() => {
+    if (user) {
+      fetch_data();
+    }
+  }, [user, email]);
 
-  //   const metadata = {
-  //     contentType: 'image/jpeg',
-  //   };
-  //   console.log(typeof(img))
-  //   // imageRef.putData(Rank1);
-  //   uploadBytesResumable(imageRef, img, metadata)
-  //     .then(() => {
-  //   getDownloadURL(imageRef)
-  //     .then((u) => {
-  //       setUrl(u);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.message, "error getting the image url");
-  //     });
-  //   setimg(null);
-  // })
-  // .catch((error) => {
-  //   console.log(error.message);
-  // });
-  // };
-  // const docref = doc(db, `user`,id)
-
-
-
-  ///////////////////////////////////For Profile Image And Cover Image Data/////////////////////////////////////////////////////////////////////////////////
   const handleSubmit = (img) => {
     const storage = getStorage();
     const canvas = previewCanvasRef.current;
@@ -219,27 +161,27 @@ function ClubProfile(props) {
       const storageRef = ref(storage, `images/${file.name}`);
       uploadBytes(storageRef, file)
         .then((snapshot) => {
-          // console.log("Uploaded a blob or file!");
           getDownloadURL(storageRef)
             .then((u) => {
               const docref = doc(db, `user`, id);
               setUrl(u);
-              console.log(u);
-              // console.log(id);
               updateDoc(docref, { profileimage: u });
             })
             .catch((error) => {
-              console.log(error.message, "error getting the image url");
+              setOpenAlert(true);
+              setmessage("error getting the image url");
+              setetype("error");
             });
           setimg(null);
         })
         .catch((error) => {
-          console.log(error.message);
+          setOpenAlert(true);
+          setmessage("error while fetching the image");
+          setetype("error");
         });
     }, "image/png");
   };
 
-  //Edit Cover Image Backend
   const handleSubmit1 = (img) => {
     const storage = getStorage();
     const canvas = previewCanvasRefCover.current;
@@ -250,7 +192,6 @@ function ClubProfile(props) {
       const storageRef = ref(storage, `images/${file.name}`);
       uploadBytes(storageRef, file)
         .then((snapshot) => {
-          // console.log("Uploaded a blob or file!");
           getDownloadURL(storageRef)
             .then((u) => {
               const dc = doc(db, "user", id);
@@ -258,27 +199,25 @@ function ClubProfile(props) {
               updateDoc(dc, { coverimage: u });
             })
             .catch((error) => {
-              console.log(error.message, "error getting the image url");
+              setOpenAlert(true);
+              setmessage("error getting the image url");
+              setetype("error");
             });
           setimg1(null);
         })
         .catch((error) => {
-          console.log(error.message);
+          setOpenAlert(true);
+          setmessage("error while fetching the image");
+          setetype("error");
         });
     }, "image/png");
   };
-
-  // getDocs(collectionGroup(db, "badges")).then((querySnapshot) => {
-  //   console.log(querySnapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
-  // });
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   async function SaveChanges(canvas, crop) {
     if (!crop || !canvas) {
       return;
     }
     setOpen(false);
-    console.log("hahahah");
     if (crop.width && crop.height) {
       canvas.toBlob((blob) => {
         const Imageuse = canvas.toDataURL("image/png");
@@ -286,11 +225,6 @@ function ClubProfile(props) {
       }, "image/png");
       handleSubmit(url);
     }
-    console.log(url);
-    // console.log(upImg);
-    // console.log(user);
-    // console.log(setLoading);
-    // await upload(upImg, user, setLoading);
   }
   function setCanvasImage(image, canvas, crop) {
     if (!crop || !canvas || !image) {
@@ -322,7 +256,6 @@ function ClubProfile(props) {
       const reader = new FileReader();
       reader.addEventListener("load", () => setUpImg(reader.result));
       reader.readAsDataURL(e.target.files[0]);
-      console.log("idarbeta");
     }
   };
   const onLoad = useCallback((img) => {
@@ -344,7 +277,6 @@ function ClubProfile(props) {
       return;
     }
     setOpenCover(false);
-    console.log("hahahah");
     if (crop.width && crop.height) {
       canvas.toBlob((blob) => {
         const Imageuse = canvas.toDataURL("image/png");
@@ -353,6 +285,7 @@ function ClubProfile(props) {
       handleSubmit1(url1);
     }
   }
+
   function setCanvasImageCover(image, canvas, crop) {
     if (!crop || !canvas || !image) {
       return;
@@ -383,7 +316,6 @@ function ClubProfile(props) {
       const reader = new FileReader();
       reader.addEventListener("load", () => setUpImgCover(reader.result));
       reader.readAsDataURL(e.target.files[0]);
-      // console.log("idarbeta");
     }
   };
   const onLoadCover = useCallback((img) => {
@@ -397,19 +329,15 @@ function ClubProfile(props) {
       completedCropCover
     );
   }, [completedCropCover]);
+
   const handleClickOpenCover = () => {
     setOpenCover(true);
   };
+
   const handleCloseCover = () => {
     setOpenCover(false);
   };
 
-
-  //////////////////////////////////////////////////User-Badge Id (db:document name) and type Data fetch////////////////////////////////////////////////////  
-  const collectionRef = collection(db, `user/${id}/badges`);
-
-  const [type2, settype2] = useState();
-  const [id2, setid2] = useState();
   useEffect(() => {
     getDocs(collectionRef).then((d) => {
       let type_arr = [];
@@ -428,20 +356,12 @@ function ClubProfile(props) {
   }, [id]);
 
   useEffect(() => {
-    // console.log(type2);
-  }, [id2, type2]);
-
-  const [clubimg, setclubimg] = useState();
-
-  useEffect(() => {
     const collectionref2 = collection(db, "clubs");
     getDocs(collectionref2).then((d) => {
       let imgg = [];
       id2?.forEach((dd) => {
-        // console.log(2);
         if (dd) {
           if (d) {
-            // console.log(1);
             d.forEach((search) => {
               if (dd == search.data().name) {
                 imgg.push(search.data().logo);
@@ -455,44 +375,21 @@ function ClubProfile(props) {
   }, [id2]);
 
   useEffect(() => {
-    // console.log(clubimg);
-  }, [clubimg]);
-
-  // console.log(clubimg);
-
-  // const result = [];
-  const [result, setresult] = useState();
-  useEffect(() => {
     let array = [];
     for (let i = 0; i < type2?.length; i++) {
       array.push({ key: type2[i], value: clubimg[i] });
     }
     setresult(array);
-  }, [type2])
-  useEffect(() => {
-    // console.log(result);
-  }, [clubimg]);
+  }, [type2]);
 
-  // const res = [];
-  const [res, setres] = useState();
   useEffect(() => {
     let array = [];
     for (let i = 0; i < id2?.length; i++) {
       array.push({ key: id2[i], value: result[i] });
     }
     setres(array);
-  }, [id2])
+  }, [id2]);
 
-  useEffect(() => {
-    // res.forEach((d) => {
-    // console.log(d.key);
-    // console.log(d.value.key);
-    // });
-  }, [result]);
-
-  ///////////////////////////////////////////////////////////////Reference-Badge Data for Clubs Joined Button////////////////////////////////////////////////
-
-  const [user_clubs, setuser_clubs] = useState();
   useEffect(() => {
     const collectionref3 = collection(db, `user/${id}/clubs`);
     let array = [];
@@ -507,13 +404,6 @@ function ClubProfile(props) {
     });
   }, [id]);
 
-  useEffect(() => {
-    // console.log(user_clubs);
-  }, [user_clubs]);
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [user_badges, setuser_badges] = useState();
   useEffect(() => {
     const collectionref4 = collection(db, `user/${id}/badges`);
     let array = [];
@@ -537,13 +427,6 @@ function ClubProfile(props) {
   }, [user_clubs]);
 
   useEffect(() => {
-    // console.log(user_badges)
-  }, [user_badges]);
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [club_logo, setclub_logo] = useState();
-  useEffect(() => {
     const collectionref5 = collection(db, `clubs`);
     let array = [];
     getDocs(collectionref5).then((d) => {
@@ -560,13 +443,6 @@ function ClubProfile(props) {
     });
   }, [user_clubs]);
 
-  useEffect(() => {
-    console.log(club_logo)
-  }, [club_logo]);
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [club_points, setclub_points] = useState();
   useEffect(() => {
     const collectionref6 = collection(db, `user/${id}/clubs`);
     let array = [];
@@ -585,15 +461,6 @@ function ClubProfile(props) {
   }, [user_clubs]);
 
   useEffect(() => {
-    // console.log(club_points);
-  }, [club_points]);
-
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // let final_array = [];
-  const [final_array, setfinal_array] = useState([]);
-  useEffect(() => {
     let array = [];
     for (let i = 0; i < club_points?.length; i++) {
       let obj = {
@@ -605,30 +472,14 @@ function ClubProfile(props) {
       array.push(obj);
     }
     setfinal_array(array);
-  }, [club_points])
+  }, [club_points]);
 
-  useEffect(() => {
-    console.log(final_array)
-    // final_array.forEach((d) => {
-    //   // console.log(d.type);
-    // });
-  }, [final_array]);
-
-  const [sortedData, setsortedData] = useState([]);
   useEffect(() => {
     const sorted_data = [...final_array].sort((a, b) => a.points - b.points);
     const reversedData = [...sorted_data].reverse();
     setsortedData(reversedData);
-  }, [final_array])
+  }, [final_array]);
 
-
-  useEffect(() => {
-    // console.log(sortedData)
-  }, [sortedData])
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
-
-  const [badge_array, setbadge_array] = useState();
   useEffect(() => {
     let array = [];
     for (let i = 0; i < final_array?.length; i++) {
@@ -636,18 +487,13 @@ function ClubProfile(props) {
         let obj = {
           logo: final_array[i].logo,
           type: final_array[i].type,
-        }
+        };
         array.push(obj);
       }
     }
     setbadge_array(array);
-  }, [final_array])
+  }, [final_array]);
 
-  useEffect(() => {
-    console.log(badge_array);
-  }, [badge_array])
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -658,7 +504,6 @@ function ClubProfile(props) {
 
   return (
     <div className="">
-      <Navbar selected="profile"></Navbar>
       <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] max-sm:grid-rows-[repeat(5,minmax(30px,auto))]  gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] sm:grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr_1fr] ">
           {user?.email === email && (
@@ -687,8 +532,9 @@ function ClubProfile(props) {
                 onMouseOut={(e) => {
                   setChangeCover(false);
                 }}
-                className={`${changeCover ? "" : "hidden"
-                  } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
+                className={`${
+                  changeCover ? "" : "hidden"
+                } px-4 py-2 shadow-inner shadow-black row-start-1 row-span-4 col-start-1 col-span-7 text-white text-3xl bg-black bg-opacity-10 rounded-md`}
               >
                 Edit Cover Photo
               </button>
@@ -703,10 +549,8 @@ function ClubProfile(props) {
                   key={id}
                   alt=""
                   className="object-cover rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full"
-
                 />
               </div>
-
             </>
           )}
           {user?.email === email && (
@@ -749,7 +593,6 @@ function ClubProfile(props) {
           {user?.email !== email && (
             <div className=" max-sm:col-start-3 max-sm:col-span-1 justify-self-center items-center row-span-2 row-start-4 col-start-1 col-span-1 w-fit ">
               <div className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] ">
-
                 <img
                   src={url}
                   key={id}
@@ -759,20 +602,15 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
-          {/* <div className="row-start-6 col-start-1 "></div> */}
-          {/* <div className="row-start-6 col-start-4 "></div> */}
           <div className="max-sm:col-start-3 max-sm:hidden  max-sm:col-span-3 row-start-6 col-start-1   row-span-1 col-span-1">
             <div className="text-3xl md:px-4 my-2 whitespace-nowrap  max-sm:text-xl text-white  font-semibold ">
-
               {name}
             </div>
           </div>
           <div className="flex flex-col max-sm:hidden md:px-4 h-fit max-sm:col-start-3 row-start-8 col-start-1 row-span-1 col-span-2 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             <div className="">
               {id}
-              <div className=" ">
-                {des}
-              </div>
+              <div className=" ">{des}</div>
             </div>
           </div>
 
@@ -791,7 +629,10 @@ function ClubProfile(props) {
             <Link
               to="/leaderboard"
               className="  flex items-center justify-center mx-auto px-4 whitespace-nowrap text-lg  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white text-center"
-            > <Leaderboard className="scale-[80%] max-lg:scale-[60%]"></Leaderboard>{rank} Rank
+            >
+              {" "}
+              <Leaderboard className="scale-[80%] max-lg:scale-[60%]"></Leaderboard>
+              {rank} Rank
             </Link>
           </div>
         </div>
@@ -799,16 +640,13 @@ function ClubProfile(props) {
           <div className="flex flex-col space-y-2">
             <div className="   ">
               <div className="text-3xl md:px-4 my-2 whitespace-nowrap  max-sm:text-xl text-white  font-semibold ">
-
                 {name}
               </div>
             </div>
             <div className="flex flex-col  md:px-4 h-fit max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
               <div className="">
                 {id}
-                <div className=" ">
-                  {des}
-                </div>
+                <div className=" ">{des}</div>
               </div>
             </div>
           </div>
@@ -821,11 +659,13 @@ function ClubProfile(props) {
               <Link
                 to="/leaderboard"
                 className="  flex justify-center items-center px-4  whitespace-nowrap text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-[0.35rem] text-white text-center"
-              > <Leaderboard className="scale-[60%]"></Leaderboard>{rank} Rank
+              >
+                {" "}
+                <Leaderboard className="scale-[60%]"></Leaderboard>
+                {rank} Rank
               </Link>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -841,24 +681,15 @@ function ClubProfile(props) {
           <div className="flex  justify-start flex-wrap">
             {docs
               ? docs.map((d) => {
-                return (
-                  <img
-                    src={medal_data[Math.min(20, d.rank - 1)]}
-                    alt={Rank20p}
-                    className="p-4 w-[150px] object-cover"
-                  />
-                );
-                // console.log("hello")
-              })
+                  return (
+                    <img
+                      src={medal_data[Math.min(20, d.rank - 1)]}
+                      alt={Rank20p}
+                      className="p-4 w-[150px] object-cover"
+                    />
+                  );
+                })
               : ""}
-            {/* <img src={Rank1} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" />
-            <img src={Rank2} alt="" className="p-4 w-[150px]" /> */}
           </div>
         </div>
         <div className="flex max-lg:hidden flex-col w-[20vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
@@ -870,7 +701,6 @@ function ClubProfile(props) {
             </span>
           </div>
           <div className="flex max-[1300px]:justify-around flex-wrap">
-            {/* <div className="badge grid grid-rows-1 py-2 px-2 items-center grid-cols-1"> */}
             {badge_array?.map((d) => {
               const b = badgetype[d.type];
               return (
@@ -915,10 +745,7 @@ function ClubProfile(props) {
                     className="p-4 w-[130px] object-cover"
                   />
                 );
-                // console.log("hello")
-              })
-              }
-
+              })}
             </div>
           )}
           {!medal && (
@@ -980,7 +807,6 @@ function ClubProfile(props) {
                   background: "#130f22",
                   "&:hover": { background: "#100d1e" },
                 }}
-                // onChange={() => handleChange()}
                 onClick={() => profileinput.current.click()}
               >
                 Upload File{" "}
@@ -1029,7 +855,6 @@ function ClubProfile(props) {
             }}
             onClick={() => {
               SaveChanges(previewCanvasRef.current, completedCrop);
-
             }}
           >
             save changes{" "}
@@ -1077,7 +902,6 @@ function ClubProfile(props) {
                   background: "#130f22",
                   "&:hover": { background: "#100d1e" },
                 }}
-                // onChange={() => handleChange()}
                 onClick={() => Coverinput.current.click()}
               >
                 Upload File{" "}
@@ -1129,7 +953,6 @@ function ClubProfile(props) {
                 previewCanvasRefCover.current,
                 completedCropCover
               );
-
             }}
           >
             save changes{" "}
@@ -1154,8 +977,6 @@ function ClubProfile(props) {
             padding: "15px",
           },
         }}
-        // TransitionComponent={Transition}
-        // fullWidth
         height={50}
         keepMounted
         onClose={() => {
@@ -1169,13 +990,12 @@ function ClubProfile(props) {
         <DialogContent
           sx={{
             overflow: "auto",
-            scrollbarWidth: "none", // Hide the scrollbar for Firefox
+            scrollbarWidth: "none",
             "&::-webkit-scrollbar": {
-              display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+              display: "none",
             },
           }}
         >
-          {/* <div className="text-[#e4e2e2] text-lg">Are you sure you want to logout?</div> */}
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
             {sortedData?.map((d) => {
               const b = badgetype[d.type];
@@ -1189,8 +1009,6 @@ function ClubProfile(props) {
                         className="mx-auto  h-[50px] w-[50px] rounded-full min-w-[50px] min-h-[50px]  object-cover "
                       />
                     </div>
-
-                    {/* <div className="font-semibold">{d.name}</div> */}
                     <div>
                       <Link
                         to={`/club/${d.name}`}
@@ -1221,6 +1039,19 @@ function ClubProfile(props) {
           </div>
         </DialogContent>
       </Dialog>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={handleCloseAlert}
+      >
+        <Alert
+          onClose={handleCloseAlert}
+          severity={etype}
+          sx={{ width: "100%" }}
+        >
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

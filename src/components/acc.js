@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 const Accordion = ({ title, content }) => {
   const [isActive, setIsActive] = useState(false);
-  // const [isAct, setIsAct] = useState('transition-all duration-500');
-
   return (
     <div className="accordion-item">
       <div className="accordion-title" onClick={() => setIsActive(!isActive)}>
