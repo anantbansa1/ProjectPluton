@@ -152,7 +152,7 @@ export default function Addnewclub(props) {
     const docRef = doc(db, "user", `${Presidentrollno}`, "clubs", `${clubName}`)
     await setDoc(docRef, {
       role: "admin"
-    })
+    },{ merge: true })
 
   }
 
