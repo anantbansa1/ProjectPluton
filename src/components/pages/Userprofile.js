@@ -460,6 +460,25 @@ function ClubProfile(props) {
     });
   }, [user_clubs]);
 
+
+  const [isactive , setisactive] = useState();
+  useEffect(() => {
+    const collectionref7 = collection(db, `clubs`);
+    let array = [];
+    getDocs(collectionref7).then((d) => {
+      if (d) {
+        user_clubs?.forEach((dd) => {
+          d.forEach((search) => {
+            if (dd === search.data().name) {
+              array.push(search.data().active);
+            }
+          });
+        });
+      }
+      setisactive(array);
+    });
+  }, [user_clubs]);
+
   useEffect(() => {
     let array = [];
     for (let i = 0; i < club_points?.length; i++) {
@@ -468,6 +487,7 @@ function ClubProfile(props) {
         type: user_badges[i],
         logo: club_logo[i],
         points: club_points[i],
+        active : isactive[i],
       };
       array.push(obj);
     }
@@ -492,6 +512,24 @@ function ClubProfile(props) {
       }
     }
     setbadge_array(array);
+  }, [final_array]);
+
+  const [final_sorted , setfinal_sorted] = useState();
+  useEffect(() => {
+    let array = [];
+    for (let i = 0; i < final_array?.length; i++) {
+      if (final_array[i].active === true) {
+        let obj = {
+          name: final_array[i].name,
+          type: final_array[i].type,
+          logo: final_array[i].logo,
+          points: final_array[i].points,
+          active : final_array[i].active,
+        };
+        array.push(obj);
+      }
+    }
+    setfinal_sorted(array);
   }, [final_array]);
 
   const badgetype = {
@@ -621,7 +659,7 @@ function ClubProfile(props) {
               }}
               className={`px-4 py-2  max-sm:text-xs max-sm:mt-2 h-[100%] whitespace-nowrap text-lg items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
-              <div> {sortedData?.length} Clubs Joined</div>
+              <div> {final_sorted?.length} Clubs Joined</div>
             </button>
           </div>
 
@@ -652,7 +690,7 @@ function ClubProfile(props) {
           </div>
           <div className="flex w-[100%] space-x-5">
             <div className="bg-opacity-10 hover:bg-opacity-20 max-sm:px-1 max-sm:text-xs text-center rounded-full px-4 py-2 w-full bg-white">
-              {sortedData?.length} Clubs Joined
+              {final_sorted?.length} Clubs Joined
             </div>
 
             <div className="w-full text-center justify-center">
@@ -679,17 +717,24 @@ function ClubProfile(props) {
             </span>
           </div>
           <div className="flex  justify-start flex-wrap">
-            {docs
-              ? docs.map((d) => {
-                  return (
-                    <img
-                      src={medal_data[Math.min(20, d.rank - 1)]}
-                      alt={Rank20p}
-                      className="p-4 w-[150px] object-cover"
-                    />
-                  );
-                })
-              : ""}
+            {docs?.length === 0 && (
+              <div className="px-4">
+                No medals yet!
+              </div>
+            )}
+            {docs?.length !== 0 && (
+              docs
+                ? docs.map((d) => {
+                    return (
+                      <img
+                        src={medal_data[Math.min(20, d.rank - 1)]}
+                        alt={Rank20p}
+                        className="p-4 w-[150px] object-cover"
+                      />
+                    );
+                  })
+                : ""
+            )}
           </div>
         </div>
         <div className="flex max-lg:hidden flex-col w-[20vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
@@ -701,17 +746,24 @@ function ClubProfile(props) {
             </span>
           </div>
           <div className="flex max-[1300px]:justify-around flex-wrap">
-            {badge_array?.map((d) => {
-              const b = badgetype[d.type];
-              return (
-                <img
-                  style={{ borderColor: b }}
-                  src={d.logo}
-                  alt=""
-                  className={`mx-auto my-1 border-[5px] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
-                />
-              );
-            })}
+            {badge_array?.length === 0 && (
+              <div className="px-4">
+                No badges yet!
+              </div>
+            )}
+            {badge_array?.lenngth !== 0 && (
+              badge_array?.map((d) => {
+                const b = badgetype[d.type];
+                return (
+                  <img
+                    style={{ borderColor: b }}
+                    src={d.logo}
+                    alt=""
+                    className={`mx-auto my-1 border-[5px] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
+                  />
+                );
+              })
+            )}
           </div>
         </div>
       </div>
@@ -737,30 +789,42 @@ function ClubProfile(props) {
           </div>
           {medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
-              {docs?.map((d) => {
-                return (
-                  <img
-                    src={medal_data[Math.min(20, d.rank - 1)]}
-                    alt={Rank20p}
-                    className="p-4 w-[130px] object-cover"
-                  />
-                );
-              })}
+              {docs?.length === 0 && (
+                "No medals yet!"
+              )}
+              {docs?.length !== 0 && (
+                docs?.map((d) => {
+                  return (
+                    <img
+                      src={medal_data[Math.min(20, d.rank - 1)]}
+                      alt={Rank20p}
+                      className="p-4 w-[130px] object-cover"
+                    />
+                  );
+                })
+              )}
             </div>
           )}
           {!medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
-              {badge_array?.map((d) => {
-                const b = badgetype[d.type];
-                return (
-                  <img
-                    style={{ borderColor: b }}
-                    src={d.logo}
-                    alt=""
-                    className={` border-[5px] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
-                  />
-                );
-              })}
+              {badge_array?.length === 0 && (
+                <div>
+                  No badges yet!
+                </div>
+              )}
+              {badge_array?.length !== 0 && (
+                badge_array?.map((d) => {
+                  const b = badgetype[d.type];
+                  return (
+                    <img
+                      style={{ borderColor: b }}
+                      src={d.logo}
+                      alt=""
+                      className={` border-[5px] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
+                    />
+                  );
+                })
+              )}
             </div>
           )}
         </div>
@@ -997,7 +1061,7 @@ function ClubProfile(props) {
           }}
         >
           <div className="flex text-lg max-sm:text-base  scrollbar-hide flex-col space-y-5 ">
-            {sortedData?.map((d) => {
+            {final_sorted?.map((d) => {
               const b = badgetype[d.type];
               return (
                 <div className=" flex justify-between">
