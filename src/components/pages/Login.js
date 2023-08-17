@@ -74,7 +74,7 @@ function Login() {
                 },
                 ".MuiInputBase-input": {
                   background: "#130f22",
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                   "&:-webkit-autofill": {
                     WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
                     WebkitTextFillColor: "#ece9e9",
@@ -87,12 +87,12 @@ function Login() {
                   // borderColor: "#fff",
                 },
                 "&:before, &:after": {
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                 },
               }}
               InputProps={{
                 style: {
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                 },
               }}
               id="myfilled-name"
@@ -127,7 +127,7 @@ function Login() {
                 },
                 ".MuiInputBase-input": {
                   background: "#130f22",
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                   "&:-webkit-autofill": {
                     WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
                     WebkitTextFillColor: "#ece9e9",
@@ -140,12 +140,12 @@ function Login() {
                   // borderColor: "#fff",
                 },
                 "&:before, &:after": {
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                 },
               }}
               InputProps={{
                 style: {
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                 },
               }}
               id="myfilled-name"
