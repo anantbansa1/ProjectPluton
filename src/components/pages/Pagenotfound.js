@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../Navbar";
 import Lottie from "lottie-web";
 import { useRef, useEffect } from "react";
 
