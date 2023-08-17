@@ -660,7 +660,7 @@ function ClubProfile(props) {
     <div className="">
       <Navbar selected="profile"></Navbar>
       <div className=" md:ml-[22vw] ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22] shadow-xl rounded-2xl py-8 px-4 shadow-black">
-        <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
+        <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] max-sm:grid-rows-[repeat(5,minmax(30px,auto))]  gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] sm:grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr_1fr] ">
           {user?.email === email && (
             <>
               <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
@@ -697,7 +697,7 @@ function ClubProfile(props) {
 
           {user?.email !== email && (
             <>
-              <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+              <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-4  max-sm:row-end-5 col-span-7 ">
                 <img
                   src={url1}
                   key={id}
@@ -710,7 +710,7 @@ function ClubProfile(props) {
             </>
           )}
           {user?.email === email && (
-            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4  col-start-2 col-span-1 w-fit ">
+            <div className=" px-4 max-sm:col-start-4 max-sm:col-span-1 justify-self-center items-center row-span-2 row-start-4  col-start-1  col-span-1 w-fit ">
               <div className=" ">
                 <button
                   onClick={handleClickOpen}
@@ -740,9 +740,14 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
-
+          <div className="row-start-5 col-start-1"></div>
+          <div className="row-start-5 col-start-2"></div>
+          <div className="row-start-5 col-start-3"></div>
+          <div className="row-start-5 col-start-5"></div>
+          <div className="row-start-5 col-start-6"></div>
+          <div className="row-start-5 col-start-7"></div>
           {user?.email !== email && (
-            <div className="max-sm:mx-[-16vw] max-sm:col-start-4 items-center row-span-2 row-start-4 col-start-2 col-span-1 w-fit ">
+            <div className=" max-sm:col-start-3 max-sm:col-span-1 justify-self-center items-center row-span-2 row-start-4 col-start-1 col-span-1 w-fit ">
               <div className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] ">
 
                 <img
@@ -754,15 +759,15 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
-          <div className="row-start-6 col-start-1 "></div>
-          <div className="row-start-6 col-start-4 "></div>
-          <div className="max-sm:col-start-3  max-sm:col-span-3 row-start-6 col-start-2  row-span-1 col-span-1">
-            <div className="text-2xl whitespace-nowrap  max-sm:text-xl text-white  font-semibold ">
+          {/* <div className="row-start-6 col-start-1 "></div> */}
+          {/* <div className="row-start-6 col-start-4 "></div> */}
+          <div className="max-sm:col-start-3 max-sm:hidden  max-sm:col-span-3 row-start-6 col-start-1   row-span-1 col-span-1">
+            <div className="text-3xl md:px-4 my-2 whitespace-nowrap  max-sm:text-xl text-white  font-semibold ">
 
               {name}
             </div>
           </div>
-          <div className="flex flex-col h-fit max-sm:col-start-3 row-start-8 col-start-2 row-span-1 col-span-2 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
+          <div className="flex flex-col max-sm:hidden md:px-4 h-fit max-sm:col-start-3 row-start-8 col-start-1 row-span-1 col-span-2 max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
             <div className="">
               {id}
               <div className=" ">
@@ -771,37 +776,54 @@ function ClubProfile(props) {
             </div>
           </div>
 
-          <div className="max-sm:hidden row-start-6 max-sm:col-start-2  max-sm:col-span-1   max-sm:row-start-[9]  mx-5 col-start-5 row-span-1 col-span-1 text-center ">
+          <div className="max-sm:hidden row-start-6 max-sm:col-span-1 h-[100%]  mx-5 col-start-6 row-span-1 col-span-1 text-center ">
             <button
               onClick={() => {
                 setclubs(true);
               }}
-              className={`px-4 py-2  max-sm:mt-2 whitespace-nowrap  lg:text-lg text-xs  items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
+              className={`px-4 py-2  max-sm:text-xs max-sm:mt-2 h-[100%] whitespace-nowrap text-lg items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
             >
               <div> {sortedData?.length} Clubs Joined</div>
             </button>
           </div>
 
-          <div className="max-sm:hidden row-start-6 w-fit max-sm:col-start-5 max-sm:col-span-1 justify-self-center max-sm:row-start-[9] col-start-6 row-span-1 mx-5 col-span-1 text-center text-white">
+          <div className="max-sm:hidden row-start-6 w-fit  flex justify-center max-sm:col-span-1 justify-self-center col-start-7 row-span-1 col-span-1 text-center text-white">
             <Link
               to="/leaderboard"
-              className="  flex items-center px-4 whitespace-nowrap lg:text-lg text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-2 text-white text-center"
+              className="  flex items-center justify-center mx-auto px-4 whitespace-nowrap text-lg  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white text-center"
             > <Leaderboard className="scale-[80%] max-lg:scale-[60%]"></Leaderboard>{rank} Rank
             </Link>
           </div>
-          <div className="row-start-6 col-start-7"></div>
         </div>
-        <div className="flex sm:hidden text-sm md:text-md lg:text-xl items-center text-center space-x-5 text-white">
-          <div className="bg-opacity-10 hover:bg-opacity-20 text-center rounded-full px-4 py-2 w-full bg-white">
-            {sortedData?.length} Clubs Joined
-          </div>
+        <div className="flex space-y-5 flex-col sm:hidden text-md lg:text-xl items-center text-center space-x-5 text-white ">
+          <div className="flex flex-col space-y-2">
+            <div className="   ">
+              <div className="text-3xl md:px-4 my-2 whitespace-nowrap  max-sm:text-xl text-white  font-semibold ">
 
-          <div className="w-full text-center justify-center">
-            <Link
-              to="/leaderboard"
-              className="  flex justify-center items-center px-4  whitespace-nowrap text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-[0.35rem] text-white text-center"
-            > <Leaderboard className="scale-[60%]"></Leaderboard>{rank} Rank
-            </Link>
+                {name}
+              </div>
+            </div>
+            <div className="flex flex-col  md:px-4 h-fit max-sm:text-center text-sm md:text-md lg:text-xl  text-[#a5a5a5]">
+              <div className="">
+                {id}
+                <div className=" ">
+                  {des}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex w-[100%] space-x-5">
+            <div className="bg-opacity-10 hover:bg-opacity-20 max-sm:px-1 max-sm:text-xs text-center rounded-full px-4 py-2 w-full bg-white">
+              {sortedData?.length} Clubs Joined
+            </div>
+
+            <div className="w-full text-center justify-center">
+              <Link
+                to="/leaderboard"
+                className="  flex justify-center items-center px-4  whitespace-nowrap text-xs bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full py-[0.35rem] text-white text-center"
+              > <Leaderboard className="scale-[60%]"></Leaderboard>{rank} Rank
+              </Link>
+            </div>
           </div>
 
         </div>

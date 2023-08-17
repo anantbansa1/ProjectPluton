@@ -498,7 +498,8 @@ export default function UserFeed() {
             </Link>
           );
         })}
-        <Link
+        {isadmin && (
+          <Link
           to="/addclub"
           className="h-[7vw] w-[7vw] border-white rounded-full"
         >
@@ -513,6 +514,7 @@ export default function UserFeed() {
             </div>
           </Tooltip>
         </Link>
+        )}
       </div>
 
       <button
@@ -546,7 +548,8 @@ export default function UserFeed() {
               </Link>
             );
           })}
-          <Link to="/addclub" className="">
+          {isadmin && (
+            <Link to="/addclub" className="">
             <Tooltip title="Add New Club">
               {" "}
               <div
@@ -558,6 +561,7 @@ export default function UserFeed() {
               </div>
             </Tooltip>
           </Link>
+          )}
         </div>
 
       <Backdrop

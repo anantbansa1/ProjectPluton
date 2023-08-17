@@ -19,6 +19,8 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import { useAuth } from '../../firebase';
+import {useNavigate} from 'react-router-dom'
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -32,6 +34,8 @@ const theme = createTheme({
 
 const allowedExtensions = ["jpg"];
 export default function Addnewclub(props) {
+  const user = useAuth();
+  const navigate = useNavigate();
   const [profile, setprofile] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [ClubImage, setclubimage] = useState('https://firebasestorage.googleapis.com/v0/b/pluton-684e6.appspot.com/o/Screenshot%202023-08-14%20at%203.02.08%20PM.png?alt=media&token=dfd92663-aaa6-4068-93b7-1735b1569339');
@@ -81,6 +85,25 @@ export default function Addnewclub(props) {
       crop.height * scaleY
     );
   }
+
+  useEffect(() => {
+    if (user) {
+      let flag = false;
+      getDocs(
+        query(collection(db, "user")),
+        where("email", "==", user.email)
+      ).then((snapshot) => {
+        snapshot.forEach((u) => {
+          if (u.data().email === user.email) {
+            flag = u.data().isadmin;
+          }
+        });
+        if (flag === false) {
+          navigate('/pagenotfound')
+        }
+      });
+    }
+  }, [user]);
 
   const handleNewClub = async () => {
     if (clubName == '' || clubDescription == '' || Presidentrollno == '') {
@@ -246,13 +269,13 @@ export default function Addnewclub(props) {
   return (
     <div>
       <Navbar></Navbar>
-      <div className="ml-[20vw] max-md:ml-[15vw] mt-10  max-md:content-center">
-        <div className="flex justify-center mx-auto w-[60vw] text-center max-md:w-[75vw] h-[80vh] bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white text-2xl">
-          <div className="flex flex-col min-lg:items-start max-md:items-center h-[60vh] max-[414px]:h-[40vh]">
-            <div className="mx-auto h-[5vh] w-[40vh] min-[375px]:w-[30vh] font-semibold mb-2 max-md:mb-6">
+      <div className="ml-[20vw] flex justify-center items-center max-md:ml-[15vw]  h-[100vh]">
+        <div className="flex justify-center  w-[45vw] text-center max-md:w-[75vw] h-fit bg-[#130f22] shadow-xl rounded-2xl  px-4 shadow-black text-white text-2xl">
+          <div className="flex flex-col min-lg:items-start  h-fit w-[100%] ">
+            <div className="mx-auto  font-semibold my-12">
               Add New Club
             </div>
-            <div className="flex flex-col h-[40vw] w-[40vw] min-[414px]:h-[10vh] max-md:flex-row min-lg:items-start max-md:justify-center object-fill min-lg:mb-6 max-md:mb-6 ">
+            <div className="flex items-center space-x-5 max-md:flex-row min-lg:items-start max-md:justify-center object-fill  ">
               <button
                 onClick={handleClickOpen}
                 onMouseOut={(e) => {
@@ -261,27 +284,23 @@ export default function Addnewclub(props) {
                 onMouseOver={(e) => {
                   setprofile(false);
                 }}
-                className=" h-[5w] w-[5vw] self-start min-w-[80px] min-h-[80px] object-cover rounded-[50%]"
+                className=" w-[5vw] self-start min-w-[80px]  object-cover rounded-[50%]"
               >
                 {profile === false ? (
                   <img
                     src={SirfPencil}
                     alt=""
-                    className="object-fit rounded-[50%] border-white h-[5vw] w-[5vw] min-w-[80px] min-h-[80px]"
+                    className="object-fit rounded-[50%] border-white  w-[5vw] min-w-[80px] "
                   />
                 ) : (
                   <img
                     src={ClubImage}
                     alt=""
-                    className=" rounded-[50%] object-fit border-2 border-white h-[5vw] w-[5vw] min-w-[80px] min-h-[80px]"
+                    className=" rounded-[50%] object-fit border-2 border-white w-[5vw] min-w-[80px] "
                   />
                 )}
               </button>
-              <br />
-            </div>
-            <div className="flex flex-col max-[414px]:justify-center max-[414px]:w-[60vw] h-[65vh] max-[414px]:mt-[25vw] max-[414px]:h-[10vh] mt-[2vw]">
-              <div className="max-[375px]:mt-[5vw] mt-[2vw]">
-                <ThemeProvider theme={theme}>
+              <div className="w-full">
                   <TextField
                     onChange={(e) => {
                       setclubname(e.target.value);
@@ -306,18 +325,19 @@ export default function Addnewclub(props) {
                     id="myfilled-name"
                     label="Club Name"
                     variant="filled"
+                    fullWidth
                     color="grey"
                     inputProps={{
                       style: {
-                        height: "3vh",
-                        width: "55vw",
+                        height: "20px",
                       },
                     }}
                   />
-                </ThemeProvider>
               </div>
-              <div className="max-[375px]:mt-[5vw] mt-[2vw]">
-                <ThemeProvider theme={theme}>
+            </div>
+            <div className="flex flex-col space-y-10  my-10 max-[414px]:justify-center max-[414px]:w-[60vw] h-fit  ">
+              
+              <div className="">
                   <TextField
                     onChange={(e) => {
                       setclubdescription(e.target.value);
@@ -343,18 +363,16 @@ export default function Addnewclub(props) {
                     label="Club Description"
                     variant="filled"
                     color="grey"
+                    fullWidth
                     inputProps={{
                       style: {
-                        height: "3vh",
-                        width: "55vw ",
+                        height: "20px",
                       },
                     }}
 
                   />
-                </ThemeProvider>
               </div>
-              <div className="max-[375px]:mt-[5vw] mt-[2vw]">
-                <ThemeProvider theme={theme}>
+              <div className="">
                   <TextField
                     onChange={(e) => {
                       setpresidentrollno(e.target.value);
@@ -380,21 +398,20 @@ export default function Addnewclub(props) {
                     label="President Roll No."
                     variant="filled"
                     color="grey"
+                    fullWidth
                     inputProps={{
                       style: {
-                        height: "3vh ",
-                        width: "55vw "
+                        height: "20px",
                       },
                     }}
                   />
-                </ThemeProvider>
               </div>
               {/* <button
 
                 className="bg-[#060606]  shadow-xl rounded-lg px-6 py-2 self-center mt-[8vh] text-xl text-[#FFFFFF] hover:bg-opacity-50 ">
                 BUTTON
               </button> */}
-              <div className='self-center mt-[8vh]'>
+              <div className='self-center my-5 '>
                 <Button
                   variant="contained"
                   color="primary"

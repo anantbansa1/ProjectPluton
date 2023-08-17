@@ -1,11 +1,7 @@
 import "./App.css";
 import React, { Component } from "react";
-import Row from "./components/pages/Row";
-
 import Navbar from "./components/Navbar";
 import AddUserAdmin from "./components/pages/AddUserAdmin";
-import minion from "./components/Images/Minions.jpg";
-import cover from "./components/Images/zoro.jpg";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import UserFeed from "./components/pages/UserFeed";
 import UserProfile from "./components/pages/Userprofile";
@@ -26,33 +22,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<UserFeed />} />
-        <Route
-          path="/user/:email"
-          element={
-            <UserProfile
-              name="John Doe"
-              desc="
-    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
-              clubimage={minion}
-              coverimage={cover}
-            />
-          }
-        />
-        <Route
-          path={"/club/:clubID"}
-          element={
-            <ClubProfile
-              name="Club of Programmers"
-              desc="Lorem ipsum dolor s sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
-              clubimage={minion}
-              coverimage={cover}
-              clubpoint={125}
-              tbronze={50}
-              tsilver={100}
-              tgold={150}
-            />
-          }
-        />
+        <Route path="/user/:email" element={<UserProfile />}/>
+        <Route path={"/club/:clubID"} element={<ClubProfile />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/getemail" element={<Resetpass />} />
@@ -63,18 +34,7 @@ function App() {
         <Route path="*" element={<Pagenotfound />} />
         <Route path="/pagenotfound" element={<Pagenotfound />} />
         <Route path="/ourteam" element={<AboutUs />} />
-        <Route
-          path="/manage"
-          element={
-            <Manage
-              name="Club of Programmers"
-              desc="
-    Lorem ipsum dolor s sit, amet consectetur adipisicing elit. Aut, laudantium beatae. Voluptatibus amet nobis, fugiat cupiditate ea praesentium, odio quos aut voluptas ab sequi. Aspernatur ipsa libero facilis eligendi quis!"
-              clubimage={minion}
-              coverimage={cover}
-            />
-          }
-        />
+        <Route path="/manage/:clubID" element={<Manage/>}/>
       </Routes>
     </Router>
   );

@@ -6,6 +6,9 @@ import Deadpool from "../Images/Deadpool.jpg";
 import Sasuke from "../Images/Sasuke.jpg";
 import Temp from "../Images/Temp.jpg";
 import Beetles from "../Images/Beetles.jpg";
+import Madhav from "../Images/Madhav.jpg"
+import Anant from "../Images/Anant.jpg"
+import Deepanshu from "../Images/Deepanshu.jpg"
 
 export default function AboutUs() {
   return (
@@ -21,7 +24,7 @@ export default function AboutUs() {
               <div className="relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                 <div className="absolute inset-0">
                   <img
-                    src={Beetles}
+                    src={Anant}
                     alt=""
                     className="h-full w-full rounded-xl object-cover shadow-xl shadow-black/40 "
                   />
@@ -42,7 +45,7 @@ export default function AboutUs() {
               <div className="relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                 <div className="absolute inset-0">
                   <img
-                    src={Minions}
+                    src={Madhav}
                     alt=""
                     className="h-full w-full rounded-xl object-cover shadow-xl shadow-black/40 "
                   />
@@ -63,7 +66,7 @@ export default function AboutUs() {
               <div className="relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                 <div className="absolute inset-0">
                   <img
-                    src={Rengoku}
+                    src={Deepanshu}
                     alt=""
                     className="h-full w-full rounded-xl object-cover shadow-xl shadow-black/40 "
                   />
@@ -86,7 +89,7 @@ export default function AboutUs() {
               <div className="relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                 <div className="absolute inset-0">
                   <img
-                    src={Sasuke}
+                    src={Rengoku}
                     alt=""
                     className="h-full w-full rounded-xl object-cover shadow-xl shadow-black/40 "
                   />
@@ -107,7 +110,7 @@ export default function AboutUs() {
               <div className="relative h-full w-full rounded-xl shadow-xl transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                 <div className="absolute inset-0">
                   <img
-                    src={Temp}
+                    src={Deadpool}
                     alt=""
                     className="h-full w-full rounded-xl object-cover shadow-xl shadow-black/40 "
                   />

@@ -19,7 +19,7 @@ import Slide from "@mui/material/Slide";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { getDocs, query, collection, where } from "firebase/firestore";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { db } from "../firebase";
 // bg-[#1c1733]
 export default function Navbar(props) {
@@ -39,15 +39,13 @@ export default function Navbar(props) {
 
   useEffect(() => {
     if (user) {
-      getDocs(
-        query(collection(db, "user"))
-      ).then((snapshot) => {
+      getDocs(query(collection(db, "user"))).then((snapshot) => {
         snapshot.forEach((u) => {
           if (u.data().email === user.email) {
             setprofileimage(u.data().profileimage);
-            console.log('email: ', u.data());
+            console.log("email: ", u.data());
             setisadmin(u.data().isadmin);
-            console.log('admin: ', u.data().isadmin);
+            console.log("admin: ", u.data().isadmin);
           }
         });
       });
@@ -55,7 +53,9 @@ export default function Navbar(props) {
   }, [user]);
 
   useEffect(() => {
-    sleep(500).then(() => {
+    setLoading(true);
+    sleep(2000).then(() => {
+      setLoading(false);
       sethelper(true);
     });
   }, []);
@@ -87,7 +87,7 @@ export default function Navbar(props) {
     try {
       await logOut();
       // setTimeout(1000);
-      navigate('/login')
+      navigate("/login");
       // redirectIn();
     } catch {
       alert("Something went wrong! Please try again later.");
@@ -97,13 +97,6 @@ export default function Navbar(props) {
 
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-  function redirectIn() {
-    if (user) {
-      // console.log(user?.email);
-    } else {
-      navigate("/login");
-    }
   }
 
   return (
@@ -122,8 +115,9 @@ export default function Navbar(props) {
         <div className="flex flex-col space-y-[1.5vw]">
           <Link
             to="/home"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${props.selected === "home" ? " bg-opacity-10  bg-white" : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-base`}
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex items-center max-lg:justify-center ${
+              props.selected === "home" ? " bg-opacity-10  bg-white" : ""
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer  justify-start  text-center  text-base`}
           >
             {" "}
             <HomeIcon className=" scale-[120%]"></HomeIcon>
@@ -132,10 +126,11 @@ export default function Navbar(props) {
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/leaderboard"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "leaderboard"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "leaderboard"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
+            } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
           >
             <LeaderboardIcon className=" scale-[120%]"></LeaderboardIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Leaderboard</button>
@@ -143,10 +138,11 @@ export default function Navbar(props) {
           {isadmin && (
             <Link
               to="/adduser"
-              className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "manageusers"
+              className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+                props.selected === "manageusers"
                   ? " bg-opacity-10  bg-white  border-[#323232]"
                   : ""
-                } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
+              } hover:bg-opacity-10 hover:bg-white rounded-full cursor-pointer items-center  max-lg:justify-center justify-start  text-center  text-base`}
             >
               <ManageAccountsIcon className=" scale-[120%]"></ManageAccountsIcon>
               <button className="max-lg:hidden">&nbsp;&nbsp;Manage </button>
@@ -155,10 +151,11 @@ export default function Navbar(props) {
 
           <Link
             to="/faq"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${props.selected === "faq"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4  ${
+              props.selected === "faq"
                 ? " bg-opacity-10 sm:px-6 px-2 py-4 bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-base`}
+            } hover:bg-opacity-10  hover:bg-white rounded-full cursor-pointer  flex items-center   max-lg:justify-center justify-start text-center  text-base`}
           >
             <LiveHelpIcon className=" scale-[120%]"></LiveHelpIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;FAQ</button>
@@ -167,19 +164,21 @@ export default function Navbar(props) {
           {/* <hr className="mt-[3vh] w-[11vw] mx-auto border-black" /> */}
           <Link
             to="/ourteam"
-            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${props.selected === "ourteam"
+            className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
+              props.selected === "ourteam"
                 ? " bg-opacity-10  bg-white  border-[#323232]"
                 : ""
-              } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-base`}
+            } hover:bg-opacity-10 cursor-pointer hover:bg-white rounded-full items-center max-lg:justify-center justify-start  text-center  text-base`}
           >
             <InfoIcon className=" scale-[120%]"></InfoIcon>
             <button className="max-lg:hidden">&nbsp;&nbsp;Our Team</button>
           </Link>
-          <Link
+          {!isadmin && (
+            <Link
             to={`/user/${user?.email}`}
             className={`max-lg:mx-auto mx-5 sm:px-6 px-2 py-4 flex ${
               props.selected === "profile" ? " bg-opacity-10  bg-white" : ""
-            } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-xl`}
+            } rounded-full items-center max-lg:justify-center justify-start hover:bg-opacity-10 cursor-pointer hover:bg-white text-center  text-base`}
           >
             {/* <InfoIcon className=" scale-[120%]"></InfoIcon> */}
             <button
@@ -190,12 +189,13 @@ export default function Navbar(props) {
                 alt=""
                 className="h-[26px] w-[26px] rounded-[100%] "
               /> */}
-              <AccountCircleIcon className=" scale-[120%]"/>
+              <AccountCircleIcon className=" scale-[120%]" />
               &nbsp;&nbsp;
               {/* <button>Anant</button> */}
             </button>
             <button className="max-lg:hidden">&nbsp;&nbsp; Profile </button>
           </Link>
+          )}
         </div>
 
         <button

@@ -85,7 +85,7 @@ function Post(props) {
                     </Link>
 
                   </div>
-                  {(props.isadmin === true || props.role === "admin" || props.role === "admin" )&& (
+                  {(props.isadmin === true || props.role === "admin" || props.role === "core" )&& (
                     <div>
                       <button
                         className="text-slate-200  hover:text-slate-300 px-4"

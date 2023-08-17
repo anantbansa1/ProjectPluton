@@ -197,10 +197,11 @@ function ClubProfile(props) {
         const docref2 = doc(db, "user", mem, "badges", clubName);
         const snapshot = await getDoc(docref);
         const snapshot2 = await getDoc(docref2);
-        let memimage, memname, membadge;
+        let memimage, memname, membadge, mememail;
         if (snapshot.data()) {
           memimage = snapshot.data().profileimage;
           memname = snapshot.data().name;
+          mememail = snapshot.data().email;
         }
         if (snapshot2) {
           if (snapshot2.data()) {
@@ -213,6 +214,7 @@ function ClubProfile(props) {
           memname: memname,
           memimage: memimage,
           membadge: membadge,
+          mememail: mememail,
         });
         console.log(memname, membadge);
       } catch (error) {
@@ -922,7 +924,7 @@ function ClubProfile(props) {
           <div className="row-start-6 col-start-7"></div>
         </div>
         <div className="flex sm:hidden space-x-6 mt-5">
-          {(role === "visitor" && isadmin===false) && (
+          {(role === "visitor" && isadmin === false) && (
             <div className="  text-center w-full ">
               <button
                 onClick={handleapply}
@@ -933,7 +935,7 @@ function ClubProfile(props) {
               </button>
             </div>
           )}
-          {(role === "pending" && isadmin===false) && (
+          {(role === "pending" && isadmin === false) && (
             <div className=" text-center w-full">
               <div
                 className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
@@ -943,7 +945,7 @@ function ClubProfile(props) {
               </div>
             </div>
           )}
-          {(role === "member" && isadmin===false) && (
+          {(role === "member" && isadmin === false) && (
             <div className="text-center w-full">
               <button
                 onClick={handleleave}
@@ -955,7 +957,7 @@ function ClubProfile(props) {
               </button>
             </div>
           )}
-          {(role === "admin" && isadmin===false) && (
+          {(role === "admin" && isadmin === false) && (
             <div className=" text-center w-full">
               <button
                 onClick={() => {
@@ -990,7 +992,7 @@ function ClubProfile(props) {
             </button>
           </div>
         </div>
-        {(isadmin===false && role === "member") ? (
+        {(isadmin === false && role === "member") ? (
           <div className="flex max-sm:mt-5  items-center ">
             <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
@@ -1487,7 +1489,7 @@ function ClubProfile(props) {
             <div>Members</div>
             {(isadmin === true || role === "admin" || role === "core") ? (
               <Link
-                to="/manage"
+                to={`/manage/${clubName}`}
                 className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"
               >
                 {" "}
@@ -1512,21 +1514,25 @@ function ClubProfile(props) {
               return (
                 <>
                   {/* {console.log('1',badgetype[element.membadge])} */}
-                  <div className=" flex text-white justify-between">
-                    <div className="flex items-center space-x-2 ">
-                      <img
-                        src={element.memimage}
-                        className="w-[40px] h-[40px] border-2 border-white rounded-full"
-                        alt=""
-                      />
+                  <div className="flex text-white justify-between">
 
-                      <div
-                        className={`font-semibold`}
-                        style={{ color: badgetype[element.membadge] }}
-                      >
-                        {element.memname}
+                    <Link to={`/user/${element.mememail}`} className="">
+                      <div className="flex items-center space-x-2 ">
+                        <img
+                          src={element.memimage}
+                          className="w-[40px] h-[40px] border-2 border-white rounded-full"
+                          alt=""
+                        />
+                        <Tooltip title={element.memname}>
+                          <div
+                            className={`font-semibold`}
+                            style={{ color: badgetype[element.membadge] }}
+                          >
+                            {element.memname}
+                          </div>
+                        </Tooltip>
                       </div>
-                    </div>
+                    </Link>
                     {element.membadge !== "none" && (
                       <div className="grid grid-rows-1 items-center grid-cols-1">
                         <img
@@ -1848,7 +1854,7 @@ function ClubProfile(props) {
         </DialogTitle>
         <DialogContent>
           <div className="text-[#c0bebe] text-lg">
-       
+
             When a club is deleted, its status will be changed to inactive, resulting in the removal of all associated posts and polls from both user and club feeds. This action is reversible and will not impact members' points and badges.
           </div>
         </DialogContent>
