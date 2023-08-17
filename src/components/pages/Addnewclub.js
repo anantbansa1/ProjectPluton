@@ -323,6 +323,10 @@ export default function Addnewclub(props) {
                     },
                     ".MuiInputBase-input": {
                       background: "#0A0813",
+                      "&:-webkit-autofill": {
+                        WebkitBoxShadow: "0 0 0px 1000px #0A0813 inset",
+                        WebkitTextFillColor: "#AEBAB5",
+                      },
                     },
                     ".MuiTextField-root": {
                       background: "#FFFFFF",
@@ -360,6 +364,10 @@ export default function Addnewclub(props) {
                     },
                     ".MuiInputBase-input": {
                       background: "#0A0813",
+                      "&:-webkit-autofill": {
+                        WebkitBoxShadow: "0 0 0px 1000px #0A0813 inset",
+                        WebkitTextFillColor: "#AEBAB5",
+                      },
                     },
                     ".MuiTextField-root": {
                       background: "#FFFFFF",
@@ -395,6 +403,10 @@ export default function Addnewclub(props) {
                     },
                     ".MuiInputBase-input": {
                       background: "#0A0813",
+                      "&:-webkit-autofill": {
+                        WebkitBoxShadow: "0 0 0px 1000px #0A0813 inset",
+                        WebkitTextFillColor: "#AEBAB5",
+                      },
                     },
                     ".MuiTextField-root": {
                       background: "#FFFFFF",

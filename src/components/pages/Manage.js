@@ -398,6 +398,10 @@ function ClubProfile(props) {
                             },
                             ".MuiInputBase-input": {
                               background: "transparent",
+                              "&:-webkit-autofill": {
+                                WebkitBoxShadow: "0 0 0px 1000px transparent inset",
+                                WebkitTextFillColor: "#AEBAB5",
+                              },
                             },
                             ".MuiTextField-root": { background: "transparent" },
                           }}
