@@ -263,14 +263,21 @@ function ClubProfile(props) {
       const docref3 = doc(db, `clubs/${club_id}`);
       const payload = { points: a };
       await updateDoc(docref3, payload);
-      const docref4 = doc(db, `user/${id}/clubs/${clubName}`);
-      const temp = await getDoc(docref4);
-      let b = parseInt(temp.data().points) + parseInt(newpoints);
-      const payload2 = { points: b };
-      await updateDoc(docref4, payload2);
-      setOpenAlert(true);
-      setmessage("Points added successfully");
-      setetype("success");
+      const docref6 = doc(db, "user", id);
+      getDoc(docref6).then((docs) => {
+        const cpoints = docs.data().points + parseInt(newpoints);
+        const payload6 = { points: cpoints };
+        updateDoc(docref6, payload6).then(async () => {
+          const docref4 = doc(db, `user/${id}/clubs/${clubName}`);
+          const temp = await getDoc(docref4);
+          let b = parseInt(temp.data().points) + parseInt(newpoints);
+          const payload2 = { points: b };
+          await updateDoc(docref4, payload2);
+          setOpenAlert(true);
+          setmessage("Points added successfully");
+          setetype("success");
+        });
+      });
     } else {
       setOpenAlert(true);
       setmessage("Insufficient Points");
@@ -399,7 +406,8 @@ function ClubProfile(props) {
                             ".MuiInputBase-input": {
                               background: "transparent",
                               "&:-webkit-autofill": {
-                                WebkitBoxShadow: "0 0 0px 1000px transparent inset",
+                                WebkitBoxShadow:
+                                  "0 0 0px 1000px transparent inset",
                                 WebkitTextFillColor: "#AEBAB5",
                               },
                             },

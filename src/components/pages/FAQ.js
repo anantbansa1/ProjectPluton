@@ -5,31 +5,21 @@ export default function FAQ() {
   const accordionData = [
     {
       title: "Q. How do I earn points?",
-      content: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis sapiente
-          laborum cupiditate possimus labore, hic temporibus velit dicta earum
-          suscipit commodi eum enim atque at? Et perspiciatis dolore iure
-          voluptatem. madhav`,
+      content:
+        "Earn points by participating in club activities and club admin will assign you points",
     },
     {
       title: "Q. What do badges mean?",
-      content: `Lorem ipsum, dolor sit amet consectetur adipisicing elit. Mollitia veniam
-          reprehenderit nam assumenda voluptatem ut. Ipsum eius dicta, officiis
-          quaerat iure quos dolorum accusantium ducimus in illum vero commodi
-          pariatur? Impedit autem esse nostrum quasi, fugiat a aut error cumque
-          quidem maiores doloremque est numquam praesentium eos voluptatem amet!
-          Repudiandae, mollitia id reprehenderit a ab odit!`,
+      content:
+        "Badges are the symbols of milestones you achieved in each club badges are of 4 types: Gold, Silver, Bronze and Core",
     },
     {
       title: "Q. How to get badges?",
-      content: `Sapiente expedita hic obcaecati, laboriosam similique omnis architecto ducimus magnam accusantium corrupti
-          quam sint dolore pariatur perspiciatis, necessitatibus rem vel dignissimos
-          dolor ut sequi minus iste? Quas?`,
+      content: `You can get badges on either gathering more points or getting promoted to core`,
     },
     {
       title: "Q. How do I earn medals?",
-      content: `Sapiente expedita hic obcaecati, laboriosam similique omnis architecto ducimus magnam accusantium corrupti
-          quam sint dolore pariatur perspiciatis, necessitatibus rem vel dignissimos
-          dolor ut sequi minus iste? Quas?`,
+      content: `Each Season the points you collect are accumulated to pplace you in the global leaderboard and at end of each season according to your rank a medal is assigned to you`,
     },
   ];
   return (
