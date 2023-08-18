@@ -4,6 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import Tooltip from "@mui/material/Tooltip";
 import DialogContent from "@mui/material/DialogContent";
+import { Backdrop, CircularProgress } from "@mui/material";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useCallback, useRef, useEffect } from "react";
@@ -69,6 +70,7 @@ function ClubProfile(props) {
     Rank20p,
   ];
   const [etype, setetype] = useState("error");
+  const [loading, setloading] = useState(true);
   const [message, setmessage] = useState("error while getting image url");
   const [openAlert, setOpenAlert] = useState(false);
   const user = useAuth();
@@ -127,6 +129,17 @@ function ClubProfile(props) {
     }
     setOpenAlert(false);
   };
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  useEffect(() => {
+    // setloading(true);
+    // console.log("then");
+    sleep(1000).then(() => {
+      setloading(false);
+    });
+  }, []);
 
   async function fetch_data() {
     const q = query(collection(db, "user"), where("email", "==", email));
@@ -1098,6 +1111,17 @@ function ClubProfile(props) {
           {message}
         </Alert>
       </Snackbar>
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backdropFilter: "blur(20px)",
+        }}
+        open={loading}
+        close={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

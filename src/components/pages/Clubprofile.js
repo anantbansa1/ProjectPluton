@@ -1502,7 +1502,7 @@ function ClubProfile(props) {
         <DialogTitle>
           <div className="flex justify-between items-center">
             <div>Members</div>
-            {isadmin === true || role === "admin" || role === "core" ? (
+            {isadmin === true || role === "admin" ? (
               <Link
                 to={`/manage/${clubName}`}
                 className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"
