@@ -6,7 +6,6 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { getFirestore } from "firebase/firestore";

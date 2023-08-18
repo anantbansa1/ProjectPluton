@@ -1,4 +1,3 @@
-import Navbar from "../Navbar";
 import { useState } from "react";
 import SirfPencil from "../Images/pencil_black.jpg";
 import Dialog from "@mui/material/Dialog";
@@ -460,8 +459,24 @@ function ClubProfile(props) {
     });
   }, [user_clubs]);
 
+  useEffect(() => {
+    const collectionref7 = collection(db, `clubs`);
+    let array = [];
+    getDocs(collectionref7).then((d) => {
+      if (d) {
+        user_clubs?.forEach((dd) => {
+          d.forEach((search) => {
+            if (dd === search.data().name) {
+              array.push(search.data().active);
+            }
+          });
+        });
+      }
+      setisactive(array);
+    });
+  }, [user_clubs]);
 
-  const [isactive , setisactive] = useState();
+  const [isactive, setisactive] = useState();
   useEffect(() => {
     const collectionref7 = collection(db, `clubs`);
     let array = [];
@@ -487,7 +502,7 @@ function ClubProfile(props) {
         type: user_badges[i],
         logo: club_logo[i],
         points: club_points[i],
-        active : isactive[i],
+        active: isactive[i],
       };
       array.push(obj);
     }
@@ -514,7 +529,7 @@ function ClubProfile(props) {
     setbadge_array(array);
   }, [final_array]);
 
-  const [final_sorted , setfinal_sorted] = useState();
+  const [final_sorted, setfinal_sorted] = useState();
   useEffect(() => {
     let array = [];
     for (let i = 0; i < final_array?.length; i++) {
@@ -524,7 +539,7 @@ function ClubProfile(props) {
           type: final_array[i].type,
           logo: final_array[i].logo,
           points: final_array[i].points,
-          active : final_array[i].active,
+          active: final_array[i].active,
         };
         array.push(obj);
       }
@@ -717,13 +732,9 @@ function ClubProfile(props) {
             </span>
           </div>
           <div className="flex  justify-start flex-wrap">
-            {docs?.length === 0 && (
-              <div className="px-4">
-                No medals yet!
-              </div>
-            )}
-            {docs?.length !== 0 && (
-              docs
+            {docs?.length === 0 && <div className="px-4">No medals yet!</div>}
+            {docs?.length !== 0 &&
+              (docs
                 ? docs.map((d) => {
                     return (
                       <img
@@ -733,8 +744,7 @@ function ClubProfile(props) {
                       />
                     );
                   })
-                : ""
-            )}
+                : "")}
           </div>
         </div>
         <div className="flex max-lg:hidden flex-col w-[20vw] max-md:w-[60vw] h-fit bg-[#130f22] shadow-xl rounded-2xl max-md:py-4 py-8 px-4 shadow-black text-white">
@@ -747,11 +757,9 @@ function ClubProfile(props) {
           </div>
           <div className="flex max-[1300px]:justify-around flex-wrap">
             {badge_array?.length === 0 && (
-              <div className="px-4">
-                No badges yet!
-              </div>
+              <div className="px-4">No badges yet!</div>
             )}
-            {badge_array?.lenngth !== 0 && (
+            {badge_array?.lenngth !== 0 &&
               badge_array?.map((d) => {
                 const b = badgetype[d.type];
                 return (
@@ -762,8 +770,7 @@ function ClubProfile(props) {
                     className={`mx-auto my-1 border-[5px] row-start-1 col-start-1 sm:h-[100px] sm:w-[100px] h-[45px] w-[45px] rounded-full  object-cover`}
                   />
                 );
-              })
-            )}
+              })}
           </div>
         </div>
       </div>
@@ -789,10 +796,8 @@ function ClubProfile(props) {
           </div>
           {medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
-              {docs?.length === 0 && (
-                "No medals yet!"
-              )}
-              {docs?.length !== 0 && (
+              {docs?.length === 0 && "No medals yet!"}
+              {docs?.length !== 0 &&
                 docs?.map((d) => {
                   return (
                     <img
@@ -801,18 +806,13 @@ function ClubProfile(props) {
                       className="p-4 w-[130px] object-cover"
                     />
                   );
-                })
-              )}
+                })}
             </div>
           )}
           {!medal && (
             <div className="flex mt-5 justify-center  flex-wrap">
-              {badge_array?.length === 0 && (
-                <div>
-                  No badges yet!
-                </div>
-              )}
-              {badge_array?.length !== 0 && (
+              {badge_array?.length === 0 && <div>No badges yet!</div>}
+              {badge_array?.length !== 0 &&
                 badge_array?.map((d) => {
                   const b = badgetype[d.type];
                   return (
@@ -823,8 +823,7 @@ function ClubProfile(props) {
                       className={` border-[5px] mx-auto row-start-1 col-start-1 h-[100px] w-[100px] rounded-full  object-cover`}
                     />
                   );
-                })
-              )}
+                })}
             </div>
           )}
         </div>

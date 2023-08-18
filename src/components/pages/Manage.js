@@ -1,4 +1,3 @@
-import Navbar from "../Navbar";
 import { useState } from "react";
 import React, { useEffect } from "react";
 import "react-image-crop/dist/ReactCrop.css";

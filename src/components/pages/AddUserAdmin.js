@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import Papa from "papaparse";
-import Navbar from "../Navbar";
 import { doc, setDoc } from "firebase/firestore";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
