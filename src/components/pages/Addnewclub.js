@@ -110,7 +110,7 @@ export default function Addnewclub(props) {
           }
         });
         if (flag === false) {
-          navigate("/pagenotfound");
+          navigate("/accessdenied");
         }
       });
     }

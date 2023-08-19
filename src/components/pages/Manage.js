@@ -75,13 +75,13 @@ function ClubProfile(props) {
                 if (role !== "admin") {
                   console.log("club", role);
 
-                  navigate("/pagenotfound");
+                  navigate("/accessdenied");
                 }
               } else {
-                navigate("/pagenotfound");
+                navigate("/accessdenied");
               }
             } else {
-              navigate("/pagenotfound");
+              navigate("/accessdenied");
             }
           }
         });

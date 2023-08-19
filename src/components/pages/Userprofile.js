@@ -44,6 +44,7 @@ import { db } from "../../firebase";
 import { useAuth } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 function ClubProfile(props) {
   const medal_data = [
@@ -74,6 +75,7 @@ function ClubProfile(props) {
   const [message, setmessage] = useState("error while getting image url");
   const [openAlert, setOpenAlert] = useState(false);
   const user = useAuth();
+  const navigate = useNavigate();
   const [id, setid] = useState();
   const email = useParams().email;
   const s = collection(db, `user/${id}/medals`);
@@ -120,6 +122,7 @@ function ClubProfile(props) {
   const [sortedData, setsortedData] = useState([]);
   const [badge_array, setbadge_array] = useState();
 
+
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -145,8 +148,11 @@ function ClubProfile(props) {
     const q = query(collection(db, "user"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     if (querySnapshot) {
+      // console.log('query snapshot')
+      let flag=0;
       querySnapshot.forEach(async (doc) => {
         const docdata = doc.data();
+        flag=1;
         setname(docdata["name"]);
         setUrl(docdata["profileimage"]);
         setUrl1(docdata["coverimage"]);
@@ -154,6 +160,7 @@ function ClubProfile(props) {
         setrank(docdata["rank"]);
         setid(doc.id);
       });
+      if (flag === 0) navigate('/pagenotfound')
     }
   }
 
