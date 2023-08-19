@@ -54,7 +54,7 @@ export default function AddUserAdmin() {
           }
         });
         if (flag === false) {
-          navigate("/pagenotfound");
+          navigate("/accessdenied");
         }
       });
     }

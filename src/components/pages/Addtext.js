@@ -168,15 +168,15 @@ export default function Text() {
           if (getuser) {
             if (getuser.data()) {
               const role = getuser.data().role;
-
-              if (role !== "admin") {
-                navigate("/pagenotfound");
+              console.log('role ', role)
+              if (role !== "admin" && role !== "core") {
+                navigate("/accessdenied");
               }
             } else {
-              navigate("/pagenotfound");
+              navigate("/accessdenied");
             }
           } else {
-            navigate("/pagenotfound");
+            navigate("/accessdenied");
           }
         });
       } catch (error) {}
