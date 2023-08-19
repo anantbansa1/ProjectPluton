@@ -20,7 +20,7 @@ function Pagenotfound() {
       <div className=" md:ml-[22vw] flex flex-col h-[100vh] space-y-5 max-md:w-[78%] text-[#d7d9db]  ml-[18vw]  ">
         <div className="text-3xl my-auto">
           {" "}
-          <div className="container h-[50vh] " ref={container}></div>
+          <div className="container h-[50vh]  " ref={container}></div>
           <div className="text-center my-10 max-sm:my-0 max-sm:text-lg"> Oops! The page you are trying to acces doesn't exist. </div>
         </div>
       </div>
