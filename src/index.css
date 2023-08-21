@@ -43,8 +43,8 @@ code {
   text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
-  color: white;
-  box-shadow: 0 0 20px #eee;
+  color: #ece9e9;
+  box-shadow: 0 0 10px #353535;
   border-radius: 10px;
   display: block;
   width: 100%;

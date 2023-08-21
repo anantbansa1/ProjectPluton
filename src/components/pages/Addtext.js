@@ -347,6 +347,10 @@ export default function Text() {
                   },
                   ".MuiInputBase-input": {
                     background: "#130f22",
+                    "&:-webkit-autofill": {
+                      WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                      WebkitTextFillColor: "#AEBAB5",
+                    },
                   },
                   ".MuiTextField-root": {
                     background: "#FFFFFF",
@@ -438,9 +442,14 @@ export default function Text() {
                           },
                           ".MuiInputBase-input": {
                             background: "#130f22",
+                            "&:-webkit-autofill": {
+                              WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                              WebkitTextFillColor: "#AEBAB5",
+                            },
                           },
                           ".MuiTextField-root": {
                             background: "#FFFFFF",
+                            
                           },
                           "& .MuiOutlinedInput-notchedOutline": {
                             borderColor: "#475569 !important",
@@ -491,6 +500,10 @@ export default function Text() {
                         },
                         ".MuiInputBase-input": {
                           background: "#130f22",
+                          "&:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                            WebkitTextFillColor: "#AEBAB5",
+                          },
                         },
                         ".MuiTextField-root": {
                           background: "#FFFFFF",
@@ -538,6 +551,10 @@ export default function Text() {
                         },
                         ".MuiInputBase-input": {
                           background: "#130f22",
+                          "&:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                            WebkitTextFillColor: "#AEBAB5",
+                          },
                         },
                         ".MuiTextField-root": {
                           background: "#FFFFFF",
@@ -583,6 +600,10 @@ export default function Text() {
                         },
                         ".MuiInputBase-input": {
                           background: "#130f22",
+                          "&:-webkit-autofill": {
+                            WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                            WebkitTextFillColor: "#AEBAB5",
+                          },
                         },
                         ".MuiTextField-root": {
                           background: "#FFFFFF",
@@ -629,6 +650,10 @@ export default function Text() {
                           },
                           ".MuiInputBase-input": {
                             background: "#130f22",
+                            "&:-webkit-autofill": {
+                              WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                              WebkitTextFillColor: "#AEBAB5",
+                            },
                           },
                           ".MuiTextField-root": {
                             background: "#FFFFFF",
@@ -676,6 +701,10 @@ export default function Text() {
                           },
                           ".MuiInputBase-input": {
                             background: "#130f22",
+                            "&:-webkit-autofill": {
+                              WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                              WebkitTextFillColor: "#AEBAB5",
+                            },
                           },
                           ".MuiTextField-root": {
                             background: "#FFFFFF",

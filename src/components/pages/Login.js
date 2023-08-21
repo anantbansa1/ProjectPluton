@@ -48,9 +48,9 @@ function Login() {
 
   return (
     <div className="  ">
-      <div className="flex justify-center h-[100vh] bg-white bg-[url('https://upload.wikimedia.org/wikipedia/commons/3/33/Microsoft_login_screen.svg')] items-center">
-        <div className="flex flex-col bg-white rounded-3xl shadow-2xl shadow-slate-300 p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 max-[450px]:w-[100%] max-[450px]:h-[100%] w-[450px] xl:w-[25vw] ">
-          <span className="text-4xl font-semibold">Login</span>
+      <div className="flex justify-center h-[100vh] bg-[#1c1733] items-center">
+        <div className="flex flex-col  h backdrop-blur-2xl bg-white bg-opacity-5 rounded-3xl shadow-2xl max-[450px]:bg-[#1c1733] max-[450px]:backdrop-blur-0 max-[450px]:rounded-none shadow-black p-6 items-center space-y-10 justify-start h-fit pt-16 pb-10 px-10 max-[450px]:w-[100%] max-[450px]:h-[100%] w-[450px] xl:w-[25vw] ">
+          <span className="text-4xl font-semibold text-[#ece9e9]">Login</span>
           <div className="mt-1 w-[100%]">
             <TextField
               onChange={(e) => {
@@ -64,30 +64,35 @@ function Login() {
               className=""
               sx={{
                 "& .MuiInputBase-root": {
-                  color: "#000",
+                  color: "#ece9e9",
                 },
                 "& .MuiFormLabel-root": {
-                  color: "#000",
+                  color: "#ece9e9",
                 },
                 "& .MuiFormLabel-root.Mui-focused": {
-                  color: "#1c1733",
+                  color: "#ece9e9",
                 },
                 ".MuiInputBase-input": {
-                  background: "#fff",
+                  background: "#130f22",
+                  borderRadius: "10px",
+                  "&:-webkit-autofill": {
+                    WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                    WebkitTextFillColor: "#ece9e9",
+                  },
                 },
                 ".MuiTextField-root": {
-                  background: "#FFFFFF",
+                  background: "#130f22",
                 },
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#000",
+                  // borderColor: "#fff",
                 },
                 "&:before, &:after": {
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                 },
               }}
               InputProps={{
                 style: {
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                 },
               }}
               id="myfilled-name"
@@ -96,6 +101,8 @@ function Login() {
               color="grey"
               fullWidth
             />
+
+
           </div>
           <div className="mt-1 w-[100%]">
             <TextField
@@ -110,27 +117,35 @@ function Login() {
               error={error}
               sx={{
                 "& .MuiInputBase-root": {
-                  color: "#000",
+                  color: "#ece9e9",
                 },
                 "& .MuiFormLabel-root": {
-                  color: "#000",
+                  color: "#ece9e9",
                 },
                 "& .MuiFormLabel-root.Mui-focused": {
-                  color: "#000",
+                  color: "#ece9e9",
                 },
                 ".MuiInputBase-input": {
-                  background: "#fff",
+                  background: "#130f22",
+                  borderRadius: "10px",
+                  "&:-webkit-autofill": {
+                    WebkitBoxShadow: "0 0 0px 1000px #130f22 inset",
+                    WebkitTextFillColor: "#ece9e9",
+                  },
                 },
                 ".MuiTextField-root": {
-                  background: "#FFFFFF",
+                  background: "#130f22",
                 },
                 "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#000",
+                  // borderColor: "#fff",
+                },
+                "&:before, &:after": {
+                  borderRadius: "10px",
                 },
               }}
               InputProps={{
                 style: {
-                  borderRadius: "50px",
+                  borderRadius: "10px",
                 },
               }}
               id="myfilled-name"
@@ -143,7 +158,7 @@ function Login() {
           <button className="btn-grad font-semibold" onClick={handleLogin}>
             Sign In
           </button>
-          <Link to="/getemail" className="self-end text-[#232323] ">
+          <Link to="/getemail" className="self-end text-[#ece9e9] ">
             Forgot Password?
           </Link>
         </div>

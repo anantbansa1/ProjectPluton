@@ -459,23 +459,6 @@ function ClubProfile(props) {
     });
   }, [user_clubs]);
 
-  useEffect(() => {
-    const collectionref7 = collection(db, `clubs`);
-    let array = [];
-    getDocs(collectionref7).then((d) => {
-      if (d) {
-        user_clubs?.forEach((dd) => {
-          d.forEach((search) => {
-            if (dd === search.data().name) {
-              array.push(search.data().active);
-            }
-          });
-        });
-      }
-      setisactive(array);
-    });
-  }, [user_clubs]);
-
   const [isactive, setisactive] = useState();
   useEffect(() => {
     const collectionref7 = collection(db, `clubs`);
@@ -493,6 +476,41 @@ function ClubProfile(props) {
       setisactive(array);
     });
   }, [user_clubs]);
+
+  useEffect(() => {
+    const collectionref7 = collection(db, `clubs`);
+    let array = [];
+    getDocs(collectionref7).then((d) => {
+      if (d) {
+        user_clubs?.forEach((dd) => {
+          d.forEach((search) => {
+            if (dd === search.data().name) {
+              array.push(search.data().active);
+            }
+          });
+        });
+      }
+      setisactive(array);
+    });
+  }, [user_clubs]);
+
+  // const [isactive, setisactive] = useState();
+  // useEffect(() => {
+  //   const collectionref7 = collection(db, `clubs`);
+  //   let array = [];
+  //   getDocs(collectionref7).then((d) => {
+  //     if (d) {
+  //       user_clubs?.forEach((dd) => {
+  //         d.forEach((search) => {
+  //           if (dd === search.data().name) {
+  //             array.push(search.data().active);
+  //           }
+  //         });
+  //       });
+  //     }
+  //     setisactive(array);
+  //   });
+  // }, [user_clubs]);
 
   useEffect(() => {
     let array = [];
