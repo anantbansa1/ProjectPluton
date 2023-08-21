@@ -1,4 +1,3 @@
-import Navbar from "../Navbar";
 import { useState } from "react";
 import SirfPencil from "../Images/pencil_black.jpg";
 import Dialog from "@mui/material/Dialog";
@@ -11,13 +10,11 @@ import Silverbadge from "../Images/badge_silver.png";
 import Goldbadge from "../Images/badge_golden.png";
 import React, { useCallback, useRef, useEffect } from "react";
 import ReactCrop from "react-image-crop";
-import Zoro from "../Images/zoro.jpg";
 import "react-image-crop/dist/ReactCrop.css";
 import Post from "./Post";
 import Poll from "./Poll";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import tanjiro from "../Images/Tanjiro.jpg";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -28,14 +25,9 @@ import Tooltip from "@mui/material/Tooltip";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-import {
-  Cancel,
-  CheckCircle,
-  ManageAccounts,
-  Settings,
-} from "@mui/icons-material";
+import { Cancel, CheckCircle, Settings } from "@mui/icons-material";
 import { useAuth } from "../../firebase";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
 import {
   collection,
@@ -49,7 +41,6 @@ import {
   onSnapshot,
   updateDoc,
   orderBy,
-  addDoc,
 } from "firebase/firestore";
 import { uploadBytes, getStorage, getDownloadURL, ref } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
@@ -58,7 +49,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { TextField } from "@mui/material";
 
-function ClubProfile(props) {
+function ClubProfile() {
   const clubName = useParams().clubID;
   const navigate = useNavigate();
   const [profile, setprofile] = useState(true);
@@ -1502,7 +1493,7 @@ function ClubProfile(props) {
         <DialogTitle>
           <div className="flex justify-between items-center">
             <div>Members</div>
-            {isadmin === true || role === "admin" || role === "core" ? (
+            {isadmin === true || role === "admin" ? (
               <Link
                 to={`/manage/${clubName}`}
                 className="text-sm text-slate-200 flex items-center cursor-pointer hover:text-slate-300"

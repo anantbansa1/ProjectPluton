@@ -16,6 +16,7 @@ import Pagenotfound from "./components/pages/Pagenotfound";
 import Addnewclub from "./components/pages/Addnewclub";
 import PrivateRoute from "./PrivateRoute";
 import { useAuth } from "./firebase";
+import AccessDenied from "./components/pages/AccessDenied";
 
 function App() {
   const user = useAuth();
@@ -31,11 +32,12 @@ function App() {
           <Route path={"/club/:clubID"} element={<ClubProfile />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/accessdenied" element={<AccessDenied />} />
+          <Route path="/pagenotfound" element={<Pagenotfound />} />
           <Route path="/add/:clubId" element={<Addtext />} />
           <Route path="/addclub" element={<Addnewclub />} />
           <Route path="/adduser" element={<AddUserAdmin />} />
           <Route path="*" element={<Pagenotfound />} />
-          <Route path="/pagenotfound" element={<Pagenotfound />} />
           <Route path="/ourteam" element={<AboutUs />} />
           <Route path="/manage/:clubID" element={<Manage />} />
         </Route>

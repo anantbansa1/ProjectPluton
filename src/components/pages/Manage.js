@@ -55,6 +55,7 @@ function ClubProfile(props) {
           query(collection(db, "clubs"), where("name", "==", clubName))
         );
         if (!currentclub) {
+          console.log("club", currentclub);
           navigate("/pagenotfound");
           return;
         }
@@ -72,13 +73,15 @@ function ClubProfile(props) {
                 const role = getuser.data().role;
 
                 if (role !== "admin") {
-                  navigate("/pagenotfound");
+                  console.log("club", role);
+
+                  navigate("/accessdenied");
                 }
               } else {
-                navigate("/pagenotfound");
+                navigate("/accessdenied");
               }
             } else {
-              navigate("/pagenotfound");
+              navigate("/accessdenied");
             }
           }
         });
@@ -87,7 +90,9 @@ function ClubProfile(props) {
   }
 
   useEffect(() => {
-    checkClub();
+    if (user) {
+      checkClub();
+    }
   }, [user]);
 
   async function fetch_data() {

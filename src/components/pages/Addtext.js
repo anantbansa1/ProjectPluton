@@ -36,6 +36,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import TextField from "@mui/material/TextField";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Text() {
   const [option, setoption] = useState("text");
@@ -68,6 +70,8 @@ export default function Text() {
   const [polloption2, setpolloption2] = useState("");
   const [polloption3, setpolloption3] = useState("");
   const [polloption4, setpolloption4] = useState("");
+  const [loading, setLoading] = useState(false);
+
 
   const handleClickVisibility = (event) => {
     setAnchorEl(event.currentTarget);
@@ -122,7 +126,9 @@ export default function Text() {
         };
         const docref = collection(db, "posts");
         try {
+          setLoading(true)
           await addDoc(docref, payload);
+          setLoading(false)
           navigate(`/club/${clubName}`);
         } catch (error) {}
       }
@@ -142,7 +148,9 @@ export default function Text() {
         timestamp: serverTimestamp(),
       };
       try {
+        setLoading(true)
         await addDoc(collref, payload);
+        setLoading(false)
         navigate(`/club/${clubName}`);
       } catch (error) {}
     }
@@ -168,15 +176,15 @@ export default function Text() {
           if (getuser) {
             if (getuser.data()) {
               const role = getuser.data().role;
-
-              if (role !== "admin") {
-                navigate("/pagenotfound");
+              console.log('role ', role)
+              if (role !== "admin" && role !== "core") {
+                navigate("/accessdenied");
               }
             } else {
-              navigate("/pagenotfound");
+              navigate("/accessdenied");
             }
           } else {
-            navigate("/pagenotfound");
+            navigate("/accessdenied");
           }
         });
       } catch (error) {}
@@ -274,11 +282,18 @@ export default function Text() {
                   tag: tags[selected],
                 };
                 const collref = collection(db, "posts");
+                setLoading(true)
                 addDoc(collref, payload).then(() => {
+                  setLoading(false);
                   navigate(`/club/${clubName}`);
                 });
               })
-              .catch((error) => {});
+              .catch((error) => {
+                setLoading(false);
+                setetype("error")
+                setmessage("Internal error")
+                setOpen(true);
+              });
           })
           .catch((error) => {});
       }, "image/png");
@@ -1076,6 +1091,17 @@ export default function Text() {
           {message}
         </Alert>
       </Snackbar>
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backdropFilter: "blur(20px)",
+        }}
+        open={loading}
+        close={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

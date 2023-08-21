@@ -4,6 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import Tooltip from "@mui/material/Tooltip";
 import DialogContent from "@mui/material/DialogContent";
+import { Backdrop, CircularProgress } from "@mui/material";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useCallback, useRef, useEffect } from "react";
@@ -43,6 +44,7 @@ import { db } from "../../firebase";
 import { useAuth } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 function ClubProfile(props) {
   const medal_data = [
@@ -69,9 +71,11 @@ function ClubProfile(props) {
     Rank20p,
   ];
   const [etype, setetype] = useState("error");
+  const [loading, setloading] = useState(true);
   const [message, setmessage] = useState("error while getting image url");
   const [openAlert, setOpenAlert] = useState(false);
   const user = useAuth();
+  const navigate = useNavigate();
   const [id, setid] = useState();
   const email = useParams().email;
   const s = collection(db, `user/${id}/medals`);
@@ -118,6 +122,7 @@ function ClubProfile(props) {
   const [sortedData, setsortedData] = useState([]);
   const [badge_array, setbadge_array] = useState();
 
+
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -127,13 +132,27 @@ function ClubProfile(props) {
     }
     setOpenAlert(false);
   };
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  useEffect(() => {
+    // setloading(true);
+    // console.log("then");
+    sleep(1000).then(() => {
+      setloading(false);
+    });
+  }, []);
 
   async function fetch_data() {
     const q = query(collection(db, "user"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     if (querySnapshot) {
+      // console.log('query snapshot')
+      let flag=0;
       querySnapshot.forEach(async (doc) => {
         const docdata = doc.data();
+        flag=1;
         setname(docdata["name"]);
         setUrl(docdata["profileimage"]);
         setUrl1(docdata["coverimage"]);
@@ -141,6 +160,7 @@ function ClubProfile(props) {
         setrank(docdata["rank"]);
         setid(doc.id);
       });
+      if (flag === 0) navigate('/pagenotfound')
     }
   }
 
@@ -1133,6 +1153,17 @@ function ClubProfile(props) {
           {message}
         </Alert>
       </Snackbar>
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          backdropFilter: "blur(20px)",
+        }}
+        open={loading}
+        close={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

@@ -34,16 +34,14 @@ function Login() {
   }
 
   useEffect(() => {
-    setLoading(true);
-    sleep(1000).then(() => {
-      console.log("hello1");
+
+    // setLoading(true);
       if (user) {
-        console.log("hello2");
         setLoading(false);
         navigate("/home");
       }
-      setLoading(false);
-    });
+      // setLoading(false);
+
   }, [user]);
 
   return (

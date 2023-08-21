@@ -9,7 +9,6 @@ class Middleware {
         try {
 
           const decodeValue = await admin.auth().verifyIdToken(token);
-    x
           req.user = decodeValue;
           //   console.log(decodeValue);
           if (decodeValue) {
@@ -51,6 +50,7 @@ class Middleware {
           }
           return res.json({ message: "Unauthorized", type: "error" });
         } catch (e) {
+          console.log("internal error: ", e)
           return res.json({ message: "Internal Error", type: "error" });
         }
       } else {
