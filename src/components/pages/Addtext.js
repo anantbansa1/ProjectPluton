@@ -72,7 +72,6 @@ export default function Text() {
   const [polloption4, setpolloption4] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   const handleClickVisibility = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -126,9 +125,9 @@ export default function Text() {
         };
         const docref = collection(db, "posts");
         try {
-          setLoading(true)
+          setLoading(true);
           await addDoc(docref, payload);
-          setLoading(false)
+          setLoading(false);
           navigate(`/club/${clubName}`);
         } catch (error) {}
       }
@@ -148,9 +147,9 @@ export default function Text() {
         timestamp: serverTimestamp(),
       };
       try {
-        setLoading(true)
+        setLoading(true);
         await addDoc(collref, payload);
-        setLoading(false)
+        setLoading(false);
         navigate(`/club/${clubName}`);
       } catch (error) {}
     }
@@ -176,7 +175,6 @@ export default function Text() {
           if (getuser) {
             if (getuser.data()) {
               const role = getuser.data().role;
-              console.log('role ', role)
               if (role !== "admin" && role !== "core") {
                 navigate("/accessdenied");
               }
@@ -282,7 +280,7 @@ export default function Text() {
                   tag: tags[selected],
                 };
                 const collref = collection(db, "posts");
-                setLoading(true)
+                setLoading(true);
                 addDoc(collref, payload).then(() => {
                   setLoading(false);
                   navigate(`/club/${clubName}`);
@@ -290,8 +288,8 @@ export default function Text() {
               })
               .catch((error) => {
                 setLoading(false);
-                setetype("error")
-                setmessage("Internal error")
+                setetype("error");
+                setmessage("Internal error");
                 setOpen(true);
               });
           })
@@ -464,7 +462,6 @@ export default function Text() {
                           },
                           ".MuiTextField-root": {
                             background: "#FFFFFF",
-                            
                           },
                           "& .MuiOutlinedInput-notchedOutline": {
                             borderColor: "#475569 !important",
