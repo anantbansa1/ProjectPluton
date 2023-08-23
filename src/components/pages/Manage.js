@@ -195,9 +195,10 @@ function ClubProfile(props) {
     const promises = member_id.map((member) => {
       const docRef = doc(db, `user/${member}/clubs/${clubName}`);
       return getDoc(docRef).then((d) => {
-        console.log(198, d.data().role);
-        console.log(199, member);
+        // console.log(198, d.data().role);
+        // console.log(199, member);
         array.push(d.data().role);
+        array[member] = d.data().role;
       });
     });
     Promise.all(promises).then(() => {
@@ -225,7 +226,7 @@ function ClubProfile(props) {
           roll_no: member_id[i],
           name: member_name[i],
           points: member_points[i],
-          role: member_role[i],
+          role: member_role[[member_id[i]]],
         };
         finalarray.push(obj);
       }
