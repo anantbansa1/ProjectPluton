@@ -693,7 +693,7 @@ function ClubProfile() {
   const Leavebox = async () => {
     const docref = doc(db, "user", userRollNo, "clubs", clubName);
     try {
-      await deleteDoc(docref);
+      await updateDoc(docref, { role: "visitor" });
       const q = query(collection(db, "clubs"), where("name", "==", clubName));
       const docs = await getDocs(q);
       if (docs) {
@@ -702,6 +702,7 @@ function ClubProfile() {
           await deleteDoc(docrefa);
         });
       }
+
       navigate(0);
       setleavedialog(false);
     } catch (error) {}
@@ -943,7 +944,7 @@ function ClubProfile() {
               </button>
             </div>
           )}
-          {role === "admin" && isadmin === false && (
+          {(role === "admin" || role === "core") && isadmin === false && (
             <div className=" text-center w-full">
               <button
                 onClick={() => {

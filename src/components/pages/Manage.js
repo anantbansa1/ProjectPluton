@@ -15,6 +15,11 @@ import { collection, where, query } from "@firebase/firestore";
 import { db } from "../../firebase";
 import { useAuth } from "../../firebase";
 import { getDocs, getDoc } from "firebase/firestore";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 function ClubProfile(props) {
   const [etype, setetype] = useState("success");
@@ -35,6 +40,8 @@ function ClubProfile(props) {
   const [member_points, setmember_points] = useState([]);
   const [member_role, setmember_role] = useState();
   const [club_id, setclub_id] = useState();
+  const [opendialog, setopendialog] = useState(false);
+  const [helper, sethelper] = useState([]);
 
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -47,6 +54,34 @@ function ClubProfile(props) {
     setOpenAlert(false);
   };
 
+  async function handleYesPromoteadmin() {
+    const id = helper[0];
+    for (let i = 0; i < final_array?.length; i++) {
+      if (final_array[i].role === "admin") {
+        const docref = doc(
+          db,
+          `user/${final_array[i].roll_no}/clubs/${clubName}`
+        );
+        const payload = { role: "core" };
+        await updateDoc(docref, payload);
+        const docref9 = doc(
+          db,
+          `user/${final_array[i].roll_no}/badges/${clubName}`
+        );
+        const payload2 = { type: "core" };
+        await setDoc(docref9, payload2);
+      }
+    }
+    console.log("came here");
+    const docref = doc(db, `user/${id}/clubs/${clubName}`);
+    const payload = { role: "admin" };
+    await updateDoc(docref, payload);
+    const docref9 = doc(db, `user/${id}/badges/${clubName}`);
+    const payload2 = { type: "core" };
+    await setDoc(docref9, payload2);
+    navigate(`/club/${clubName}`);
+  }
+
   async function checkClub() {
     if (user) {
       const email = user.email;
@@ -55,7 +90,6 @@ function ClubProfile(props) {
           query(collection(db, "clubs"), where("name", "==", clubName))
         );
         if (!currentclub) {
-          console.log("club", currentclub);
           navigate("/pagenotfound");
           return;
         }
@@ -73,8 +107,6 @@ function ClubProfile(props) {
                 const role = getuser.data().role;
 
                 if (role !== "admin") {
-                  console.log("club", role);
-
                   navigate("/accessdenied");
                 }
               } else {
@@ -141,22 +173,32 @@ function ClubProfile(props) {
   }, [member_id]);
 
   useEffect(() => {
-    let memberpoints = [];
-    for (let i = 0; i < member_name?.length; i++) {
-      memberpoints.push(0);
+    if (member_name) {
+      let memberpoints = [];
+      for (let i = 0; i < member_name?.length; i++) {
+        memberpoints.push(0);
+      }
+      setmember_points(memberpoints);
     }
-    setmember_points(memberpoints);
   }, [member_name]);
 
-  useEffect(() => {
+  async function getmemberrole() {
     let array = [];
-    member_id?.forEach((member) => {
+    const promises = member_id.map((member) => {
       const docRef = doc(db, `user/${member}/clubs/${clubName}`);
-      getDoc(docRef).then((d) => {
+      return getDoc(docRef).then((d) => {
         array.push(d.data().role);
       });
     });
-    setmember_role(array);
+    Promise.all(promises).then(() => {
+      setmember_role(array);
+    });
+  }
+
+  useEffect(() => {
+    if (member_id) {
+      getmemberrole();
+    }
   }, [member_id]);
 
   useEffect(() => {
@@ -202,28 +244,9 @@ function ClubProfile(props) {
       const payload2 = { type: "core" };
       await setDoc(docref9, payload2);
     } else if (role === "core") {
-      for (let i = 0; i < final_array?.length; i++) {
-        if (final_array[i].role === "admin") {
-          const docref = doc(
-            db,
-            `user/${final_array[i].roll_no}/clubs/${clubName}`
-          );
-          const payload = { role: "core" };
-          await updateDoc(docref, payload);
-          const docref9 = doc(
-            db,
-            `user/${final_array[i].roll_no}/badges/${clubName}`
-          );
-          const payload2 = { type: "core" };
-          await setDoc(docref9, payload2);
-        }
-      }
-      const docref = doc(db, `user/${id}/clubs/${clubName}`);
-      const payload = { role: "admin" };
-      await updateDoc(docref, payload);
-      const docref9 = doc(db, `user/${id}/badges/${clubName}`);
-      const payload2 = { type: "core" };
-      await setDoc(docref9, payload2);
+      setopendialog(true);
+      sethelper([id, role]);
+      // handleYesPromoteadmin(id, role);
     }
     navigate(0);
   };
@@ -576,6 +599,61 @@ function ClubProfile(props) {
           {message}
         </Alert>
       </Snackbar>
+      <Dialog
+        open={opendialog}
+        PaperProps={{
+          style: {
+            background: "#1e1936",
+            color: "#fff",
+            borderRadius: 25,
+            padding: "10px",
+          },
+        }}
+        sx={{
+          "& .MuiBackdrop-root": {
+            backdropFilter: "blur(20px)",
+          },
+        }}
+        fullWidth
+        maxWidth="sm"
+        keepMounted
+        onClose={() => {
+          setopendialog(false);
+        }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          <div className="">
+            {"Are you sure you want to promote user to admin?"}
+          </div>
+        </DialogTitle>
+        <DialogContent>
+          <div className="text-[#c0bebe] text-lg">
+            Once you promote this user to admin, The current admin will be
+            demoted to core member, will be directed to club profile and will no
+            longer be able to access this option.
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant=""
+            onClick={() => {
+              setopendialog(false);
+            }}
+            sx={{ borderRadius: "15px" }}
+          >
+            No
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{ borderRadius: "15px" }}
+            onClick={handleYesPromoteadmin}
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

@@ -64,8 +64,6 @@ export default function Navbar(props) {
     handleLogOut();
   };
 
-  const Title = ({ children }) => <div className="title">{children}</div>;
-
   async function handleLogOut() {
     setLoading(true);
     try {

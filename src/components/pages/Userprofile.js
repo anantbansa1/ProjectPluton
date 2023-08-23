@@ -122,7 +122,6 @@ function ClubProfile(props) {
   const [sortedData, setsortedData] = useState([]);
   const [badge_array, setbadge_array] = useState();
 
-
   const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
   });
@@ -137,8 +136,6 @@ function ClubProfile(props) {
   }
 
   useEffect(() => {
-    // setloading(true);
-    // console.log("then");
     sleep(1000).then(() => {
       setloading(false);
     });
@@ -148,11 +145,10 @@ function ClubProfile(props) {
     const q = query(collection(db, "user"), where("email", "==", email));
     const querySnapshot = await getDocs(q);
     if (querySnapshot) {
-      // console.log('query snapshot')
-      let flag=0;
+      let flag = 0;
       querySnapshot.forEach(async (doc) => {
         const docdata = doc.data();
-        flag=1;
+        flag = 1;
         setname(docdata["name"]);
         setUrl(docdata["profileimage"]);
         setUrl1(docdata["coverimage"]);
@@ -160,7 +156,9 @@ function ClubProfile(props) {
         setrank(docdata["rank"]);
         setid(doc.id);
       });
-      if (flag === 0) navigate('/pagenotfound')
+      if (flag === 0) {
+        navigate("/pagenotfound");
+      }
     }
   }
 
