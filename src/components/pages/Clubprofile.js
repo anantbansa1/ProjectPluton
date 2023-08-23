@@ -258,73 +258,71 @@ function ClubProfile() {
     navigate(0);
   }
 
-  useEffect(() => {
+  async function fetchapplications() {
+    let applications = [];
     if (clubId) {
-      let applications = [];
-      const colRef = collection(db, "clubs", clubId, "Applications");
+      const colref = collection(db, "clubs", clubId, "Applications");
       try {
-        const unsub = onSnapshot(colRef, async (snapshot) => {
-          const changes = snapshot.docChanges();
-          for (const change of changes) {
-            if (change.type === "added") {
-              const usera = await getDoc(doc(db, "user", change.doc.id));
-              const d = usera.data();
-              applications.push({
-                name: d.name,
-                rollno: change.doc.id,
-                profileimage: d.profileimage,
-              });
-            } else if (change.type === "removed") {
-              applications = applications.filter(
-                (application) => application.rollno !== change.doc.id
-              );
-            }
-          }
-          setapplication(applications, () => {
-            setpending(false);
-            setpending(true);
+        const snapshot = await getDocs(colref);
+        snapshot.forEach((element) => {
+          getDoc(doc(db, "user", element.id)).then((usera) => {
+            console.log("here");
+
+            const d = usera.data();
+            applications.push({
+              name: d.name,
+              rollno: element.id,
+              profileimage: d.profileimage,
+            });
+            console.log("here application now ", applications);
           });
         });
-        return () => {
-          unsub();
-        };
-      } catch (error) {}
+      } catch (error) {
+        console.log("firebase error!");
+      }
+
+      console.log("applications ", applications);
+      setapplication(applications);
+    }
+  }
+
+  useEffect(() => {
+    if (clubId) {
+      fetchapplications();
     }
   }, [clubId]);
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      const q = query(collection(db, "clubs"), where("name", "==", clubName));
+  async function fetchmembers() {
+    const q = query(collection(db, "clubs"), where("name", "==", clubName));
+    try {
       const snapshot = await getDocs(q);
-      try {
-        if (snapshot) {
-          snapshot.forEach(async (club) => {
-            const clubid = club.id;
-            let memberarray = [];
-            setClubId(clubid);
-            setisactive(club.data().active);
-            const colRef = collection(db, "clubs", clubid, "Members");
-            const unsub = onSnapshot(colRef, (snapshot) => {
-              snapshot.docChanges().forEach((change) => {
-                if (change.type === "added") {
-                  memberarray.push(change.doc.id);
-                } else if (change.type === "removed") {
-                  memberarray = memberarray.filter(
-                    (member) => member !== change.doc.id
-                  );
-                }
-              });
-              setmember(memberarray);
-              setmemberscount(memberarray.length);
+      if (snapshot) {
+        snapshot.forEach(async (club) => {
+          const clubid = club.id;
+          let memberarray = [];
+          console.log("club id: ", club.id);
+          setClubId(clubid);
+          const colref = collection(db, "clubs", clubid, "Members");
+          const memshot = await getDocs(colref);
+          if (memshot) {
+            memshot.forEach(async (temp) => {
+              memberarray.push(temp.id);
+              // console.log("temp :", temp.id);
             });
-            return () => {
-              unsub();
-            };
-          });
-        }
-      } catch (error) {}
-    };
-    fetchMembers();
+          }
+          setmember(memberarray);
+          setmemberscount(memberarray.length);
+        });
+      }
+    } catch (error) {
+      console.log("firebase error");
+    }
+  }
+
+  useEffect(() => {
+    if (clubName) {
+      fetchmembers();
+    }
   }, [clubName]);
 
   useEffect(() => {

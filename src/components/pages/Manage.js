@@ -243,12 +243,11 @@ function ClubProfile(props) {
       const docref9 = doc(db, `user/${id}/badges/${clubName}`);
       const payload2 = { type: "core" };
       await setDoc(docref9, payload2);
+      navigate(0);
     } else if (role === "core") {
-      setopendialog(true);
       sethelper([id, role]);
-      // handleYesPromoteadmin(id, role);
+      setopendialog(true);
     }
-    navigate(0);
   };
 
   const handleDemote = async (id, role) => {
