@@ -302,6 +302,7 @@ function ClubProfile() {
           let memberarray = [];
           console.log("club id: ", club.id);
           setClubId(clubid);
+          setisactive(club.data().active);
           const colref = collection(db, "clubs", clubid, "Members");
           const memshot = await getDocs(colref);
           if (memshot) {
