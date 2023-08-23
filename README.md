@@ -18,7 +18,8 @@ npm install --save @fontsource/press-start-2p\
 npm install papaparse\
 npm install express\
 npm install firebase-admin\
-npm install -g nodemon
+npm install -g nodemon\
+npm install lottie-react
 
 ## Available Scripts
 
