@@ -48,6 +48,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { TextField } from "@mui/material";
+import { borderColor } from "@mui/system";
 
 function ClubProfile() {
   const clubName = useParams().clubID;
@@ -103,7 +104,7 @@ function ClubProfile() {
   const [etype, setetype] = useState("success");
   const [message, setmessage] = useState("Successfully Added!");
   const [openAlert, setOpenAlert] = useState(false);
-  const [isadmin, setisadmin] = useState(false);
+  const [isadmin, setisadmin] = useState();
   const [text, settext] = useState("");
   const [opendesc, setOpendesc] = useState(false);
   const [opendeleteclub, setopendeleteclub] = useState(false);
@@ -123,9 +124,10 @@ function ClubProfile() {
 
   useEffect(() => {
     if (isactive === false && isadmin === false) {
+      console.log();
       navigate("/pagenotfound");
     }
-  }, [isactive]);
+  }, [isactive, isadmin]);
   const badgetype = {
     gold: "#fee101",
     silver: "#d7d7d7",
@@ -258,72 +260,73 @@ function ClubProfile() {
     navigate(0);
   }
 
-  async function fetchapplications() {
-    let applications = [];
-    if (clubId) {
-      const colref = collection(db, "clubs", clubId, "Applications");
-      try {
-        const snapshot = await getDocs(colref);
-        snapshot.forEach((element) => {
-          getDoc(doc(db, "user", element.id)).then((usera) => {
-            console.log("here");
-
-            const d = usera.data();
-            applications.push({
-              name: d.name,
-              rollno: element.id,
-              profileimage: d.profileimage,
-            });
-            console.log("here application now ", applications);
-          });
-        });
-      } catch (error) {
-        console.log("firebase error!");
-      }
-
-      console.log("applications ", applications);
-      setapplication(applications);
-    }
-  }
-
   useEffect(() => {
     if (clubId) {
-      fetchapplications();
+      let applications = [];
+      const colRef = collection(db, "clubs", clubId, "Applications");
+      try {
+        const unsub = onSnapshot(colRef, async (snapshot) => {
+          const changes = snapshot.docChanges();
+          for (const change of changes) {
+            if (change.type === "added") {
+              const usera = await getDoc(doc(db, "user", change.doc.id));
+              const d = usera.data();
+              applications.push({
+                name: d.name,
+                rollno: change.doc.id,
+                profileimage: d.profileimage,
+              });
+            } else if (change.type === "removed") {
+              applications = applications.filter(
+                (application) => application.rollno !== change.doc.id
+              );
+            }
+          }
+          setapplication(applications, () => {
+            setpending(false);
+            setpending(true);
+          });
+        });
+        return () => {
+          unsub();
+        };
+      } catch (error) {}
     }
   }, [clubId]);
 
-  async function fetchmembers() {
-    const q = query(collection(db, "clubs"), where("name", "==", clubName));
-    try {
-      const snapshot = await getDocs(q);
-      if (snapshot) {
-        snapshot.forEach(async (club) => {
-          const clubid = club.id;
-          let memberarray = [];
-          console.log("club id: ", club.id);
-          setClubId(clubid);
-          setisactive(club.data().active);
-          const colref = collection(db, "clubs", clubid, "Members");
-          const memshot = await getDocs(colref);
-          if (memshot) {
-            memshot.forEach(async (temp) => {
-              memberarray.push(temp.id);
-              // console.log("temp :", temp.id);
-            });
-          }
-          setmember(memberarray);
-          setmemberscount(memberarray.length);
-        });
-      }
-    } catch (error) {
-      console.log("firebase error");
-    }
-  }
-
   useEffect(() => {
-    if (clubName) {
-      fetchmembers();
-    }
+    const fetchMembers = async () => {
+      const q = query(collection(db, "clubs"), where("name", "==", clubName));
+      const snapshot = await getDocs(q);
+      try {
+        if (snapshot) {
+          snapshot.forEach(async (club) => {
+            const clubid = club.id;
+            let memberarray = [];
+            setClubId(clubid);
+            setisactive(club.data().active);
+            const colRef = collection(db, "clubs", clubid, "Members");
+            const unsub = onSnapshot(colRef, (snapshot) => {
+              snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                  memberarray.push(change.doc.id);
+                } else if (change.type === "removed") {
+                  memberarray = memberarray.filter(
+                    (member) => member !== change.doc.id
+                  );
+                }
+              });
+              setmember(memberarray);
+              setmemberscount(memberarray.length);
+            });
+            return () => {
+              unsub();
+            };
+          });
+        }
+      } catch (error) {}
+    };
+    fetchMembers();
   }, [clubName]);
 
   useEffect(() => {
@@ -711,15 +714,25 @@ function ClubProfile() {
     <div className="">
       <div className=" md:ml-[22vw]  ml-[18vw] my-[2vw] mr-[2vw] bg-[#130f22b6] shadow-xl rounded-2xl py-8 px-4 shadow-black">
         <div className="   grid grid-rows-[repeat(8,minmax(30px,auto))] gap-y-2 grid-cols-[repeat(7,minmax(10px,auto))] ">
-          <div className="row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ">
+          <div
+            className={`row-start-1 col-start-1 shadow-inner shadow-black row-span-4 max-sm:row-start-1 max-sm:col-start-1  max-sm:row-end-5 col-span-7 ${
+              isactive === false ||
+              (role !== "admin" && role !== "core" && isadmin === false)
+                ? "cursor-default"
+                : "cursor-pointer"
+            } `}
+          >
             <img
               src={CoverImage}
               alt=""
-              className={`object-cover cursor-pointer rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full ${
+              className={`object-cover  rounded-2xl  max-sm:h-[38vw] h-[20vw] w-full ${
                 isactive === true ? "" : "grayscale"
               }`}
               onClick={() => {
-                if (isadmin === true || role === "admin" || role === "core")
+                if (
+                  (isadmin === true || role === "admin" || role === "core") &&
+                  isactive === true
+                )
                   handleClickOpenCover();
               }}
               onMouseOver={(e) => {
@@ -750,7 +763,10 @@ function ClubProfile() {
             <div className=" ">
               <button
                 onClick={() => {
-                  if (isadmin === true || role === "admin" || role === "core")
+                  if (
+                    (isadmin === true || role === "admin" || role === "core") &&
+                    isactive === true
+                  )
                     handleClickOpen();
                 }}
                 onMouseOut={(e) => {
@@ -759,9 +775,15 @@ function ClubProfile() {
                 onMouseOver={(e) => {
                   setprofile(false);
                 }}
-                className="bg-white h-[10vw] w-[10vw] self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] "
+                className={`bg-white h-[10vw] w-[10vw]  self-center min-w-[80px] min-h-[80px] object-cover rounded-[50%] ${
+                  isactive === false ||
+                  (role !== "admin" && role !== "core" && isadmin === false)
+                    ? "cursor-default"
+                    : ""
+                }`}
               >
-                {isadmin === true || role === "admin" || role === "core" ? (
+                {(isadmin === true || role === "admin" || role === "core") &&
+                isactive === true ? (
                   <>
                     {profile === false ? (
                       <img
@@ -864,7 +886,7 @@ function ClubProfile() {
                 className={`px-4 py-2 max-sm:hidden  max-sm:mt-2 max-sm:w-[27vw] justify-center lg:text-lg text-xs   flex items-center bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
                 {" "}
-                &nbsp; <div>Pending</div> &nbsp;
+                &nbsp; <div>{application?.length}&nbsp;Requests </div>
               </button>
             </div>
           )}
@@ -951,7 +973,7 @@ function ClubProfile() {
                 }}
                 className={`p-2 h-fit text-xs w-full text-center  bg-opacity-10 hover:bg-opacity-20 bg-white rounded-full  text-white`}
               >
-                <div>Pending</div>
+                <div>{application?.length} Requests</div>
               </button>
             </div>
           )}
@@ -993,7 +1015,7 @@ function ClubProfile() {
         </div>
         {isadmin === false && role === "member" ? (
           <div className="flex max-sm:mt-5  items-center ">
-            <div className=" grid max-sm:mx-2 mx-10 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
+            <div className=" grid max-sm:mx-2 mr-3 w-[65vw] gap-0 items-center text-[1.35rem] grid-cols-[repeat(9,minmax(10px,auto))] grid-rows-2 lg:text-[1.5rem] text-white">
               <div
                 className={`row-start-2 mt-2 self-start col-start-9 lg:text-xl md:text-sm  text-[0.68rem] text-right ${
                   points >= currentClub.gold ? "hidden" : ""
@@ -1064,18 +1086,12 @@ function ClubProfile() {
                 }  rounded-full w-[100%]  py-[1.2vh] row-start-1 col-span-9 justify-center col-start-1 bg-[#d6af36]   `}
               />
             </div>
-            <div className="grid grid-rows-1 items-center grid-cols-1">
-              <div className="  mx-auto row-start-1  col-start-1 ">
-                <img
-                  src={image}
-                  alt=""
-                  className="sm:h-[150px]  h-[70px] object-cover "
-                />
-              </div>
+            <div className="">
               <img
+                style={{ borderColor: badgetype[badge] }}
                 src={ClubImage}
                 alt=""
-                className="row-start-1 col-start-1 mx-auto sm:h-[100px] sm:w-[100px] h-[50px] w-[50px] rounded-full  object-cover "
+                className="mx-auto sm:min-h-[120px] max-sm:border-[5px] border-[10px]  sm:min-w-[120px] min-h-[60px] min-w-[60px] sm:h-[120px]  sm:w-[120px] h-[60px] w-[60px] rounded-full  object-cover aspect-square "
               />
             </div>
           </div>
