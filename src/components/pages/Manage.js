@@ -28,17 +28,15 @@ function ClubProfile(props) {
   const navigate = useNavigate();
   const clubName = useParams().clubID;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const names = ["Anant", "Deepanshu", "Samrath", "Madhav", "Duke"];
-  const [final_array, setfinal_array] = useState([]);
+  const [final_array, setfinal_array] = useState();
   const [menuState, setMenuState] = useState([]);
   const [points_state, setpoints_state] = useState([]);
-  const [member_id, setmembers] = useState();
+  const [member_id, setmembers] = useState([]);
   const [points, setpoints] = useState();
   const user = useAuth();
-  const [member_name, setmember_name] = useState();
+  const [member_name, setmember_name] = useState([]);
   const [member_points, setmember_points] = useState([]);
-  const [member_role, setmember_role] = useState();
+  const [member_role, setmember_role] = useState([]);
   const [club_id, setclub_id] = useState();
   const [opendialog, setopendialog] = useState(false);
   const [helper, sethelper] = useState([]);
@@ -81,6 +79,14 @@ function ClubProfile(props) {
     await setDoc(docref9, payload2);
     navigate(`/club/${clubName}`);
   }
+
+  useEffect(() => {
+    console.log("fa", final_array);
+    console.log("mi", member_id);
+    console.log("mn", member_name);
+    console.log("mp", member_points);
+    console.log("mr", member_role);
+  }, [final_array]);
 
   async function checkClub() {
     if (user) {
@@ -139,8 +145,10 @@ function ClubProfile(props) {
   }
 
   useEffect(() => {
-    fetch_data();
-  }, [club_id]);
+    if (clubName) {
+      fetch_data();
+    }
+  }, [clubName]);
 
   useEffect(() => {
     const collectionref = collection(db, `clubs/${club_id}/Members`);
@@ -187,7 +195,10 @@ function ClubProfile(props) {
     const promises = member_id.map((member) => {
       const docRef = doc(db, `user/${member}/clubs/${clubName}`);
       return getDoc(docRef).then((d) => {
+        // console.log(198, d.data().role);
+        // console.log(199, member);
         array.push(d.data().role);
+        array[member] = d.data().role;
       });
     });
     Promise.all(promises).then(() => {
@@ -202,14 +213,20 @@ function ClubProfile(props) {
   }, [member_id]);
 
   useEffect(() => {
-    if (member_role && member_id && member_name && member_points) {
+    if (
+      member_role.length &&
+      member_id.length &&
+      member_name.length &&
+      member_points.length
+    ) {
       let finalarray = [];
+      console.log("entered");
       for (let i = 0; i < member_points?.length; i++) {
         let obj = {
           roll_no: member_id[i],
           name: member_name[i],
           points: member_points[i],
-          role: member_role[i],
+          role: member_role[[member_id[i]]],
         };
         finalarray.push(obj);
       }
@@ -218,8 +235,10 @@ function ClubProfile(props) {
   }, [member_role, member_name, member_points, member_id]);
 
   useEffect(() => {
-    setMenuState(final_array.map(() => ({ anchorEl: null, open: false })));
-    setpoints_state(final_array.map(() => 0));
+    if (final_array) {
+      setMenuState(final_array.map(() => ({ anchorEl: null, open: false })));
+      setpoints_state(final_array.map(() => 0));
+    }
   }, [final_array]);
 
   useEffect(() => {
@@ -243,12 +262,11 @@ function ClubProfile(props) {
       const docref9 = doc(db, `user/${id}/badges/${clubName}`);
       const payload2 = { type: "core" };
       await setDoc(docref9, payload2);
+      navigate(0);
     } else if (role === "core") {
-      setopendialog(true);
       sethelper([id, role]);
-      // handleYesPromoteadmin(id, role);
+      setopendialog(true);
     }
-    navigate(0);
   };
 
   const handleDemote = async (id, role) => {
@@ -273,7 +291,7 @@ function ClubProfile(props) {
 
   const handleRemove = async (id) => {
     const docref = doc(db, `user/${id}/clubs/${clubName}`);
-    await deleteDoc(docref);
+    await updateDoc(docref, { role: "visitor" });
     const docref2 = doc(db, `clubs/${club_id}/Members/${id}`);
     await deleteDoc(docref2);
     navigate(0);
