@@ -2,7 +2,7 @@
 
 ## Details
 Created by: Anant Bansal, Deepanshu Pal, Madhav Nakra, Duke Dhal and Samrath Ahluwalia\
-\\
+ \
 This is a Club Management Portal which improves member engagements. This project is made using ReactJS, MUI v5, Tailwind CSS, Firebase, NodeJS, ExpressJS
 
 
