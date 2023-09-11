@@ -3,10 +3,10 @@
 ## Details
 Created by: Anant Bansal, Deepanshu Pal, Madhav Nakra, Duke Dhal and Samrath Ahluwalia\
  \
-This is a Club Management Portal which improves member engagements. This project is made using ReactJS, MUI v5, Tailwind CSS, Firebase, NodeJS, ExpressJS
+This is a Club Management Portal which improves member engagements. This project is made using **ReactJS, MUI v5, Tailwind CSS, Firebase, NodeJS, ExpressJS**
 ## Features
 1) Accomodate different members and create a single platform for them to interact.
-2) Users can have different roles: Visitor, Member, Core Member, Club President, Admin
+2) Users can have different roles: **Visitor, Member, Core Member, Club President, Admin**
 1) **Visitor:**
    - Visitors are users who are not part of a specific club.
    - They can view a club's profile, posts, and polls.
