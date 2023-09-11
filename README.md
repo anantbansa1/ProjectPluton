@@ -1,7 +1,7 @@
 # Project Pluton
 
 ## Details
-Created by: Anant Bansal, Deepanshu Pal, Madhav Nakra, Duke Dhal and Samrath Ahluwalia\
+Created by: [Anant Bansal](https://github.com/anantbansa1), [Deepanshu Pal](https://github.com/deepanshupal09), [Madhav Nakra](https://github.com/Madddynaks), [Duke Dhal](https://github.com/ImDoubD) and [Samrath Ahluwalia](https://github.com/samrath-ahluwalia)\
  \
 This is a Club Management Portal which improves member engagements. This project is made using **ReactJS, MUI v5, Tailwind CSS, Firebase, NodeJS, ExpressJS**
 ## Features
