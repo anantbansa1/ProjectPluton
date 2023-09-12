@@ -31,7 +31,7 @@ This is a Club Management Portal which improves member engagements. This project
      - They have the ability to add new users to the application.
      - Admins can also remove existing users.
 ## Video of Working Project
-https://github.com/anantbansa1/ProjectPluton/assets/107129255/c0cc3940-3381-4756-acf0-66f9534aebe7
+https://github.com/anantbansa1/ProjectPluton/assets/107129255/73e2031b-6efc-4cd4-9bc1-4f9df4a9174f
 
 
 ## Dependencies
